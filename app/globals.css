@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* צבעי MIALOR – הצעה מהאפיון, לאישור. שינוי כאן משנה את כל האתר. */
+:root {
+  --color-bg: #faf8f5; /* רקע */
+  --color-surface: #ffffff; /* משטח / כרטיסים */
+  --color-bg-alt: #f0e8df; /* רקע משני */
+  --color-text: #34271f; /* טקסט */
+  --color-accent: #a58b73; /* הדגשה */
+  --color-accent-strong: #8a7058; /* הדגשה לטקסט קטן – ניגודיות טובה יותר */
+  --color-border: #ddd3c9; /* גבולות */
+  --color-muted: #6f6157; /* טקסט משני */
+  --color-whatsapp: #1f7a4d;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-bg-alt: var(--color-bg-alt);
+  --color-ink: var(--color-text);
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-line: var(--color-border);
+  --color-muted: var(--color-muted);
+  --color-whatsapp: var(--color-whatsapp);
+  --font-sans: var(--font-heebo), "Segoe UI", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 140px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
