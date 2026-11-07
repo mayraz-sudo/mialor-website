@@ -29,21 +29,49 @@
 |---|---|
 | קטגוריות, מוצרים נבחרים, טקסטים, מספר WhatsApp, נתיבי תמונות | `lib/site.ts` |
 | צבעים | `app/globals.css` (משתני CSS בראש הקובץ) |
-| פונט | `app/layout.tsx` |
+| פונטים (Bellefair לכותרות, Heebo לטקסט) | `app/layout.tsx` |
+| גדלי טקסט (סולם טיפוגרפי t-display, t-h2, t-h3...) | `app/globals.css` |
+| כל המוצרים (שם, תיאור, מחיר, מינימום, תמונות) | `PRODUCTS` ב־`lib/site.ts` |
+| אילו 6 מוצרים מוצגים בדף הבית | `HOME_FEATURED_IDS` ב־`lib/site.ts` |
+| תמונות מוצרים | `public/images/products` (שם המוצר-מספר.jpg) |
+| תמונות אווירה | `public/images/atmosphere` |
+| עיצוב הכפתורים | `app/globals.css` (המחלקות btn) |
 | תמונות | `public/images` |
 
-כל תמונה ונתון זמני מסומנים ב־`placeholder: true` ב־`lib/site.ts`, ומוצגת עליהם תגית "תמונה זמנית". כשמחליפים בחומר המקורי, משנים ל־`false` והתגית נעלמת.
+## מה עוד צריך להחליף (חומרים זמניים)
+
+באתר עצמו אין סימון של "זמני". כל פריט זמני מסומן רק בקוד, בקובץ `lib/site.ts`. כדי למצוא אותם, מחפשים בקובץ את המילה `placeholder`.
+
+- **מספר וואטסאפ:** `SITE.whatsappNumber` (בפורמט 9725XXXXXXXX) ו־`SITE.whatsappDisplay`.
+- **תמונות:** תמונת הפתיחה, תמונות הקטגוריות, תמונות המוצרים ותמונת האודות.
+- **מחירים:** בכל מוצר יש שדה `priceFrom`. מספר מציג "החל מ־₪", ו־`null` מציג "מחיר לפי הזמנה".
+- **אודות:** הטקסט, החתימה (`signature`) והתמונה (`image`). אם `image: null`, האזור יוצג בלי תמונה.
+- **המלצות לקוחות:** `TESTIMONIALS`. כל עוד `testimonialsAreSamples = true`, האזור **מוסתר באתר החי** ומוצג רק בהרצה מקומית ובתצוגה המקדימה. אחרי שמכניסים המלצות אמיתיות, משנים ל־`false`.
+
+## מוצר בלי תמונה (Coming soon)
+
+מוצר שהמערך `images` שלו ריק מוצג אוטומטית עם תמונת "Coming soon" מעוצבת. כשתגיע תמונה: שמים אותה ב־`public/images/products/<מזהה>-1.jpg` ומעדכנים את המוצר.
+
+## עמוד המוצרים
+
+`/products` מציג את כל המוצרים עם סינון לפי קטגוריה. קישור לקטגוריה הוא `/products#packages` (או `invitations`, `branding`, `prints`).
+
+## כפתור "לפרטים והזמנה"
+
+הכפתור פותח וואטסאפ עם הודעה מוכנה שבה כתוב שם המוצר. כשייבנו עמודי מוצר, אפשר יהיה לשנות את הכפתור כך שיוביל אליהם.
 
 ## מבנה
 
 ```
 app/
-  layout.tsx       מבנה כללי, RTL, פונט Heebo, SEO
+  layout.tsx       מבנה כללי, RTL, פונטים, SEO
   page.tsx         דף הבית
+  products/        עמוד כל המוצרים עם סינון
   not-found.tsx    עמוד זמני לעמודים שעוד לא נבנו
 components/
   Header.tsx  Hero.tsx  CategoryGrid.tsx  FeaturedProducts.tsx
-  About.tsx   ContactCTA.tsx  Footer.tsx
+  About.tsx   Testimonials.tsx  ContactCTA.tsx  Footer.tsx
+  WhatsAppFloat.tsx   כפתור וואטסאפ צף (בנייד בלבד)
 lib/site.ts        כל הנתונים
 review/            צילומי מסך של דף הבית (מחשב ומובייל)
 ```
