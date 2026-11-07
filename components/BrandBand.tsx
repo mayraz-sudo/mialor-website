@@ -6,13 +6,13 @@ export default function BrandBand() {
   return (
     <section aria-labelledby="brand-title" className="bg-surface">
       <div className="mx-auto grid max-w-[1240px] items-center gap-8 px-5 py-12 md:grid-cols-[5fr_6fr] md:gap-16 md:py-20 lg:gap-24">
-        <div className="relative mx-auto aspect-[4/3] w-full max-w-[480px] overflow-hidden rounded-[2px] bg-bg-alt md:aspect-[4/5] md:max-w-none">
+        <div className="relative mx-auto aspect-[2/3] w-full max-w-[400px] overflow-hidden rounded-[2px] bg-bg-alt md:max-w-[460px]">
           <Image
             src={ATMOSPHERE.calla.src}
             alt={ATMOSPHERE.calla.alt}
             fill
             sizes="(min-width: 768px) 42vw, 92vw"
-            className="object-cover object-[center_45%]"
+            className="object-cover"
           />
         </div>
         <div className="text-center md:text-right">
