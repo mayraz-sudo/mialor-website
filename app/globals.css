@@ -36,14 +36,52 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-text);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.7;
 }
 
 @media (min-width: 768px) {
   body {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
+}
+
+/* ===== הגדרות מתפריט הנגישות ===== */
+html.a11y-text-1 {
+  font-size: 115%;
+}
+html.a11y-text-2 {
+  font-size: 130%;
+}
+html.a11y-contrast {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-bg-alt: #f0f0f0;
+  --color-text: #000000;
+  --color-text-hover: #222222;
+  --color-accent: #000000;
+  --color-accent-strong: #000000;
+  --color-border: #4d4d4d;
+  --color-muted: #1a1a1a;
+}
+html.a11y-links a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+html.a11y-readable {
+  --font-display: var(--font-heebo);
+}
+html.a11y-readable body {
+  letter-spacing: 0.01em;
+  word-spacing: 0.06em;
+}
+html.a11y-nomotion,
+html.a11y-nomotion *,
+html.a11y-nomotion *::before,
+html.a11y-nomotion *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }
 
 :focus-visible {

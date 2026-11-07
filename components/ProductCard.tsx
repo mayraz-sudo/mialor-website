@@ -1,4 +1,5 @@
-import { categoryBySlug, formatPrice, productHref, type Product } from "@/lib/site";
+import { categoryBySlug, productHref, type Product } from "@/lib/site";
+import { PromoBadge, PromoPrice } from "./Promo";
 import ProductMedia from "./ProductMedia";
 
 /** כרטיס מוצר אחיד – בדף הבית, בעמוד המוצרים ובעמוד מוצר. לחיצה מובילה לעמוד המוצר. */
@@ -9,6 +10,7 @@ export default function ProductCard({ product, sizes }: { product: Product; size
       <a href={href} tabIndex={-1} aria-hidden className="block">
         <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-surface">
           <ProductMedia product={product} sizes={sizes} />
+          <PromoBadge product={product} />
         </div>
       </a>
       <div className="flex flex-1 flex-col pt-3.5 md:pt-5">
@@ -20,8 +22,7 @@ export default function ProductCard({ product, sizes }: { product: Product; size
         </h3>
         <p className="mt-1 line-clamp-2 text-[0.95rem] leading-relaxed text-muted md:text-[0.94rem]">{product.description}</p>
         <p className="mt-2 text-[0.95rem] text-ink tabular-nums md:mt-2.5">
-          <span className="font-medium">{formatPrice(product)}</span>{" "}
-          {product.priceFrom !== null && <span className="text-muted">{product.unit}</span>}
+          <PromoPrice product={product} />
         </p>
         <div className="mt-auto pt-3.5 md:pt-5">
           <a href={href} aria-label={`לפרטים והזמנה: ${product.name}`} className="btn btn-secondary btn-sm w-full">

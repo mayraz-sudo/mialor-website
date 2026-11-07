@@ -4,7 +4,11 @@ import type { NextConfig } from "next";
 const isExport = process.env.STATIC_EXPORT === "1";
 
 // מגדיר את תיקיית הפרויקט כשורש, כדי ש־Next לא יחפש חבילות בתיקייה שמעליה
-const base: NextConfig = { turbopack: { root: process.cwd() } };
+// תאריך הבנייה – כדי שמבצע שתלוי בתאריך יוצג נכון כבר בטעינה הראשונה
+const base: NextConfig = {
+  turbopack: { root: process.cwd() },
+  env: { NEXT_PUBLIC_BUILD_DATE: new Date().toISOString() },
+};
 
 const nextConfig: NextConfig = isExport
   ? { ...base, output: "export", distDir: ".next-export", images: { unoptimized: true } }

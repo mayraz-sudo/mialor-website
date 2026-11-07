@@ -311,6 +311,36 @@ export const NAV = [
   { label: "צור קשר", href: "/#contact" },
 ];
 
+/**
+ * מבצע לפי תאריכים. מחוץ לטווח – לא מוצג באתר בכלל.
+ * כדי לבטל: active: false. כדי לשנות: אחוז, תאריכים וטקסטים.
+ */
+export const PROMO = {
+  active: true,
+  percent: 5,
+  /** כולל, לפי שעון ישראל, בפורמט YYYY-MM-DD */
+  start: "2026-11-01",
+  end: "2026-11-30",
+  name: "מבצע נובמבר",
+  bar: "מבצע נובמבר: 5% הנחה על כל ההזמנות שנשלחות בחודש נובמבר",
+  /** נוסח קצר לטלפון */
+  barShort: "5% הנחה על כל ההזמנות",
+  badge: "5% הנחה",
+};
+
+/** האם המבצע פעיל בתאריך נתון (לפי שעון ישראל) */
+export function isPromoActive(date: Date = new Date()) {
+  if (!PROMO.active) return false;
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" }).format(date); // YYYY-MM-DD
+  return day >= PROMO.start && day <= PROMO.end;
+}
+
+/** סכום בשקלים: בלי אגורות כשמדובר במספר שלם */
+export const formatAmount = (n: number) =>
+  `₪${n.toLocaleString("he-IL", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
+
+export const discounted = (price: number) => Math.round(price * (100 - PROMO.percent)) / 100;
+
 export const formatPrice = (p: Product) =>
   p.priceFrom === null ? "מחיר לפי הזמנה" : `החל מ־₪${p.priceFrom.toLocaleString("he-IL")}`;
 
@@ -327,6 +357,7 @@ export function detailedOrderMessage(p: Product, d: OrderDetails, pageUrl?: stri
   if (d.delivery) lines.push(`משלוח / איסוף: ${d.delivery}${d.city?.trim() ? ` – ${d.city.trim()}` : ""}`);
   if (d.name.trim()) lines.push(`שם: ${d.name.trim()}`);
   if (d.notes.trim()) lines.push(`הערות / הקדשה: ${d.notes.trim()}`);
+  if (isPromoActive()) lines.push(`${PROMO.name}: ${PROMO.percent}% הנחה`);
   if (pageUrl) lines.push("", pageUrl);
   return lines.join("\n");
 }

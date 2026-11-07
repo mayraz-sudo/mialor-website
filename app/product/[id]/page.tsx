@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 import OrderForm from "@/components/OrderForm";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
+import { PromoNote, PromoPrice } from "@/components/Promo";
 import {
   ALL_PRODUCTS_HREF,
   DELIVERY,
   PRODUCTS,
   categoryBySlug,
   categoryHref,
-  formatPrice,
   productById,
   relatedProducts,
 } from "@/lib/site";
@@ -79,9 +79,9 @@ export default async function ProductPage({ params }: Params) {
               <p className="t-label">{category.title}</p>
               <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.2] text-balance md:text-[2.4rem]">{product.name}</h1>
               <p className="mt-3 text-[1.15rem] tabular-nums">
-                <span className="font-medium">{formatPrice(product)}</span>{" "}
-                {product.priceFrom !== null && <span className="text-muted">{product.unit}</span>}
+                <PromoPrice product={product} large />
               </p>
+              {product.priceFrom !== null && <PromoNote />}
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{product.description}</p>
 

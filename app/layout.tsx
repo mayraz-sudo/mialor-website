@@ -3,6 +3,8 @@ import { Bellefair, Heebo } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import { PromoBar } from "@/components/Promo";
+import AccessibilityMenu from "@/components/AccessibilityMenu";
 import "./globals.css";
 
 /** טקסט רגיל */
@@ -47,10 +49,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           דילוג לתוכן
         </a>
+        <PromoBar />
         <Header />
         <main id="main">{children}</main>
         <Footer />
         <WhatsAppFloat />
+        <AccessibilityMenu />
       </body>
     </html>
   );
