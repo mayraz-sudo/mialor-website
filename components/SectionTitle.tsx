@@ -1,11 +1,15 @@
-export default function SectionTitle({ id, title, subtitle }: { id: string; title: string; subtitle?: string }) {
+type Props = { id: string; title: string; eyebrow?: string; subtitle?: string };
+
+/** כותרת אזור אחידה לכל דף הבית: תווית קטנה, כותרת וקו זהב דק */
+export default function SectionTitle({ id, title, eyebrow, subtitle }: Props) {
   return (
-    <div className="mb-8 text-center md:mb-10">
-      <h2 id={id} className="text-3xl font-light md:text-4xl">
+    <div className="mb-8 text-center md:mb-11">
+      {eyebrow && <p className="eyebrow mb-2.5">{eyebrow}</p>}
+      <h2 id={id} className="t-h2">
         {title}
       </h2>
-      <span aria-hidden className="mx-auto mt-4 block h-px w-12 bg-accent" />
-      {subtitle && <p className="mx-auto mt-4 max-w-xl text-muted">{subtitle}</p>}
+      <span aria-hidden className="rule mx-auto mt-4" />
+      {subtitle && <p className="t-lead mx-auto mt-4 max-w-xl">{subtitle}</p>}
     </div>
   );
 }
