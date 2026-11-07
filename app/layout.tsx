@@ -1,13 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Heebo } from "next/font/google";
+import { Bellefair, Heebo } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 import "./globals.css";
 
+/** טקסט רגיל */
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
   weight: ["300", "400", "500", "700"],
   variable: "--font-heebo",
+  display: "swap",
+});
+
+/** כותרות – פונט עברי אלגנטי ודק עם סריפים */
+const bellefair = Bellefair({
+  subsets: ["hebrew", "latin"],
+  weight: "400",
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -24,22 +34,23 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF8F5",
+  themeColor: "#FAF6F0",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl" className={heebo.variable}>
+    <html lang="he" dir="rtl" className={`${heebo.variable} ${bellefair.variable}`}>
       <body className="font-sans antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-bg"
         >
           דילוג לתוכן
         </a>
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );

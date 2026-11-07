@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* צבעי MIALOR – הצעה מהאפיון, לאישור. שינוי כאן משנה את כל האתר. */
+/* פלטת MIALOR: שמנת, בז', זהב מעושן, חום עמוק. שינוי כאן משנה את כל האתר. */
 :root {
-  --color-bg: #faf8f5; /* רקע */
-  --color-surface: #ffffff; /* משטח / כרטיסים */
-  --color-bg-alt: #f0e8df; /* רקע משני */
-  --color-text: #34271f; /* טקסט */
-  --color-accent: #a58b73; /* הדגשה */
-  --color-accent-strong: #8a7058; /* הדגשה לטקסט קטן – ניגודיות טובה יותר */
-  --color-border: #ddd3c9; /* גבולות */
-  --color-muted: #6f6157; /* טקסט משני */
-  --color-whatsapp: #1f7a4d;
+  --color-bg: #faf6f0; /* שמנת – רקע */
+  --color-surface: #fffdfa; /* משטח בהיר */
+  --color-bg-alt: #f1e9de; /* בז' – רקע משני */
+  --color-text: #3a2a20; /* חום עמוק – טקסט וכפתור ראשי */
+  --color-text-hover: #52402f;
+  --color-accent: #a89070; /* זהב מעושן – קווים */
+  --color-accent-strong: #7f6547; /* זהב מעושן כהה – טקסט קטן, ניגודיות תקינה */
+  --color-border: #e4d9cb; /* קווי הפרדה */
+  --color-muted: #6a5b4f; /* טקסט משני */
 }
 
 @theme inline {
@@ -18,27 +18,200 @@
   --color-surface: var(--color-surface);
   --color-bg-alt: var(--color-bg-alt);
   --color-ink: var(--color-text);
+  --color-ink-hover: var(--color-text-hover);
   --color-accent: var(--color-accent);
   --color-accent-strong: var(--color-accent-strong);
   --color-line: var(--color-border);
   --color-muted: var(--color-muted);
-  --color-whatsapp: var(--color-whatsapp);
   --font-sans: var(--font-heebo), "Segoe UI", Arial, sans-serif;
+  --font-serif: var(--font-display), "David Libre", "Times New Roman", serif;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 140px;
+  scroll-padding-top: 150px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 17px;
+  }
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent-strong);
   outline-offset: 3px;
+}
+
+@layer components {
+  /* ===== סולם טיפוגרפי ===== */
+  .t-display {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 2.4rem;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  .t-h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .t-h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.22rem;
+    line-height: 1.3;
+  }
+  .t-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--color-muted);
+  }
+  .t-small {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .t-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-accent-strong);
+  }
+  @media (min-width: 768px) {
+    .t-display {
+      font-size: 3.6rem;
+    }
+    .t-h2 {
+      font-size: 2.6rem;
+    }
+    .t-h3 {
+      font-size: 1.4rem;
+    }
+    .t-lead {
+      font-size: 1.15rem;
+    }
+    .t-small {
+      font-size: 0.94rem;
+    }
+  }
+  @media (min-width: 1100px) {
+    .t-display {
+      font-size: 4.1rem;
+    }
+  }
+
+  /* תווית קטנה מעל כותרת. ריווח רחב רק לאותיות לטיניות – בעברית הוא פוגע בקריאות */
+  .eyebrow {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    color: var(--color-accent-strong);
+  }
+  .eyebrow [lang="en"] {
+    font-family: var(--font-serif);
+    font-size: 0.82rem;
+    letter-spacing: 0.3em;
+  }
+
+  /* קו זהב דק מתחת לכותרות */
+  .rule {
+    display: block;
+    height: 1px;
+    width: 2.75rem;
+    background: var(--color-accent);
+  }
+
+  /* ===== כפתורים ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3rem;
+    padding-inline: 1.75rem;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .btn svg {
+    flex: none;
+  }
+  .btn-primary {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+  .btn-primary:hover {
+    background: var(--color-text-hover);
+  }
+  .btn-secondary {
+    border-color: var(--color-accent);
+    color: var(--color-text);
+    background: transparent;
+  }
+  .btn-secondary:hover {
+    background: var(--color-text);
+    border-color: var(--color-text);
+    color: var(--color-bg);
+  }
+  .btn-light {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .btn-light:hover {
+    background: var(--color-bg-alt);
+  }
+  .btn-ghost-light {
+    border-color: rgb(250 246 240 / 0.45);
+    color: var(--color-bg);
+  }
+  .btn-ghost-light:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .btn-sm {
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* קישור טקסט עדין עם קו תחתון זהב */
+  .link-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .link-quiet span {
+    border-bottom: 1px solid var(--color-accent);
+    padding-bottom: 2px;
+    transition: border-color 0.25s ease;
+  }
+  .link-quiet:hover span {
+    border-color: var(--color-text);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
