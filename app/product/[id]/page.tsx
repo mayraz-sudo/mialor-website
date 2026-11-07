@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import {
   ALL_PRODUCTS_HREF,
+  DELIVERY,
   PRODUCTS,
   categoryBySlug,
   categoryHref,
@@ -41,6 +42,7 @@ export default async function ProductPage({ params }: Params) {
     { label: "כמות מינימלית", value: product.minQty > 1 ? `${product.minQty} יחידות` : "עיצוב אחד" },
     { label: "זמן הכנה", value: product.leadTime },
     ...(product.customization ? [{ label: "התאמה אישית", value: product.customization }] : []),
+    ...(product.minQty > 1 ? [{ label: "משלוח ואיסוף", value: `${DELIVERY.pickup}, או ${DELIVERY.shipping}` }] : []),
   ];
 
   return (

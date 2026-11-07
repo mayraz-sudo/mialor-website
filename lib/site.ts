@@ -254,13 +254,27 @@ export const FAQ: FaqItem[] = [
   },
   { q: "עיצוב התפריט כולל הדפסה?", a: "לא. עיצוב התפריט נשלח כקובץ דיגיטלי מוכן להדפסה, ללא שירותי הדפסה." },
   { q: "איך יוצרים קשר?", a: "בוואטסאפ 052-870-9088, באינסטגרם mialor__ או במייל mialor555@gmail.com." },
-  // ממתינות לתשובה מ־MIALOR – לא מוצגות באתר עד שממלאים
-  { q: "יש משלוחים? לאן ובכמה?", a: null },
-  { q: "אפשר לאסוף בעצמי?", a: null },
-  { q: "איך משלמים?", a: null },
-  { q: "אפשר לבטל או לשנות הזמנה?", a: null },
-  { q: "כמה זמן מראש כדאי להזמין?", a: null },
+  {
+    q: "יש משלוחים? לאן ובכמה?",
+    a: "כן, יש משלוחים לאזור המרכז ולסביבה. עלות המשלוח היא בין 100 ל־180 ₪, בהתאם ליעד – מומלץ לשאול אותנו בוואטסאפ על העלות המדויקת.",
+  },
+  { q: "אפשר לאסוף בעצמי?", a: "כן, אפשר לאסוף מחולון. רוב הלקוחות שלנו בוחרות באיסוף עצמי." },
+  { q: "איך משלמים?", a: "איך שנוח לכם: ביט, אשראי או העברה בנקאית. תשלום במזומן אפשרי רק באיסוף עצמי." },
+  {
+    q: "אפשר לבטל הזמנה?",
+    a: "אפשר לבטל הזמנה עד שבועיים לפני האירוע, ובמקרה כזה המקדמה אינה מוחזרת. ביטול פחות משבועיים לפני האירוע כרוך בתשלום של 50% מסכום ההזמנה.",
+  },
+  {
+    q: "כמה זמן מראש כדאי להזמין?",
+    a: "כמה שיותר מראש, ולפחות חודש לפני האירוע. מומלץ להתייעץ איתנו בוואטסאפ לגבי לוח הזמנים.",
+  },
 ];
+
+/** משלוח ואיסוף – למוצרים פיזיים */
+export const DELIVERY = {
+  pickup: "איסוף עצמי מחולון",
+  shipping: "משלוח לאזור המרכז והסביבה – 100–180 ₪ לפי היעד",
+};
 
 export const ACCESSIBILITY = {
   /** תאריך עדכון ההצהרה */
@@ -292,7 +306,7 @@ export const formatPrice = (p: Product) =>
 
 export const orderMessage = (p: Product) => `שלום MIALOR, אשמח לקבל פרטים ולהזמין: ${p.name}`;
 
-export type OrderDetails = { quantity: string; date: string; eventType: string; name: string; notes: string };
+export type OrderDetails = { quantity: string; date: string; eventType: string; name: string; notes: string; delivery?: string; city?: string };
 
 /** הודעת וואטסאפ מלאה מטופס ההזמנה בעמוד המוצר – כך כל הפרטים מגיעים מראש */
 export function detailedOrderMessage(p: Product, d: OrderDetails, pageUrl?: string) {
@@ -300,6 +314,7 @@ export function detailedOrderMessage(p: Product, d: OrderDetails, pageUrl?: stri
   if (d.quantity) lines.push(`כמות: ${d.quantity}`);
   if (d.date) lines.push(`תאריך האירוע: ${d.date.split("-").reverse().join("/")}`);
   if (d.eventType) lines.push(`סוג האירוע: ${d.eventType}`);
+  if (d.delivery) lines.push(`משלוח / איסוף: ${d.delivery}${d.city?.trim() ? ` – ${d.city.trim()}` : ""}`);
   if (d.name.trim()) lines.push(`שם: ${d.name.trim()}`);
   if (d.notes.trim()) lines.push(`הערות / הקדשה: ${d.notes.trim()}`);
   if (pageUrl) lines.push("", pageUrl);

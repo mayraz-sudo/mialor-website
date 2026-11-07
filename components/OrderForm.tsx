@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EVENT_TYPES, detailedOrderMessage, whatsappLink, type Product } from "@/lib/site";
+import { DELIVERY, EVENT_TYPES, detailedOrderMessage, whatsappLink, type Product } from "@/lib/site";
 import { IconWhatsApp } from "./Icons";
 
 const field =
@@ -16,6 +16,9 @@ export default function OrderForm({ product }: { product: Product }) {
   const [eventType, setEventType] = useState("");
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
+  // משלוח או איסוף – רק במוצרים פיזיים (לא בעיצוב דיגיטלי)
+  const [delivery, setDelivery] = useState<"" | "pickup" | "shipping">("");
+  const [city, setCity] = useState("");
   const [error, setError] = useState("");
 
   const today = new Date().toISOString().slice(0, 10);
@@ -29,7 +32,19 @@ export default function OrderForm({ product }: { product: Product }) {
     }
     setError("");
     const url = whatsappLink(
-      detailedOrderMessage(product, { quantity: String(q), date, eventType, name, notes }, window.location.href),
+      detailedOrderMessage(
+        product,
+        {
+          quantity: String(q),
+          date,
+          eventType,
+          name,
+          notes,
+          delivery: delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח" : "",
+          city: delivery === "shipping" ? city : "",
+        },
+        window.location.href,
+      ),
     );
     // פתיחה בחלון חדש; אם הדפדפן חוסם – מעבר ישיר
     const w = window.open(url, "_blank");
@@ -82,6 +97,45 @@ export default function OrderForm({ product }: { product: Product }) {
           ))}
         </select>
       </div>
+
+      {!isDesign && (
+        <fieldset className="mt-4">
+          <legend className={label}>משלוח או איסוף</legend>
+          <div className="grid grid-cols-2 gap-3">
+            {(
+              [
+                { id: "pickup", title: "איסוף עצמי", sub: "מחולון" },
+                { id: "shipping", title: "משלוח", sub: "מרכז והסביבה" },
+              ] as const
+            ).map((o) => (
+              <label
+                key={o.id}
+                className="flex min-h-14 cursor-pointer flex-col justify-center rounded-[2px] border border-line bg-surface px-3.5 py-2 transition-colors has-[:checked]:border-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-strong"
+              >
+                <input
+                  type="radio"
+                  name="order-delivery"
+                  value={o.id}
+                  checked={delivery === o.id}
+                  onChange={() => setDelivery(o.id)}
+                  className="sr-only"
+                />
+                <span className="text-[0.98rem] font-medium">{o.title}</span>
+                <span className="text-[0.82rem] text-muted">{o.sub}</span>
+              </label>
+            ))}
+          </div>
+          {delivery === "shipping" && (
+            <div className="mt-3">
+              <label htmlFor="order-city" className={label}>
+                עיר למשלוח
+              </label>
+              <input id="order-city" type="text" autoComplete="address-level2" value={city} onChange={(e) => setCity(e.target.value)} className={field} />
+              <p className="mt-1 text-[0.82rem] text-muted">{DELIVERY.shipping}</p>
+            </div>
+          )}
+        </fieldset>
+      )}
 
       <div className="mt-4">
         <label htmlFor="order-name" className={label}>
