@@ -41,7 +41,12 @@ export default function TestimonialsCarousel({ items }: { items: Testimonial[] }
     <div>
       <ul
         ref={track}
-        aria-label="המלצות לקוחות"
+        tabIndex={0}
+        aria-label="המלצות לקוחות. אפשר לעבור בין ההמלצות עם החיצים במקלדת"
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active + 1); }
+          if (e.key === "ArrowRight") { e.preventDefault(); goTo(active - 1); }
+        }}
         className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 [scrollbar-width:none] md:grid md:snap-none md:grid-cols-3 md:gap-7 md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden"
       >
         {items.map((t, i) => (

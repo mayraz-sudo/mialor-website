@@ -65,7 +65,15 @@ export default function ProductGallery({ product }: { product: Product }) {
       <div className="relative">
         <div
           ref={track}
-          aria-label={`תמונות של ${product.name}`}
+          role="region"
+          tabIndex={0}
+          aria-roledescription="גלריה"
+          aria-label={`תמונות של ${product.name}. אפשר לעבור בין התמונות עם החיצים במקלדת`}
+          onKeyDown={(e) => {
+            // בעברית: חץ שמאלה = התמונה הבאה
+            if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active + 1); }
+            if (e.key === "ArrowRight") { e.preventDefault(); goTo(active - 1); }
+          }}
           className="relative flex snap-x snap-mandatory overflow-x-auto rounded-[2px] bg-surface [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {slides.map((s, i) => (

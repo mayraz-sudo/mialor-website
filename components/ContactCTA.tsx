@@ -5,7 +5,7 @@ export default function ContactCTA() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="bg-ink text-bg">
       <div className="mx-auto flex max-w-[1080px] flex-col items-center px-5 py-14 text-center md:py-20">
-        <p className="eyebrow !text-accent">הצעת מחיר אישית</p>
+        <p className="eyebrow !text-[#d4c0a1]">הצעת מחיר אישית</p>
         <h2 id="contact-title" className="t-h2 mt-3 max-w-[22ch]">
           מתכננים אירוע? נשמח ללוות אתכם בכל פרט
         </h2>
