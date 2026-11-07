@@ -8,12 +8,15 @@
 export const SITE = {
   name: "MIALOR",
   nameHe: "מיאלור",
-  // TODO: להחליף במספר הוואטסאפ האמיתי (בפורמט בינלאומי, בלי 0 ובלי מקפים)
-  whatsappNumber: "972500000000",
-  whatsappDisplay: "050-000-0000",
-  instagram: "@mialor",
-  hours: "א׳–ה׳ 9:00–19:00",
-  whatsappIsPlaceholder: true, // placeholder
+  /** וואטסאפ בפורמט בינלאומי (בלי 0 ובלי מקפים) – לקישורים */
+  whatsappNumber: "972528709088",
+  whatsappDisplay: "052-870-9088",
+  instagram: "mialor__",
+  instagramUrl: "https://www.instagram.com/mialor__/",
+  /** שם העמוד בפייסבוק. כשיהיה קישור מלא לעמוד – למלא את facebookUrl */
+  facebook: "מיאלור / MIALOR",
+  facebookUrl: null as string | null,
+  email: "mialor555@gmail.com",
 };
 
 export const whatsappLink = (text = "שלום מיאלור, אשמח לקבל פרטים") =>
@@ -27,6 +30,7 @@ export const LOGO = {
 
 /** תמונות אווירה – מהתמונות בתיקייה שלא שויכו למוצר */
 export const ATMOSPHERE = {
+  eventRoundTable: { src: "/images/atmosphere/event-round-table.jpg", alt: "שולחן אירוע עגול עם מארזים בשקיות לבנות לכל אורחת" },
   rachelRow: { src: "/images/atmosphere/rachel-row.jpg", alt: "שורת מארזי נר סגולת רחל אמנו עם סרטי סאטן לבנים" },
   calla: { src: "/images/atmosphere/save-the-date-calla.jpg", alt: "הזמנת Save the Date בצורת קשת לצד פרח קאלה לבן" },
 };
@@ -37,8 +41,10 @@ export const HERO = {
   subtitle: "מארזים לאירועים, הזמנות, הדפסות ועיצוב גרפי",
   cta: "לצפייה במוצרים",
   secondaryCta: "לשיחה בוואטסאפ",
-  image: ATMOSPHERE.rachelRow.src,
-  imageAlt: ATMOSPHERE.rachelRow.alt,
+  image: ATMOSPHERE.eventRoundTable.src,
+  imageAlt: ATMOSPHERE.eventRoundTable.alt,
+  /** איזה חלק של התמונה במרכז (CSS object-position) */
+  imagePosition: "center 72%",
 };
 
 export type CategorySlug = "packages" | "invitations" | "branding" | "prints";
@@ -218,6 +224,12 @@ export const TESTIMONIALS: Testimonial[] = [
 ];
 
 export const ALL_PRODUCTS_HREF = "/products";
+
+/** בתצוגה המקדימה (קובץ סטטי בלי תיקיות) עמודי המוצר נשמרים כ־product-<id>.html */
+const FLAT_PREVIEW = process.env.NEXT_PUBLIC_FLAT_PREVIEW === "1";
+export const productHref = (id: string) => (FLAT_PREVIEW ? `./product-${id}.html` : `/product/${id}`);
+
+export const EVENT_TYPES = ["חתונה", "חינה", "אירוסין", "הפרשת חלה", "שבת חתן", "בר מצווה", "בת מצווה", "ברית / בריתה", "אחר"];
 /** קטגוריה = עמוד המוצרים מסונן לפי הקטגוריה */
 export const categoryHref = (slug: CategorySlug) => `/products#${slug}`;
 export const categoryBySlug = (slug: CategorySlug) => CATEGORIES.find((c) => c.slug === slug)!;
@@ -233,3 +245,20 @@ export const formatPrice = (p: Product) =>
   p.priceFrom === null ? "מחיר לפי הזמנה" : `החל מ־₪${p.priceFrom.toLocaleString("he-IL")}`;
 
 export const orderMessage = (p: Product) => `שלום MIALOR, אשמח לקבל פרטים ולהזמין: ${p.name}`;
+
+export type OrderDetails = { quantity: string; date: string; eventType: string; name: string; notes: string };
+
+/** הודעת וואטסאפ מלאה מטופס ההזמנה בעמוד המוצר – כך כל הפרטים מגיעים מראש */
+export function detailedOrderMessage(p: Product, d: OrderDetails, pageUrl?: string) {
+  const lines = ["שלום MIALOR, אשמח להזמין:", "", `מוצר: ${p.name}`];
+  if (d.quantity) lines.push(`כמות: ${d.quantity}`);
+  if (d.date) lines.push(`תאריך האירוע: ${d.date.split("-").reverse().join("/")}`);
+  if (d.eventType) lines.push(`סוג האירוע: ${d.eventType}`);
+  if (d.name.trim()) lines.push(`שם: ${d.name.trim()}`);
+  if (d.notes.trim()) lines.push(`הערות / הקדשה: ${d.notes.trim()}`);
+  if (pageUrl) lines.push("", pageUrl);
+  return lines.join("\n");
+}
+
+export const relatedProducts = (p: Product, n = 4) =>
+  PRODUCTS.filter((x) => x.id !== p.id && x.categories.some((c) => p.categories.includes(c))).slice(0, n);

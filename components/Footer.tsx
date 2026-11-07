@@ -53,10 +53,25 @@ export default function Footer() {
                 וואטסאפ <span dir="ltr">{SITE.whatsappDisplay}</span>
               </a>
             </li>
-            <li className="py-1">
-              אינסטגרם <span dir="ltr">{SITE.instagram}</span>
+            <li>
+              <a href={SITE.instagramUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                אינסטגרם <span dir="ltr">@{SITE.instagram}</span>
+              </a>
             </li>
-            <li className="py-1">{SITE.hours}</li>
+            <li>
+              {SITE.facebookUrl ? (
+                <a href={SITE.facebookUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  פייסבוק {SITE.facebook}
+                </a>
+              ) : (
+                <span className="inline-block py-1">פייסבוק {SITE.facebook}</span>
+              )}
+            </li>
+            <li>
+              <a href={`mailto:${SITE.email}`} className={linkClass}>
+                <span dir="ltr">{SITE.email}</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -40,7 +40,8 @@ export default function Hero() {
               fill
               priority
               sizes="(min-width: 768px) 58vw, 100vw"
-              className="object-cover object-[center_55%]"
+              className="object-cover"
+              style={{ objectPosition: HERO.imagePosition }}
             />
           </div>
         </div>
