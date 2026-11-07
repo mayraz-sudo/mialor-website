@@ -277,11 +277,20 @@ export const DELIVERY = {
   shipping: "משלוח לאזור המרכז והסביבה – 100–180 ₪ לפי היעד",
 };
 
+/** פרטים לתקנון */
+export const TERMS = {
+  updated: "07.11.2026",
+  /** מספר עוסק / ח.פ. – יוצג בתקנון כשיתמלא */
+  businessId: null as string | null,
+  ownerName: "מאי",
+  city: "חולון",
+};
+
 export const ACCESSIBILITY = {
   /** תאריך עדכון ההצהרה */
   updated: "07.11.2026",
-  /** רכז/ת נגישות – שם יוצג כשיתמלא */
-  coordinatorName: null as string | null,
+  /** רכזת הנגישות */
+  coordinatorName: "מאי" as string | null,
 };
 
 export const ALL_PRODUCTS_HREF = "/products";

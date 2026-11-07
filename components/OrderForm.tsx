@@ -169,6 +169,13 @@ export default function OrderForm({ product }: { product: Product }) {
         שליחת ההזמנה בוואטסאפ
       </button>
       <p className="mt-3 text-center text-[0.85rem] text-muted">אין תשלום באתר. נחזור אליכם עם אישור ופרטים.</p>
+      <p className="mt-1 text-center text-[0.82rem] text-muted">
+        שליחת ההזמנה מהווה הסכמה ל
+        <a href="/terms" className="text-ink underline decoration-accent underline-offset-4">
+          תקנון
+        </a>
+        , כולל מדיניות הביטול.
+      </p>
     </form>
   );
 }
