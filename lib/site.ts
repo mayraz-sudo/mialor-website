@@ -163,7 +163,7 @@ export const PRODUCTS: Product[] = [
     description: "ברכון חגיגי המשלב את מזמור לתודה, סדר הדלקת נרות שבת וסדר הפרשת חלה. מעוצב בסגנון קלאסי עם סרט תחרה, ומתאים במיוחד כמתנה לאורחות בערב הפרשת חלה." },
   { id: "booklet-rachel-candles", name: "ברכון רחל אמנו וסדר הדלקת נרות שבת עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
     description: "ברכון מעוצב המשלב את סגולת רחל אמנו וסדר הדלקת נרות שבת. עם סרט תחרה עדין ואפשרות להקדשה אישית, ליצירת מזכרת מרגשת ומלאת משמעות." },
-  { id: "menu-design", name: "עיצוב תפריט (קובץ בלבד)", categories: ["branding"], priceFrom: 100, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: [],
+  { id: "menu-design", name: "עיצוב תפריט (קובץ בלבד)", categories: ["branding"], priceFrom: 169, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("menu-design", 2),
     description: "תפריט לאירוע בעיצוב אישי ואלגנטי, המותאם לקונספט, לצבעים ולמיתוג שלכם. הקובץ נשלח בפורמט דיגיטלי מוכן להדפסה, ללא שירותי הדפסה." },
   { id: "round-candlesticks-bag", name: "מארז פמוטים עגולים שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 37, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks-bag", 1),
     description: "מארז שבת אלגנטי הכולל זוג פמוטים עגולים בעבודת יד וברכה מעוצבת להדלקת נרות שבת. המארז מגיע בשקית יוקרתית ומוקפדת, עם אפשרות למיתוג אישי בהתאמה לאירוע." },
@@ -322,9 +322,11 @@ export const PROMO = {
   start: "2026-11-01",
   end: "2026-11-30",
   name: "מבצע נובמבר",
-  bar: "מבצע נובמבר: 5% הנחה על כל ההזמנות שנשלחות בחודש נובמבר",
+  /** על אילו קטגוריות חלה ההנחה */
+  categories: ["packages", "prints"] as CategorySlug[],
+  bar: "מבצע נובמבר: 5% הנחה על מארזים וברכונים בהזמנות שנשלחות בחודש נובמבר",
   /** נוסח קצר לטלפון */
-  barShort: "5% הנחה על כל ההזמנות",
+  barShort: "5% הנחה על מארזים וברכונים",
   badge: "5% הנחה",
 };
 
@@ -338,6 +340,10 @@ export function isPromoActive(date: Date = new Date()) {
 /** סכום בשקלים: בלי אגורות כשמדובר במספר שלם */
 export const formatAmount = (n: number) =>
   `₪${n.toLocaleString("he-IL", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
+
+/** האם ההנחה חלה על המוצר (לפי קטגוריה, ורק כשיש מחיר) */
+export const isPromoProduct = (p: Product) =>
+  p.priceFrom !== null && p.categories.some((c) => PROMO.categories.includes(c));
 
 export const discounted = (price: number) => Math.round(price * (100 - PROMO.percent)) / 100;
 
@@ -357,7 +363,7 @@ export function detailedOrderMessage(p: Product, d: OrderDetails, pageUrl?: stri
   if (d.delivery) lines.push(`משלוח / איסוף: ${d.delivery}${d.city?.trim() ? ` – ${d.city.trim()}` : ""}`);
   if (d.name.trim()) lines.push(`שם: ${d.name.trim()}`);
   if (d.notes.trim()) lines.push(`הערות / הקדשה: ${d.notes.trim()}`);
-  if (isPromoActive()) lines.push(`${PROMO.name}: ${PROMO.percent}% הנחה`);
+  if (isPromoActive() && isPromoProduct(p)) lines.push(`${PROMO.name}: ${PROMO.percent}% הנחה`);
   if (pageUrl) lines.push("", pageUrl);
   return lines.join("\n");
 }

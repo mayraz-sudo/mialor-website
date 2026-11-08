@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROMO, discounted, formatAmount, isPromoActive, type Product } from "@/lib/site";
+import { PROMO, discounted, formatAmount, isPromoActive, isPromoProduct, type Product } from "@/lib/site";
 
 /**
  * האם המבצע פעיל עכשיו.
@@ -32,7 +32,7 @@ export function PromoBar() {
 /** תגית על תמונת המוצר */
 export function PromoBadge({ product }: { product: Product }) {
   const active = usePromoActive();
-  if (!active || product.priceFrom === null) return null;
+  if (!active || !isPromoProduct(product)) return null;
   return (
     <span className="absolute top-2.5 right-2.5 z-10 rounded-full bg-ink px-2.5 py-1 text-[0.78rem] leading-none font-medium text-bg md:top-3 md:right-3">
       {PROMO.badge}
@@ -45,7 +45,7 @@ export function PromoPrice({ product, large = false }: { product: Product; large
   const active = usePromoActive();
   if (product.priceFrom === null) return <span className="font-medium">מחיר לפי הזמנה</span>;
   const unit = <span className="text-muted">{product.unit}</span>;
-  if (!active) {
+  if (!active || !isPromoProduct(product)) {
     return (
       <>
         <span className="font-medium">החל מ־{formatAmount(product.priceFrom)}</span> {unit}
@@ -65,12 +65,12 @@ export function PromoPrice({ product, large = false }: { product: Product; large
 }
 
 /** הערה קטנה בעמוד המוצר */
-export function PromoNote() {
+export function PromoNote({ product }: { product: Product }) {
   const active = usePromoActive();
-  if (!active) return null;
+  if (!active || !isPromoProduct(product)) return null;
   return (
     <p className="mt-2 text-[0.92rem] text-accent-strong">
-      {PROMO.name}: {PROMO.percent}% הנחה על הזמנות שנשלחות בחודש נובמבר. ההנחה כבר מחושבת במחיר.
+      {PROMO.name}: {PROMO.percent}% הנחה על מארזים וברכונים בהזמנות שנשלחות בחודש נובמבר. ההנחה כבר מחושבת במחיר.
     </p>
   );
 }

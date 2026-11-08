@@ -81,7 +81,7 @@ export default async function ProductPage({ params }: Params) {
               <p className="mt-3 text-[1.15rem] tabular-nums">
                 <PromoPrice product={product} large />
               </p>
-              {product.priceFrom !== null && <PromoNote />}
+              <PromoNote product={product} />
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{product.description}</p>
 
