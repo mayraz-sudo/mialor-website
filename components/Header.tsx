@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LOGO, NAV, whatsappLink } from "@/lib/site";
-import { IconClose, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
+import { LOGO, NAV, SITE, whatsappLink } from "@/lib/site";
+import { IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
 
 function SearchForm({ id, compact = false }: { id: string; compact?: boolean }) {
   return (
@@ -104,14 +104,14 @@ export default function Header() {
               <SearchForm id="search-desktop" compact />
             </div>
             <a
-              href={whatsappLink()}
+              href={SITE.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="שליחת הודעה בוואטסאפ"
+              aria-label="MIALOR באינסטגרם (נפתח בחלון חדש)"
               className="btn btn-secondary btn-sm !min-h-10 !px-3 lg:!px-4"
             >
-              <IconWhatsApp className="h-[18px] w-[18px]" />
-              <span className="hidden lg:inline">WhatsApp</span>
+              <IconInstagram className="h-[18px] w-[18px]" />
+              <span className="hidden lg:inline">Instagram</span>
             </a>
           </div>
         </div>
