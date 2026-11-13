@@ -27,65 +27,121 @@ export const SHOP = {
   /** false = העמוד לא מופיע בתפריט ולא בגוגל (עדיין בבנייה) */
   enabled: true,
   title: "חנות מוצרים",
-  intro: "פריטים בודדים לקנייה מיידית באשראי. משלוח לכל הארץ בדואר ישראל, או איסוף בחינם מחולון.",
+  intro: "מוצרי גבס איכותי בעבודת יד, לקנייה מיידית באשראי. משלוח לכל הארץ בדואר ישראל, או איסוף בחינם מחולון.",
   /** מחיר משלוח בדואר ישראל בשקלים. null = עדיין לא נקבע */
   postPrice: null as number | null,
+  /** זמן הכנה ומשלוח */
+  leadTime: "עד 7 ימי עסקים",
+  shippingNote: "משלוח באמצעות דואר ישראל, עד 7 ימי עסקים",
+  material: "כל המוצרים עשויים מגבס איכותי, בעבודת יד.",
+  handmadeNote:
+    "כל המוצרים מיוצרים בעבודת יד מתוך תשומת לב מלאה לפרטים. המידות המצוינות הן גודל ממוצע של פריט מסוג זה, וייתכנו סטיות קטנות בגודל המוצר בפועל ואי־שלמויות האופייניות לעבודת יד, בשל חומרי הגלם ואופי הייצור. ייתכנו גם הבדלים קלים בגוון, במרקם ובגימור – אלו חלק מהייחודיות של כל פריט.",
 };
 
+/** הוראות שימוש ושמירה על מוצרי גבס */
+export const CARE = {
+  title: "הוראות שימוש ושמירה על מוצרי גבס",
+  intro: "המוצר מיוצר בעבודת יד, באהבה ובתשומת לב לכל פרט. כדי לשמור על יופיו ואיכותו לאורך זמן, מומלץ להקפיד על ההנחיות הבאות:",
+  items: [
+    { title: "ניקוי", text: "יש לנקות בעדינות באמצעות מטלית רכה ויבשה בלבד." },
+    { title: "מים ולחות", text: "יש להימנע ממגע ישיר עם מים ומחשיפה ממושכת ללחות." },
+    { title: "שמירה על המוצר", text: "הגבס הוא חומר עדין. יש להימנע מנפילות, מכות ושריטות." },
+    { title: "שימוש בפמוטים", text: "יש להשתמש בנרות בתוך בתי קיבול מתאימים ועמידים לחום בלבד. אין להניח להבה ישירות על הגבס." },
+    { title: "בטיחות", text: "אין להשאיר נרות דולקים ללא השגחה. יש להרחיק מילדים, מבעלי חיים ומחומרים דליקים." },
+    { title: "שימוש במגשים", text: "מיועדים לפריטי נוי ולאחסון אביזרים יבשים בלבד. אינם מיועדים למגע ישיר עם מזון." },
+  ],
+  footer: "חשוב לדעת: כל מוצר מיוצר בעבודת יד, ולכן ייתכנו הבדלים קלים בגוון, במרקם ובגימור. אלו חלק מהייחודיות של כל פריט.",
+  signature: "MIALOR | מתנות עם משמעות 🤍",
+};
+
+const img = (n: string) => `/images/shop/${n}.jpg`;
+
+/** המוצרים בחנות – לפי הקובץ "MIALOR – פרטים לאתר" (גיליון מוצרים) */
 export const SHOP_ITEMS: ShopItem[] = [
   {
-    id: "rachel-candle-holder",
+    id: "rachel-candle",
     name: "פמוט רחל אמנו",
-    description: "פמוט בעבודת יד בהשראת סגולת רחל אמנו.",
+    description: "פמוט מגבס עם הכיתוב \"הריני מדליקה נר זה לכבוד רחל אמנו\".",
     price: 120,
     per: "unit",
-    image: "/images/products/rachel-candle-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
+    image: img("rachel-1"),
+    image2: img("rachel-2"),
   },
   {
-    id: "round-candlestick",
-    name: "פמוט עגול",
-    description: "זוג פמוטים עגולים בעבודת יד, בעיצוב מינימליסטי ועל־זמני.",
+    id: "hanukkiah",
+    name: "חנוכייה",
+    description: "חנוכייה מגבס בעיצוב נקי ומודרני.",
+    price: 199,
+    image: img("hanukkiah-1"),
+  },
+  {
+    id: "round-pair-shabbat-shalom",
+    name: "זוג פמוטים עגולים שבת שלום",
+    description: "זוג פמוטים עגולים מגבס, עם הכיתוב \"שבת\" ו\"שלום\".",
     price: 80,
     per: "pair",
-    image: "/images/products/shop-round-candlesticks-1.jpg",
-    image2: "/images/products/round-candlesticks-1.jpg", // באריזה
+    image: img("round-pair-1"),
+    image2: img("round-pair-2"),
   },
   {
-    id: "square-candlestick",
-    name: "פמוט ריבוע",
-    description: "זוג פמוטים מרובעים בעבודת יד, בעיצוב נקי ומוקפד.",
-    price: 100,
+    id: "square-pair-shabbat-shalom",
+    name: "זוג פמוטים מרובעים שבת שלום",
+    description: "זוג פמוטים מרובעים מגבס, עם הכיתוב \"שבת\" ו\"שלום\".",
+    price: 99,
     per: "pair",
-    image: "/images/products/square-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
+    image: img("square-pair-1"),
+    image2: img("square-pair-2"),
   },
   {
-    id: "gypsum-stand-candlesticks",
-    name: "מעמד ופמוטים מגבס",
-    description: "מעמד ופמוטים מגבס בעבודת יד.",
-    price: 200,
-    image: "/images/products/shop-gypsum-stand-1.jpg",
-    image2: "/images/products/shop-gypsum-stand-2.jpg", // באריזה
+    id: "stand-round-candlesticks",
+    name: "מעמד הדלקת נרות ופמוטים עגולים",
+    description: "מעמד עם ברכת הדלקת נרות שבת וזוג פמוטים עגולים \"שבת שלום\". המעמד בגודל 16 ס\"מ.",
+    price: 129,
+    image: img("stand-round-1"),
+  },
+  {
+    id: "stand-candlesticks-rachel",
+    name: "מעמד הדלקת נרות, פמוטים שבת שלום ונר רחל אמנו",
+    description: "מעמד עם ברכת הדלקת נרות שבת, זוג פמוטים \"שבת שלום\" ופמוט רחל אמנו. המעמד בגודל 16 ס\"מ.",
+    price: 249,
+    image: img("stand-rachel-1"),
   },
   {
     id: "blessing-stand",
-    name: "מעמד ברכה בלבד",
-    description: "מעמד לברכה, בלי פמוטים.",
-    price: 150,
-    image: null, // תמונה בקרוב
+    name: "מעמד הדלקת נרות",
+    description: "מעמד עם ברכת הדלקת נרות שבת. המעמד בגודל 16 ס\"מ.",
+    price: 119,
+    image: img("blessing-stand-1"),
+    image2: img("blessing-stand-2"),
   },
   {
-    id: "plate",
-    name: "צלחת בלבד",
-    description: "צלחת בעבודת יד, בלי פמוטים וברכה.",
-    price: 80,
-    image: null, // תמונה בקרוב
+    id: "my-fire-stand",
+    name: "מעמד הדלקת נרות האש שלי",
+    description: "מעמד בצורת להבה עם שני פמוטים מחוברים.",
+    price: 149,
+    image: img("fire-stand-1"),
+    image2: img("fire-stand-2"),
   },
   {
-    id: "plate-candlesticks-blessing",
-    name: "צלחת, פמוטים וברכה",
-    description: "סט מלא: צלחת, פמוטים וברכה.",
-    price: 199,
-    image: null, // תמונה בקרוב
+    id: "braid-candlesticks-tray",
+    name: "פמוטים צמה ומגש",
+    description: "פמוטים בעיצוב צמה, עם מגש אובלי.",
+    price: 149,
+    image: img("braid-tray-1"),
+  },
+  {
+    id: "braid-candlesticks",
+    name: "פמוטים צמה",
+    description: "פמוטים בעיצוב צמה.",
+    price: 99,
+    image: img("braid-tray-1"), // התמונה בדרייב זהה לזו של "פמוטים צמה ומגש" – כדאי תמונה בלי המגש
+  },
+  {
+    id: "tray",
+    name: "מגש בלבד",
+    description: "מגש אובלי מגבס.",
+    price: 70,
+    image: img("tray-1"),
   },
 ];
 

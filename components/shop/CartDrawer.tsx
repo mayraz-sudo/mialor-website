@@ -151,7 +151,7 @@ export default function CartDrawer() {
                   {(
                     [
                       { id: "pickup", title: "איסוף עצמי מחולון", sub: "בחינם, בתיאום מראש" },
-                      { id: "post", title: "משלוח בדואר ישראל", sub: postReady ? `לכל הארץ – ${money(SHOP.postPrice!)}` : "לכל הארץ – המחיר יעודכן בקרוב" },
+                      { id: "post", title: "משלוח בדואר ישראל", sub: postReady ? `לכל הארץ, ${SHOP.leadTime} – ${money(SHOP.postPrice!)}` : `לכל הארץ, ${SHOP.leadTime} – המחיר יעודכן בקרוב` },
                     ] as const
                   ).map((o) => (
                     <label

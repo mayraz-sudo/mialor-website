@@ -122,7 +122,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center justify-self-end gap-2 lg:gap-3">
-            <div className="hidden w-52 xl:block">
+            <div className="hidden w-40 xl:block 2xl:w-52">
               <SearchForm id="search-desktop" compact />
             </div>
             <a
@@ -130,10 +130,10 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="MIALOR באינסטגרם (נפתח בחלון חדש)"
-              className="btn btn-secondary btn-sm !min-h-10 !px-3 lg:!px-4"
+              className="btn btn-secondary btn-sm !min-h-10 !px-3 xl:!px-4"
             >
               <IconInstagram className="h-[18px] w-[18px]" />
-              <span className="hidden lg:inline">Instagram</span>
+              <span className="hidden xl:inline">Instagram</span>
             </a>
             {SHOP.enabled && <CartButton />}
           </div>

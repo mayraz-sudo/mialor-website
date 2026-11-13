@@ -23,11 +23,11 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
           const q = qtyOf(item.id);
           return (
             <li key={item.id} className="flex flex-col">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-surface">
+              <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
                 {item.image ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
               </div>
-              <h3 className="t-h3 mt-3.5 text-[1.15rem] leading-snug md:text-[1.3rem]">{item.name}</h3>
-              <p className="mt-1 line-clamp-2 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
+              <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug md:text-[1.25rem]">{item.name}</h2>
+              <p className="mt-1 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
               <p className="mt-2 font-medium tabular-nums">
                 {money(item.price)}
                 {item.per && <span className="ms-1.5 text-[0.88rem] font-normal text-muted">{perLabel(item)}</span>}
