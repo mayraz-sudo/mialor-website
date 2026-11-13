@@ -96,7 +96,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     id: "stand-round-candlesticks",
     name: "מעמד הדלקת נרות ופמוטים עגולים",
     description: "מעמד עם ברכת הדלקת נרות שבת וזוג פמוטים עגולים \"שבת שלום\". המעמד בגודל 16 ס\"מ.",
-    price: 129,
+    price: 199,
     image: img("stand-round-1"),
   },
   {
