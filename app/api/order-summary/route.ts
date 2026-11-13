@@ -5,7 +5,8 @@ import { getOrder } from "@/lib/orders";
 export async function GET(req: Request) {
   const id = new URL(req.url).searchParams.get("o") || "";
   if (!/^M\d{6}-[A-F0-9]{4}$/.test(id)) return NextResponse.json({ error: "bad id" }, { status: 400 });
-  const o = await getOrder(id).catch(() => null);
+  // לא מחכים יותר מ-8 שניות לאחסון
+  const o = await Promise.race([getOrder(id).catch(() => null), new Promise<null>((r) => setTimeout(() => r(null), 8000))]);
   if (!o) return NextResponse.json({ error: "not found" }, { status: 404 });
   return NextResponse.json(
     { paid: o.pay === "paid", total: o.total, ids: o.items.map((i) => i.id), items: o.items.reduce((a, i) => a + i.qty, 0) },
