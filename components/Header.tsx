@@ -36,7 +36,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   // קישור עם # (קטגוריה/אזור בדף) – קישור רגיל, כדי שהסינון יתעדכן גם כשכבר נמצאים בעמוד
-  const isCurrent = (href: string) => (href === "/" ? pathname === "/" : false);
+  const isCurrent = (href: string) => (href === "/" ? pathname === "/" : href.startsWith("/") && !href.includes("#") && pathname.startsWith(href));
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
 
@@ -78,7 +78,7 @@ export default function Header() {
               height={LOGO.mark.height}
               alt="MIALOR"
               priority
-              className="h-[58px] w-auto lg:h-[76px]"
+              className="h-[58px] w-auto max-w-none lg:h-[76px]"
             />
           </Link>
 
@@ -90,7 +90,7 @@ export default function Header() {
                   <NavLink
                     href={item.href}
                     aria-current={isCurrent(item.href) ? "page" : undefined}
-                    className="relative block px-3 py-2 text-[15px] whitespace-nowrap transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-center after:scale-x-0 after:bg-accent after:transition-transform hover:text-accent-strong hover:after:scale-x-100 aria-[current=page]:after:scale-x-100 xl:px-4"
+                    className="relative block px-3 py-2 text-[15px] whitespace-nowrap transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-center after:scale-x-0 after:bg-accent after:transition-transform hover:text-accent-strong hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
                   >
                     {item.label}
                   </NavLink>
