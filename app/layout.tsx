@@ -24,6 +24,7 @@ const bellefair = Bellefair({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mialorshop.com"),
   title: "MIALOR | מארזים, הזמנות, הדפסות ועיצוב גרפי לאירועים",
   description:
     "MIALOR – מארזים לאירועים, הזמנות, ברכונים והדפסות ועיצוב גרפי ומיתוג בהתאמה אישית. פנייה מהירה בוואטסאפ.",
@@ -31,6 +32,8 @@ export const metadata: Metadata = {
     title: "MIALOR | עיצוב אישי לכל רגע מיוחד",
     description: "מארזים לאירועים, הזמנות, הדפסות ועיצוב גרפי",
     locale: "he_IL",
+    url: "https://mialorshop.com",
+    siteName: "MIALOR",
     type: "website",
   },
 };
