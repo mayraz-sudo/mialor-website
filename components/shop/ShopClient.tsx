@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SHOP, cartTotals, type CartLine, type Delivery, type ShopItem, perLabel } from "@/lib/shop";
 import { ComingSoon } from "../ProductMedia";
 
@@ -34,7 +34,12 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
   const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", city: "", zip: "", notes: "" });
   const [agree, setAgree] = useState(false);
   const [status, setStatus] = useState<{ kind: "idle" | "sending" | "error"; msg?: string }>({ kind: "idle" });
-  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [payment, setPayment] = useState<{ action: string; fields: Record<string, string> } | null>(null);
+  const payForm = useRef<HTMLFormElement>(null);
+  // פתיחת דף התשלום: שליחת הפרטים (POST) לתוך ה־iframe של טרנזילה
+  useEffect(() => {
+    if (payment) payForm.current?.submit();
+  }, [payment]);
 
   // סל נשמר במכשיר
   useEffect(() => {
@@ -73,8 +78,8 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
         body: JSON.stringify({ lines: cart, delivery, customer: form }),
       });
       const data = await res.json();
-      if (!res.ok || !data.paymentUrl) throw new Error(data.error || "לא הצלחנו לפתוח את דף התשלום. נסו שוב או כתבו לנו בוואטסאפ.");
-      setPaymentUrl(data.paymentUrl);
+      if (!res.ok || !data.action || !data.fields) throw new Error(data.error || "לא הצלחנו לפתוח את דף התשלום. נסו שוב או כתבו לנו בוואטסאפ.");
+      setPayment({ action: data.action, fields: data.fields });
       setStatus({ kind: "idle" });
     } catch (err) {
       setStatus({ kind: "error", msg: err instanceof Error ? err.message : "שגיאה. נסו שוב." });
@@ -247,13 +252,18 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
       </aside>
 
       {/* דף התשלום של טרנזילה */}
-      {paymentUrl && (
+      {payment && (
         <div role="dialog" aria-modal="true" aria-label="תשלום מאובטח" className="fixed inset-0 z-[90] grid place-items-center bg-ink/40 p-3">
           <div className="relative h-[min(720px,92vh)] w-full max-w-[520px] overflow-hidden rounded-[2px] bg-surface">
-            <button type="button" onClick={() => setPaymentUrl(null)} aria-label="סגירת דף התשלום" className="absolute top-2 left-2 z-10 grid h-10 w-10 place-items-center rounded-full bg-bg">
+            <button type="button" onClick={() => setPayment(null)} aria-label="סגירת דף התשלום" className="absolute top-2 left-2 z-10 grid h-10 w-10 place-items-center rounded-full bg-bg">
               ×
             </button>
-            <iframe src={paymentUrl} title="דף תשלום מאובטח – טרנזילה" className="h-full w-full border-0" allow="payment" />
+            <iframe name="tranzila-pay" title="דף תשלום מאובטח – טרנזילה" className="h-full w-full border-0" allow="payment" />
+            <form ref={payForm} action={payment.action} method="POST" target="tranzila-pay" hidden>
+              {Object.entries(payment.fields).map(([k, v]) => (
+                <input key={k} type="hidden" name={k} value={v} />
+              ))}
+            </form>
           </div>
         </div>
       )}

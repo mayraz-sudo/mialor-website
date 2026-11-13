@@ -15,7 +15,7 @@ export default function ShopPage() {
     <>
       {!SHOP.enabled && (
         <p className="bg-[#fff4d6] px-5 py-2.5 text-center text-[0.9rem] text-ink">
-          העמוד בבנייה ועדיין לא מופיע באתר. הפריטים והמחירים כאן לדוגמה, והתשלום עוד לא מחובר.
+          העמוד בבנייה ועדיין לא מופיע בתפריט ובגוגל. אפשר לבצע בו תשלום ניסיון.
         </p>
       )}
       <PageHeader eyebrow="MIALOR" title={SHOP.title} intro={SHOP.intro} />
