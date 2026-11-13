@@ -73,8 +73,9 @@ export async function POST(req: Request) {
     notify_url_address: `${base}/api/tranzila/notify?o=${orderId}`,
     nologo: "1",
     trButtonColor: "3a2a20",
+    trBgColor: "fffdfa",
+    trTextColor: "3a2a20",
     buttonLabel: "לתשלום",
-    accessibility: "2",
   };
 
   try {

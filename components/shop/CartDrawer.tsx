@@ -38,11 +38,13 @@ export default function CartDrawer() {
   const [agree, setAgree] = useState(false);
   const [status, setStatus] = useState<{ kind: "idle" | "sending" | "error"; msg?: string }>({ kind: "idle" });
   const [payment, setPayment] = useState<{ action: string; fields: Record<string, string> } | null>(null);
+  const [frameReady, setFrameReady] = useState(false);
   const payForm = useRef<HTMLFormElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
 
   // פתיחת דף התשלום: שליחת הפרטים (POST) לתוך ה־iframe של טרנזילה
   useEffect(() => {
+    setFrameReady(false);
     if (payment) payForm.current?.submit();
   }, [payment]);
 
@@ -243,14 +245,48 @@ export default function CartDrawer() {
         </div>
       </aside>
 
-      {/* דף התשלום של טרנזילה */}
+      {/* דף התשלום של טרנזילה – מסך מלא בטלפון, חלון ממורכז במחשב */}
       {payment && (
-        <div role="dialog" aria-modal="true" aria-label="תשלום מאובטח" className="fixed inset-0 z-[95] grid place-items-center bg-ink/40 p-3">
-          <div className="relative h-[min(720px,92vh)] w-full max-w-[520px] overflow-hidden rounded-[2px] bg-surface">
-            <button type="button" onClick={() => setPayment(null)} aria-label="סגירת דף התשלום" className="absolute top-2 left-2 z-10 grid h-10 w-10 place-items-center rounded-full bg-bg">
-              ×
-            </button>
-            <iframe name="tranzila-pay" title="דף תשלום מאובטח – טרנזילה" className="h-full w-full border-0" allow="payment" />
+        <div role="dialog" aria-modal="true" aria-labelledby="pay-title" className="fixed inset-0 z-[95] flex items-end justify-center bg-ink/45 sm:items-center sm:p-6">
+          <div className="flex h-[min(580px,94dvh)] w-full flex-col overflow-hidden rounded-t-[14px] bg-surface shadow-[0_-10px_40px_rgba(58,42,32,0.25)] sm:h-[min(600px,90dvh)] sm:max-w-[480px] sm:rounded-[4px] sm:shadow-[0_20px_60px_rgba(58,42,32,0.3)]">
+            <span aria-hidden className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-line sm:hidden" />
+            <div className="flex items-center justify-between gap-3 border-b border-line px-4 pt-2 pb-3 sm:px-5 sm:pt-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0 text-accent-strong">
+                  <rect x="5" y="11" width="14" height="9" rx="1.5" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                </svg>
+                <div className="min-w-0">
+                  <p id="pay-title" className="font-medium leading-tight">תשלום מאובטח</p>
+                  <p className="text-[0.8rem] leading-tight text-muted">בדף המאובטח של טרנזילה</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                {totals.total !== null && (
+                  <span className="rounded-full bg-bg-alt px-3 py-1 text-[0.95rem] font-medium tabular-nums">{money(totals.total)}</span>
+                )}
+                <button type="button" onClick={() => setPayment(null)} aria-label="סגירת דף התשלום וחזרה לסל" className="-ml-1.5 grid h-11 w-11 place-items-center">
+                  <IconClose />
+                </button>
+              </div>
+            </div>
+            <div className="relative min-h-0 flex-1 bg-surface px-2 pt-5 sm:px-4">
+              {!frameReady && (
+                <p className="absolute inset-0 grid place-items-center text-[0.95rem] text-muted" aria-live="polite">
+                  טוען את דף התשלום…
+                </p>
+              )}
+              <iframe
+                name="tranzila-pay"
+                title="דף תשלום מאובטח – טרנזילה"
+                onLoad={() => setFrameReady(true)}
+                className={`relative h-full w-full border-0 transition-opacity duration-300 ${frameReady ? "opacity-100" : "opacity-0"}`}
+                allow="payment"
+              />
+            </div>
+            <p className="flex items-center justify-center gap-1.5 border-t border-line px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] text-center text-[0.78rem] text-muted">
+              פרטי האשראי מוזנים ישירות אצל טרנזילה ואינם נשמרים באתר
+            </p>
             <form ref={payForm} action={payment.action} method="POST" target="tranzila-pay" hidden>
               {Object.entries(payment.fields).map(([k, v]) => (
                 <input key={k} type="hidden" name={k} value={v} />
