@@ -9,6 +9,8 @@ export type ShopItem = {
   description: string;
   /** מחיר ליחידה בשקלים (כולל הכול) */
   price: number;
+  /** על מה המחיר: "pair" = לזוג, "unit" = ליחידה (לא חובה) */
+  per?: "pair" | "unit";
   /** null = תמונה בקרוב (Coming soon) */
   image: string | null;
   /** תמונה נוספת (לא חובה) – מתחלפת במעבר עכבר או בלחיצה */
@@ -34,20 +36,23 @@ export const SHOP_ITEMS: ShopItem[] = [
     name: "פמוט רחל אמנו",
     description: "פמוט בעבודת יד בהשראת סגולת רחל אמנו.",
     price: 120,
+    per: "unit",
     image: "/images/products/rachel-candle-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
   },
   {
     id: "round-candlestick",
     name: "פמוט עגול",
-    description: "פמוט עגול בעבודת יד, בעיצוב מינימליסטי ועל־זמני.",
+    description: "זוג פמוטים עגולים בעבודת יד, בעיצוב מינימליסטי ועל־זמני.",
     price: 80,
+    per: "pair",
     image: "/images/products/round-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
   },
   {
     id: "square-candlestick",
     name: "פמוט ריבוע",
-    description: "פמוט מרובע בעבודת יד, בעיצוב נקי ומוקפד.",
+    description: "זוג פמוטים מרובעים בעבודת יד, בעיצוב נקי ומוקפד.",
     price: 100,
+    per: "pair",
     image: "/images/products/square-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
   },
   {
@@ -82,6 +87,8 @@ export const SHOP_ITEMS: ShopItem[] = [
 ];
 
 /** הפריטים שמוצגים: פריטים לדוגמה רק כשהחנות עוד לא פעילה */
+export const perLabel = (i: ShopItem) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");
+
 export const shopItems = () => SHOP_ITEMS.filter((i) => !i.sample || !SHOP.enabled);
 
 export type CartLine = { id: string; qty: number };

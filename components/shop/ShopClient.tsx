@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { SHOP, cartTotals, type CartLine, type Delivery, type ShopItem } from "@/lib/shop";
+import { SHOP, cartTotals, type CartLine, type Delivery, type ShopItem, perLabel } from "@/lib/shop";
 import { ComingSoon } from "../ProductMedia";
 
 const KEY = "mialor-cart";
@@ -99,7 +99,10 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
                 </div>
                 <h3 className="t-h3 mt-3.5 text-[1.15rem] leading-snug md:text-[1.3rem]">{item.name}</h3>
                 <p className="mt-1 line-clamp-2 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
-                <p className="mt-2 font-medium tabular-nums">{money(item.price)}</p>
+                <p className="mt-2 font-medium tabular-nums">
+                  {money(item.price)}
+                  {item.per && <span className="ms-1.5 text-[0.88rem] font-normal text-muted">{perLabel(item)}</span>}
+                </p>
                 <div className="mt-auto pt-3">
                   {q === 0 ? (
                     <button type="button" onClick={() => setQty(item.id, 1)} className="btn btn-primary btn-sm w-full">
@@ -131,7 +134,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
                   <span className="min-w-0">
                     <span className="block truncate">{item.name}</span>
                     <span className="text-muted tabular-nums">
-                      {qty} × {money(item.price)}
+                      {qty} × {money(item.price)}{item.per ? ` ${perLabel(item)}` : ""}
                     </span>
                   </span>
                   <span className="flex items-center gap-2">
