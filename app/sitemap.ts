@@ -3,7 +3,7 @@ import { PRODUCTS } from "@/lib/site";
 import { SHOP } from "@/lib/shop";
 import { getVisibleItems } from "@/lib/catalog";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const BASE = "https://mialorshop.com";
 

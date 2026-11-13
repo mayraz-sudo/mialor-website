@@ -12,7 +12,13 @@ const TTL = 3000;
 /** כל המוצרים, כולל מוסתרים, לפי הסדר שנקבע בניהול */
 export async function getCatalog(): Promise<ShopItem[]> {
   if (cache && Date.now() - cache.at < TTL) return cache.items;
-  const store = await blobStore("catalog");
+  let store: Awaited<ReturnType<typeof blobStore>>;
+  try {
+    store = await blobStore("catalog");
+  } catch {
+    // אין גישה לאחסון (למשל בזמן בניית האתר) – הרשימה שבקוד
+    return SHOP_ITEMS;
+  }
   type Res = { v: ShopItem[] | null } | { timeout: true };
   const res = await withTimeout<Res>(store.getJSON<ShopItem[]>(KEY).then((v) => ({ v })), 4000, { timeout: true });
   if ("v" in res) {
