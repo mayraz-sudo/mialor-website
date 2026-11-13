@@ -88,14 +88,14 @@ export const SHOP_ITEMS: ShopItem[] = [
     image: null, // תמונה בקרוב
   },
   {
-    // לתשלום ניסיון בלבד: mialorshop.com/shop?test=1 – למחוק אחרי הבדיקה
+    // לתשלום ניסיון בלבד – למחוק אחרי הבדיקה
     id: "test-item",
     name: "מוצר לניסיון",
     description: "לבדיקת תשלום בלבד.",
     price: 1,
     image: null,
     maxQty: 1,
-    hidden: true,
+    hidden: false, // זמנית גלוי לכולם לצורך הבדיקה – להחזיר ל-true / למחוק אחרי
   },
 ];
 
