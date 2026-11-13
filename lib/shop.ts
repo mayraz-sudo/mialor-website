@@ -45,7 +45,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: "זוג פמוטים עגולים בעבודת יד, בעיצוב מינימליסטי ועל־זמני.",
     price: 80,
     per: "pair",
-    image: "/images/products/round-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
+    image: "/images/products/shop-round-candlesticks-1.jpg",
+    image2: "/images/products/round-candlesticks-1.jpg", // באריזה
   },
   {
     id: "square-candlestick",
