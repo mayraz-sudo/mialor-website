@@ -5,17 +5,21 @@ import type { ShopItem } from "@/lib/shop";
 import { useCart } from "./CartContext";
 import { Stepper } from "./CartDrawer";
 import { productParams, track } from "@/lib/pixel";
+import { itemPrice } from "@/lib/shop";
+import { useLaunchActive } from "./Launch";
 
 /** בחירת כמות והוספה לסל, בעמוד המוצר */
 export default function BuyBox({ item }: { item: ShopItem }) {
   const { qtyOf, setQty, openCart } = useCart();
+  const launch = useLaunchActive();
   const [qty, setLocalQty] = useState(1);
   const inCart = qtyOf(item.id);
   const max = item.maxQty ?? 99;
 
   const add = () => {
     setQty(item.id, Math.min(max, inCart + qty));
-    track("AddToCart", { ...productParams(item), value: item.price * qty, num_items: qty });
+    const unit = itemPrice(item, launch);
+    track("AddToCart", { ...productParams({ ...item, price: unit }), value: unit * qty, num_items: qty });
     openCart();
   };
 

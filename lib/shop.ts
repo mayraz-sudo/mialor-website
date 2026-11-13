@@ -154,16 +154,43 @@ export type CartLine = { id: string; qty: number };
 export type Delivery = "pickup" | "post";
 
 /** חישוב סכום ההזמנה – משמש גם בדפדפן וגם בשרת (בשרת זה המחיר הקובע) */
-export function cartTotals(lines: CartLine[], delivery: Delivery) {
+/**
+ * מחירי השקה – הנחה באחוזים על כל מוצרי החנות, לפי תאריכים (שעון ישראל).
+ * המחיר אחרי ההנחה מעוגל כלפי מטה לשקל שלם, כך שההנחה תמיד לפחות האחוז שכתוב.
+ * כדי לבטל: active: false.
+ */
+export const LAUNCH = {
+  active: true,
+  percent: 15,
+  start: "2026-11-13",
+  end: "2026-11-30",
+  name: "מחירי השקה",
+  bar: "מחירי השקה: 15% הנחה על כל מוצרי החנות, עד סוף נובמבר",
+  barShort: "מחירי השקה: 15% הנחה בחנות",
+  badge: "15% הנחה",
+};
+
+export function isLaunchActive(date: Date = new Date()) {
+  if (!LAUNCH.active) return false;
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" }).format(date);
+  return day >= LAUNCH.start && day <= LAUNCH.end;
+}
+
+/** המחיר לתשלום לפריט (עם הנחת ההשקה אם פעילה) */
+export const itemPrice = (item: Pick<ShopItem, "price">, launch: boolean) =>
+  launch ? Math.floor((item.price * (100 - LAUNCH.percent)) / 100) : item.price;
+
+export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolean = isLaunchActive()) {
   const items = shopItems();
   const rows = lines
     .map((l) => {
       const item = items.find((i) => i.id === l.id);
       if (!item) return null;
       const qty = Math.max(1, Math.min(Math.floor(l.qty), item.maxQty ?? 99));
-      return { item, qty, sum: item.price * qty };
+      const unit = itemPrice(item, launch);
+      return { item, qty, unit, sum: unit * qty };
     })
-    .filter((r): r is { item: ShopItem; qty: number; sum: number } => Boolean(r));
+    .filter((r): r is { item: ShopItem; qty: number; unit: number; sum: number } => Boolean(r));
   const subtotal = rows.reduce((a, r) => a + r.sum, 0);
   const shipping = delivery === "post" ? SHOP.postPrice : 0;
   return { rows, subtotal, shipping, total: shipping === null ? null : subtotal + shipping };

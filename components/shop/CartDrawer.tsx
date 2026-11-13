@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SHOP, cartTotals, perLabel, type Delivery } from "@/lib/shop";
 import { IconClose } from "../Icons";
 import { useCart } from "./CartContext";
+import { useLaunchActive } from "./Launch";
 import { track } from "@/lib/pixel";
 
 export const money = (n: number) =>
@@ -62,7 +63,8 @@ export default function CartDrawer() {
     };
   }, [isOpen, closeCart, payment]);
 
-  const totals = useMemo(() => cartTotals(cart, delivery), [cart, delivery]);
+  const launch = useLaunchActive();
+  const totals = useMemo(() => cartTotals(cart, delivery, launch), [cart, delivery, launch]);
   const postReady = SHOP.postPrice !== null;
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -129,7 +131,7 @@ export default function CartDrawer() {
           ) : (
             <form onSubmit={submit} noValidate className="px-5 pt-2 pb-6">
               <ul className="divide-y divide-line border-b border-line">
-                {totals.rows.map(({ item, qty, sum }) => (
+                {totals.rows.map(({ item, qty, unit, sum }) => (
                   <li key={item.id} className="flex gap-3 py-3.5">
                     <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-[2px] bg-surface">
                       {item.image && <Image src={item.image} alt="" fill sizes="64px" className="object-cover" />}
@@ -142,7 +144,8 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       <span className="text-[0.88rem] text-muted tabular-nums">
-                        {money(item.price)}
+                        {money(unit)}
+                        {unit !== item.price && <s className="ms-1.5">{money(item.price)}</s>}
                         {item.per ? ` ${perLabel(item)}` : ""}
                       </span>
                       <div className="mt-auto flex items-center justify-between pt-1.5">

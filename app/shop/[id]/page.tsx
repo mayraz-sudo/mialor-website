@@ -5,8 +5,9 @@ import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import BuyBox from "@/components/shop/BuyBox";
 import TrackViewContent from "@/components/pixel/TrackViewContent";
+import { LaunchBadge, LaunchNote, LaunchPrice } from "@/components/shop/Launch";
 import { IconChevron } from "@/components/Icons";
-import { CARE, SHOP, perLabel, shopItemById, shopItemHref, shopItemImages, shopItems } from "@/lib/shop";
+import { CARE, SHOP, shopItemById, shopItemHref, shopItemImages, shopItems } from "@/lib/shop";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -67,10 +68,10 @@ export default async function ShopItemPage({ params }: Params) {
             <div>
               <p className="t-label">{SHOP.title}</p>
               <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.2] text-balance md:text-[2.4rem]">{item.name}</h1>
-              <p className="mt-3 text-[1.35rem] tabular-nums">
-                {money(item.price)}
-                {item.per && <span className="ms-2 text-[1rem] text-muted">{perLabel(item)}</span>}
+              <p className="mt-3">
+                <LaunchPrice item={item} large />
               </p>
+              <LaunchNote />
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{item.description}</p>
 
@@ -118,12 +119,15 @@ export default async function ShopItemPage({ params }: Params) {
                 <li key={o.id}>
                   <Link href={shopItemHref(o.id)} className="group block">
                     <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
+                      <LaunchBadge />
                       {o.image && (
                         <Image src={o.image} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                       )}
                     </div>
                     <p className="mt-3 leading-snug">{o.name}</p>
-                    <p className="mt-1 font-medium tabular-nums">{money(o.price)}</p>
+                    <p className="mt-1">
+                      <LaunchPrice item={o} />
+                    </p>
                   </Link>
                 </li>
               ))}

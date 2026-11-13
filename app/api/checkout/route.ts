@@ -96,7 +96,7 @@ export async function POST(req: Request) {
       id: orderId,
       createdAt: now,
       updatedAt: now,
-      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.item.price, per: perLabel(r.item) || undefined, sum: r.sum })),
+      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.unit, per: perLabel(r.item) || undefined, sum: r.sum })),
       subtotal: totals.subtotal,
       shipping: totals.shipping ?? 0,
       total: sum,

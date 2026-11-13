@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { perLabel, shopItemHref, type ShopItem } from "@/lib/shop";
+import { itemPrice, shopItemHref, type ShopItem } from "@/lib/shop";
+import { LaunchBadge, LaunchPrice, useLaunchActive } from "./Launch";
 import { ComingSoon } from "../ProductMedia";
 import { useCart } from "./CartContext";
 import { productParams, track } from "@/lib/pixel";
@@ -11,12 +12,16 @@ import { Stepper, money } from "./CartDrawer";
 export default function ShopClient({ items }: { items: ShopItem[] }) {
   const { qtyOf, setQty, count, cart, openCart } = useCart();
   const visible = items.filter((i) => !i.hidden);
-  const subtotal = cart.reduce((a, l) => a + (items.find((i) => i.id === l.id)?.price ?? 0) * l.qty, 0);
+  const launch = useLaunchActive();
+  const subtotal = cart.reduce((a, l) => {
+    const i = items.find((x) => x.id === l.id);
+    return a + (i ? itemPrice(i, launch) : 0) * l.qty;
+  }, 0);
 
   const add = (id: string) => {
     setQty(id, 1);
     const item = items.find((i) => i.id === id);
-    if (item) track("AddToCart", { ...productParams(item), num_items: 1 });
+    if (item) track("AddToCart", { ...productParams({ ...item, price: itemPrice(item, launch) }), num_items: 1 });
   };
 
   return (
@@ -28,14 +33,14 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
             <li key={item.id} className="flex flex-col">
               <Link href={shopItemHref(item.id)} className="group block">
                 <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
+                  <LaunchBadge />
                   {item.image ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
                 </div>
                 <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug group-hover:text-accent-strong md:text-[1.25rem]">{item.name}</h2>
                 <p className="mt-1 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
               </Link>
-              <p className="mt-2 font-medium tabular-nums">
-                {money(item.price)}
-                {item.per && <span className="ms-1.5 text-[0.88rem] font-normal text-muted">{perLabel(item)}</span>}
+              <p className="mt-2">
+                <LaunchPrice item={item} />
               </p>
               <div className="mt-auto pt-3">
                 {q === 0 ? (

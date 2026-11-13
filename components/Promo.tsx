@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { LAUNCH } from "@/lib/shop";
+import { useLaunchActive } from "./shop/Launch";
 import { PROMO, discounted, formatAmount, isPromoActive, isPromoProduct, type Product } from "@/lib/site";
 
 /**
@@ -15,9 +18,21 @@ export function usePromoActive() {
   return active;
 }
 
-/** פס מבצע בראש האתר */
+/** פס מבצע בראש האתר. בעמודי החנות – מחירי ההשקה; בשאר האתר – מבצע החודש */
 export function PromoBar() {
   const active = usePromoActive();
+  const launch = useLaunchActive();
+  const pathname = usePathname();
+  if (launch && pathname?.startsWith("/shop")) {
+    return (
+      <div className="bg-ink px-5 py-2 text-center text-[0.88rem] leading-snug text-bg">
+        <span className="font-serif text-[1rem]">{LAUNCH.name}</span>
+        <span aria-hidden className="mx-2 text-[#d4c0a1]">·</span>
+        <span className="sm:hidden">{LAUNCH.barShort.replace(`${LAUNCH.name}: `, "")}</span>
+        <span className="hidden sm:inline">{LAUNCH.bar.replace(`${LAUNCH.name}: `, "")}</span>
+      </div>
+    );
+  }
   if (!active) return null;
   return (
     <div className="bg-ink px-5 py-2 text-center text-[0.88rem] leading-snug text-bg">
