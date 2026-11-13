@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { perLabel, type ShopItem } from "@/lib/shop";
+import Link from "next/link";
+import { perLabel, shopItemHref, type ShopItem } from "@/lib/shop";
 import { ComingSoon } from "../ProductMedia";
 import { useCart } from "./CartContext";
 import { Stepper, money } from "./CartDrawer";
@@ -23,11 +23,13 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
           const q = qtyOf(item.id);
           return (
             <li key={item.id} className="flex flex-col">
-              <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
-                {item.image ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
-              </div>
-              <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug md:text-[1.25rem]">{item.name}</h2>
-              <p className="mt-1 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
+              <Link href={shopItemHref(item.id)} className="group block">
+                <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
+                  {item.image ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
+                </div>
+                <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug group-hover:text-accent-strong md:text-[1.25rem]">{item.name}</h2>
+                <p className="mt-1 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
+              </Link>
               <p className="mt-2 font-medium tabular-nums">
                 {money(item.price)}
                 {item.per && <span className="ms-1.5 text-[0.88rem] font-normal text-muted">{perLabel(item)}</span>}
@@ -65,31 +67,18 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
   );
 }
 
-/** תמונת פריט; אם יש תמונה שנייה – מתחלפת במעבר עכבר, ובנייד בלחיצה על הכפתור */
+/** תמונת פריט בכרטיס; אם יש תמונה שנייה – מתחלפת במעבר עכבר (את כל התמונות רואים בעמוד המוצר) */
 function ItemPhotos({ item }: { item: ShopItem }) {
-  const [second, setSecond] = useState(false);
   const sizes = "(min-width: 1024px) 25vw, 50vw";
-  if (!item.image2) return <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover" />;
   return (
-    <div className="group absolute inset-0">
-      <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover" />
-      <Image
-        src={item.image2}
-        alt={`${item.name} – תמונה נוספת`}
-        fill
-        sizes={sizes}
-        className={`object-cover transition-opacity duration-500 ${second ? "opacity-100" : "opacity-0 [@media(hover:hover)]:group-hover:opacity-100"}`}
-      />
-      <button
-        type="button"
-        onClick={() => setSecond((s) => !s)}
-        aria-pressed={second}
-        aria-label={second ? "הצגת התמונה הראשית" : "הצגת תמונה נוספת"}
-        className="absolute bottom-2.5 left-2.5 flex gap-1.5 rounded-full bg-white/85 px-2.5 py-2"
-      >
-        <span className={`h-1.5 w-1.5 rounded-full ${second ? "bg-ink/30" : "bg-ink"}`} />
-        <span className={`h-1.5 w-1.5 rounded-full ${second ? "bg-ink" : "bg-ink/30"}`} />
-      </button>
-    </div>
+    <>
+      <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+      {item.image2 && (
+        <>
+          <Image src={item.image2} alt="" fill sizes={sizes} className="object-cover opacity-0 transition-opacity duration-500 [@media(hover:hover)]:group-hover:opacity-100" />
+          <span className="absolute bottom-2.5 left-2.5 rounded-full bg-white/85 px-2 py-0.5 text-[0.75rem] text-ink">2 תמונות</span>
+        </>
+      )}
+    </>
   );
 }

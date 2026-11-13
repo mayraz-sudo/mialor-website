@@ -11,7 +11,8 @@ type Slide = { kind: "image"; src: string } | { kind: "video"; src: string; post
  * גלריית מוצר: בנייד החלקה הצידה, במחשב חיצים, ותמונות קטנות מתחת לבחירה מהירה.
  * מוצר בלי תמונות מציג Coming soon.
  */
-export default function ProductGallery({ product }: { product: Product }) {
+export default function ProductGallery({ product, square = false }: { product: Pick<Product, "name" | "images" | "video">; square?: boolean }) {
+  const ratio = square ? "aspect-square" : "aspect-[4/5]";
   const slides: Slide[] = product.video
     ? [{ kind: "video", ...product.video }, ...product.images.filter((s) => s !== product.video!.poster).map((src) => ({ kind: "image" as const, src }))]
     : product.images.map((src) => ({ kind: "image" as const, src }));
@@ -52,7 +53,7 @@ export default function ProductGallery({ product }: { product: Product }) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[2px]">
+      <div className={`relative ${ratio} overflow-hidden rounded-[2px]`}>
         <ComingSoon name={product.name} />
       </div>
     );
@@ -77,7 +78,7 @@ export default function ProductGallery({ product }: { product: Product }) {
           className="relative flex snap-x snap-mandatory overflow-x-auto rounded-[2px] bg-surface [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {slides.map((s, i) => (
-            <div key={i} className="relative aspect-[4/5] w-full shrink-0 snap-center" aria-label={`תמונה ${i + 1} מתוך ${slides.length}`}>
+            <div key={i} className={`relative ${ratio} w-full shrink-0 snap-center`} aria-label={`תמונה ${i + 1} מתוך ${slides.length}`}>
               {s.kind === "video" ? (
                 <video
                   ref={videoRef}

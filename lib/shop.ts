@@ -168,3 +168,8 @@ export function cartTotals(lines: CartLine[], delivery: Delivery) {
   const shipping = delivery === "post" ? SHOP.postPrice : 0;
   return { rows, subtotal, shipping, total: shipping === null ? null : subtotal + shipping };
 }
+
+export const shopItemById = (id: string) => shopItems().find((i) => i.id === id && !i.hidden);
+export const shopItemHref = (id: string) => `/shop/${id}`;
+/** כל התמונות של פריט, לגלריה */
+export const shopItemImages = (i: ShopItem) => [i.image, i.image2].filter((s): s is string => Boolean(s));
