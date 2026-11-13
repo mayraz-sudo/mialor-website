@@ -9,7 +9,8 @@ export type ShopItem = {
   description: string;
   /** מחיר ליחידה בשקלים (כולל הכול) */
   price: number;
-  image: string;
+  /** null = תמונה בקרוב (Coming soon) */
+  image: string | null;
   /** כמות מקסימלית להזמנה אחת (לא חובה) */
   maxQty?: number;
   /** פריט לדוגמה – מוצג רק בזמן הבנייה, לא באתר החי */
@@ -26,30 +27,40 @@ export const SHOP = {
 };
 
 export const SHOP_ITEMS: ShopItem[] = [
-  // ⚠️ פריטים לדוגמה בלבד – יוחלפו ברשימה של MIALOR
   {
-    id: "sample-round-candlesticks",
-    name: "זוג פמוטים עגולים (לדוגמה)",
-    description: "פריט לדוגמה – יוחלף בפריטים ובמחירים האמיתיים.",
-    price: 50,
-    image: "/images/products/round-candlesticks-1.jpg",
-    sample: true,
+    id: "rachel-candle-holder",
+    name: "פמוט רחל אמנו",
+    description: "פמוט בעבודת יד בהשראת סגולת רחל אמנו.",
+    price: 120,
+    image: "/images/products/rachel-candle-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
   },
   {
-    id: "sample-booklet",
-    name: "ברכון מזמור לתודה (לדוגמה)",
-    description: "פריט לדוגמה – יוחלף בפריטים ובמחירים האמיתיים.",
-    price: 25,
-    image: "/images/products/booklet-mizmor-candles-1.jpg",
-    sample: true,
+    id: "round-candlestick",
+    name: "פמוט עגול",
+    description: "פמוט עגול בעבודת יד, בעיצוב מינימליסטי ועל־זמני.",
+    price: 80,
+    image: "/images/products/round-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
   },
   {
-    id: "sample-havdalah",
-    name: "מארז הבדלה (לדוגמה)",
-    description: "פריט לדוגמה – יוחלף בפריטים ובמחירים האמיתיים.",
-    price: 30,
-    image: "/images/products/havdalah-1.jpg",
-    sample: true,
+    id: "square-candlestick",
+    name: "פמוט ריבוע",
+    description: "פמוט מרובע בעבודת יד, בעיצוב נקי ומוקפד.",
+    price: 100,
+    image: "/images/products/square-candlesticks-1.jpg", // placeholder – כדאי תמונה של הפמוט לבד
+  },
+  {
+    id: "gypsum-stand-candlesticks",
+    name: "מעמד ופמוטים מגבס",
+    description: "מעמד ופמוטים מגבס בעבודת יד.",
+    price: 200,
+    image: null, // תמונה בקרוב
+  },
+  {
+    id: "blessing-stand",
+    name: "מעמד ברכה בלבד",
+    description: "מעמד לברכה, בלי פמוטים.",
+    price: 150,
+    image: null, // תמונה בקרוב
   },
 ];
 

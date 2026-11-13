@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { SHOP, cartTotals, type CartLine, type Delivery, type ShopItem } from "@/lib/shop";
+import { ComingSoon } from "../ProductMedia";
 
 const KEY = "mialor-cart";
 const money = (n: number) =>
@@ -90,7 +91,11 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
             return (
               <li key={item.id} className="flex flex-col">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-surface">
-                  <Image src={item.image} alt={item.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                  {item.image ? (
+                    <Image src={item.image} alt={item.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                  ) : (
+                    <ComingSoon name={item.name} />
+                  )}
                 </div>
                 <h3 className="t-h3 mt-3.5 text-[1.15rem] leading-snug md:text-[1.3rem]">{item.name}</h3>
                 <p className="mt-1 line-clamp-2 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
