@@ -1,3 +1,5 @@
+import { recordPayment } from "@/lib/payment-result";
+
 /**
  * טרנזילה מחזירה לכאן את הלקוח בסוף התשלום (בתוך ה־iframe).
  * הדף רק מוציא את הלקוח מה־iframe לדף "תודה" או "התשלום לא עבר".
@@ -13,6 +15,11 @@ async function handle(req: Request) {
   }
   const ok = url.searchParams.get("r") === "ok" && params.get("Response") === "000";
   const code = (params.get("Response") || "").replace(/\D/g, "").slice(0, 6);
+  try {
+    await recordPayment(params, url.searchParams.get("o"));
+  } catch (err) {
+    console.error("[tranzila return]", err);
+  }
   const target = ok ? "/shop/thanks" : `/shop/failed${code ? `?code=${code}` : ""}`;
   const html = `<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><title>MIALOR</title>
 <body style="font-family:sans-serif;text-align:center;padding:40px;color:#3a2a20">

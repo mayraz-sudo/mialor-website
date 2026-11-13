@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { cartTotals, perLabel, type CartLine, type Delivery } from "@/lib/shop";
 import { createHandshake, iframeAction, tranzilaTerminal } from "@/lib/tranzila";
+import { saveOrder } from "@/lib/orders";
 
 /**
  * פתיחת תשלום בטרנזילה.
@@ -66,9 +67,9 @@ export async function POST(req: Request) {
     country: "ישראל",
     pdesc: `הזמנה ${orderId}: ${items}`.slice(0, 250),
     remarks: [deliveryText, customer.notes && `הערות: ${customer.notes}`].filter(Boolean).join(" | ").slice(0, 250),
-    success_url_address: `${base}/api/tranzila/return?r=ok`,
-    fail_url_address: `${base}/api/tranzila/return?r=fail`,
-    notify_url_address: `${base}/api/tranzila/notify`,
+    success_url_address: `${base}/api/tranzila/return?r=ok&o=${orderId}`,
+    fail_url_address: `${base}/api/tranzila/return?r=fail&o=${orderId}`,
+    notify_url_address: `${base}/api/tranzila/notify?o=${orderId}`,
     nologo: "1",
     trButtonColor: "3a2a20",
     buttonLabel: "לתשלום",
@@ -84,6 +85,26 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[checkout]", err);
     return NextResponse.json({ error: "לא הצלחנו לפתוח את דף התשלום. נסו שוב בעוד רגע או כתבו לנו בוואטסאפ." }, { status: 502 });
+  }
+
+  // שמירת ההזמנה במערכת הניהול (ממתינה לתשלום עד שטרנזילה מאשרת)
+  const now = new Date().toISOString();
+  try {
+    await saveOrder({
+      id: orderId,
+      createdAt: now,
+      updatedAt: now,
+      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.item.price, per: perLabel(r.item) || undefined, sum: r.sum })),
+      subtotal: totals.subtotal,
+      shipping: totals.shipping ?? 0,
+      total: sum,
+      delivery,
+      customer,
+      pay: "pending",
+      stage: "new",
+    });
+  } catch (err) {
+    console.error("[checkout] could not save order", orderId, err);
   }
 
   console.log(`[checkout] ${orderId} ₪${fields.sum} – ${items} – ${deliveryText}`);

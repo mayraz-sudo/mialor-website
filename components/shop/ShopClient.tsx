@@ -34,6 +34,10 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
   const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", city: "", zip: "", notes: "" });
   const [agree, setAgree] = useState(false);
   const [status, setStatus] = useState<{ kind: "idle" | "sending" | "error"; msg?: string }>({ kind: "idle" });
+  // פריטים נסתרים (מוצר לניסיון) מופיעים רק בכתובת עם ?test=1
+  const [testMode, setTestMode] = useState(false);
+  useEffect(() => setTestMode(new URLSearchParams(location.search).has("test")), []);
+  const visible = items.filter((i) => !i.hidden || testMode);
   const [payment, setPayment] = useState<{ action: string; fields: Record<string, string> } | null>(null);
   const payForm = useRef<HTMLFormElement>(null);
   // פתיחת דף התשלום: שליחת הפרטים (POST) לתוך ה־iframe של טרנזילה
@@ -45,7 +49,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-      if (Array.isArray(saved)) setCart(saved.filter((l) => items.some((i) => i.id === l.id)));
+      if (Array.isArray(saved)) setCart(saved.filter((l) => items.some((i) => i.id === l.id && !i.hidden)));
     } catch {}
   }, [items]);
   useEffect(() => {
@@ -91,7 +95,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
       {/* פריטים */}
       <section aria-label="פריטים">
         <ul className="grid grid-cols-2 gap-x-3.5 gap-y-10 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
-          {items.map((item) => {
+          {visible.map((item) => {
             const q = qtyOf(item.id);
             return (
               <li key={item.id} className="flex flex-col">

@@ -1,6 +1,8 @@
+import { recordPayment } from "@/lib/payment-result";
+
 /**
  * טרנזילה שולחת לכאן (מאחורי הקלעים) את פרטי כל עסקה.
- * כרגע רושם ביומן של Netlify (Logs → Functions). פרטי ההזמנה המלאים מופיעים גם בממשק של טרנזילה.
+ * ההזמנה מתעדכנת במערכת הניהול (/admin) כ"שולם" או "נכשל".
  */
 export async function POST(req: Request) {
   let p = new URLSearchParams();
@@ -9,9 +11,12 @@ export async function POST(req: Request) {
     p = new URLSearchParams([...form].map(([k, v]) => [k, String(v)] as [string, string]));
   } catch {}
   const ok = p.get("Response") === "000";
-  console.log(
-    `[tranzila notify] ${ok ? "OK" : `FAIL ${p.get("Response") ?? ""}`} ₪${p.get("sum") ?? "?"} index=${p.get("index") ?? ""} – ${p.get("pdesc") ?? ""}`,
-  );
+  try {
+    const o = await recordPayment(p, new URL(req.url).searchParams.get("o"));
+    console.log(`[tranzila notify] ${ok ? "OK" : `FAIL ${p.get("Response") ?? ""}`} ₪${p.get("sum") ?? "?"} order=${o?.id ?? "?"}${o?.payment?.mismatch ? " SUM MISMATCH" : ""}`);
+  } catch (err) {
+    console.error("[tranzila notify]", err);
+  }
   return new Response("OK");
 }
 export const GET = () => new Response("OK");

@@ -17,6 +17,8 @@ export type ShopItem = {
   image2?: string;
   /** כמות מקסימלית להזמנה אחת (לא חובה) */
   maxQty?: number;
+  /** פריט נסתר – מופיע רק בכתובת /shop?test=1 (לתשלום ניסיון) */
+  hidden?: boolean;
   /** פריט לדוגמה – מוצג רק בזמן הבנייה, לא באתר החי */
   sample?: boolean;
 };
@@ -84,6 +86,16 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: "סט מלא: צלחת, פמוטים וברכה.",
     price: 199,
     image: null, // תמונה בקרוב
+  },
+  {
+    // לתשלום ניסיון בלבד: mialorshop.com/shop?test=1 – למחוק אחרי הבדיקה
+    id: "test-item",
+    name: "מוצר לניסיון",
+    description: "לבדיקת תשלום בלבד.",
+    price: 1,
+    image: null,
+    maxQty: 1,
+    hidden: true,
   },
 ];
 
