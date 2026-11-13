@@ -20,7 +20,8 @@ async function handle(req: Request) {
   } catch (err) {
     console.error("[tranzila return]", err);
   }
-  const target = ok ? "/shop/thanks" : `/shop/failed${code ? `?code=${code}` : ""}`;
+  const orderId = (url.searchParams.get("o") || "").match(/^M\d{6}-[A-F0-9]{4}$/)?.[0];
+  const target = ok ? `/shop/thanks${orderId ? `?o=${orderId}` : ""}` : `/shop/failed${code ? `?code=${code}` : ""}`;
   const html = `<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><title>MIALOR</title>
 <body style="font-family:sans-serif;text-align:center;padding:40px;color:#3a2a20">
 <p>${ok ? "התשלום התקבל, מעבירים אתכם…" : "מעבירים אתכם…"}</p>

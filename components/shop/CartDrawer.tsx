@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SHOP, cartTotals, perLabel, type Delivery } from "@/lib/shop";
 import { IconClose } from "../Icons";
 import { useCart } from "./CartContext";
+import { track } from "@/lib/pixel";
 
 export const money = (n: number) =>
   `₪${n.toLocaleString("he-IL", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
@@ -82,6 +83,12 @@ export default function CartDrawer() {
       const data = await res.json();
       if (!res.ok || !data.action || !data.fields) throw new Error(data.error || "לא הצלחנו לפתוח את דף התשלום. נסו שוב או כתבו לנו בוואטסאפ.");
       setPayment({ action: data.action, fields: data.fields });
+      track("InitiateCheckout", {
+        value: totals.total ?? totals.subtotal,
+        num_items: count,
+        content_ids: totals.rows.map((r) => r.item.id),
+        content_type: "product",
+      });
       setStatus({ kind: "idle" });
     } catch (err) {
       setStatus({ kind: "error", msg: err instanceof Error ? err.message : "שגיאה. נסו שוב." });

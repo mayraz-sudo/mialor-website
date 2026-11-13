@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import BuyBox from "@/components/shop/BuyBox";
+import TrackViewContent from "@/components/pixel/TrackViewContent";
 import { IconChevron } from "@/components/Icons";
 import { CARE, SHOP, perLabel, shopItemById, shopItemHref, shopItemImages, shopItems } from "@/lib/shop";
 
@@ -45,6 +46,7 @@ export default async function ShopItemPage({ params }: Params) {
 
   return (
     <>
+      <TrackViewContent item={{ id: item.id, name: item.name, price: item.price }} />
       <section className="bg-bg">
         <div className="mx-auto max-w-[1180px] px-5 pt-5 pb-12 md:pt-8 md:pb-20">
           <nav aria-label="מיקום בעמוד" className="mb-5 text-[0.88rem] text-muted md:mb-8">

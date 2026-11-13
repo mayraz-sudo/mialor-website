@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import ClearCart from "@/components/shop/ClearCart";
+import TrackPurchase from "@/components/pixel/TrackPurchase";
 import { whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = { title: "תודה על ההזמנה | MIALOR", robots: { index: false, follow: false } };
@@ -10,6 +11,7 @@ export default function ThanksPage() {
   return (
     <>
       <ClearCart />
+      <TrackPurchase />
       <PageHeader eyebrow="MIALOR" title="תודה, ההזמנה התקבלה" intro="התשלום עבר בהצלחה. ניצור איתכם קשר בקרוב לתיאום האיסוף או המשלוח." />
       <section className="bg-bg">
         <div className="mx-auto flex max-w-[560px] flex-col items-center gap-3 px-5 py-12 text-center">

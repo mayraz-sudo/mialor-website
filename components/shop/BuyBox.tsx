@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ShopItem } from "@/lib/shop";
 import { useCart } from "./CartContext";
 import { Stepper } from "./CartDrawer";
+import { productParams, track } from "@/lib/pixel";
 
 /** בחירת כמות והוספה לסל, בעמוד המוצר */
 export default function BuyBox({ item }: { item: ShopItem }) {
@@ -14,6 +15,7 @@ export default function BuyBox({ item }: { item: ShopItem }) {
 
   const add = () => {
     setQty(item.id, Math.min(max, inCart + qty));
+    track("AddToCart", { ...productParams(item), value: item.price * qty, num_items: qty });
     openCart();
   };
 

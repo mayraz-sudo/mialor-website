@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bellefair, Heebo } from "next/font/google";
 import Header from "@/components/Header";
 import { CartProvider } from "@/components/shop/CartContext";
+import MetaPixel from "@/components/pixel/MetaPixel";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { PromoBar } from "@/components/Promo";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <WhatsAppFloat />
           <AccessibilityMenu />
         </CartProvider>
+        <MetaPixel />
       </body>
     </html>
   );

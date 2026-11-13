@@ -5,6 +5,7 @@ import Link from "next/link";
 import { perLabel, shopItemHref, type ShopItem } from "@/lib/shop";
 import { ComingSoon } from "../ProductMedia";
 import { useCart } from "./CartContext";
+import { productParams, track } from "@/lib/pixel";
 import { Stepper, money } from "./CartDrawer";
 
 export default function ShopClient({ items }: { items: ShopItem[] }) {
@@ -14,6 +15,8 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
 
   const add = (id: string) => {
     setQty(id, 1);
+    const item = items.find((i) => i.id === id);
+    if (item) track("AddToCart", { ...productParams(item), num_items: 1 });
   };
 
   return (
