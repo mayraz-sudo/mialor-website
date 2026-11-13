@@ -40,7 +40,7 @@ export default function OrderForm({ product }: { product: Product }) {
           eventType,
           name,
           notes,
-          delivery: delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח" : "",
+          delivery: delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח בדואר ישראל" : "",
           city: delivery === "shipping" ? city : "",
         },
         window.location.href,
@@ -104,8 +104,8 @@ export default function OrderForm({ product }: { product: Product }) {
           <div className="grid grid-cols-2 gap-3">
             {(
               [
-                { id: "pickup", title: "איסוף עצמי", sub: "מחולון" },
-                { id: "shipping", title: "משלוח", sub: "מרכז והסביבה" },
+                { id: "pickup", title: "איסוף עצמי", sub: "מחולון, בחינם" },
+                { id: "shipping", title: "משלוח", sub: "לכל הארץ, דואר ישראל" },
               ] as const
             ).map((o) => (
               <label
@@ -131,7 +131,7 @@ export default function OrderForm({ product }: { product: Product }) {
                 עיר למשלוח
               </label>
               <input id="order-city" type="text" autoComplete="address-level2" value={city} onChange={(e) => setCity(e.target.value)} className={field} />
-              <p className="mt-1 text-[0.82rem] text-muted">{DELIVERY.shipping}</p>
+              <p className="mt-1 text-[0.82rem] text-muted">{DELIVERY.shipping}. עלות המשלוח תימסר לפני אישור ההזמנה.</p>
             </div>
           )}
         </fieldset>
