@@ -1,4 +1,5 @@
 import { getOrder, saveOrder } from "@/lib/orders";
+import { sendOrderEmails } from "@/lib/email";
 
 /** עדכון סטטוס התשלום של הזמנה לפי מה שטרנזילה שלחה */
 export async function recordPayment(params: URLSearchParams, orderIdHint: string | null) {
@@ -25,5 +26,13 @@ export async function recordPayment(params: URLSearchParams, orderIdHint: string
     },
   };
   await saveOrder(next);
+  // מיילים רק בפעם הראשונה שההזמנה עוברת ל"שולם"
+  if (ok && order.pay !== "paid") {
+    try {
+      await sendOrderEmails(next);
+    } catch (err) {
+      console.error("[email]", err);
+    }
+  }
   return next;
 }

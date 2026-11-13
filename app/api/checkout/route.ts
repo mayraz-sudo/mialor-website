@@ -37,6 +37,7 @@ export async function POST(req: Request) {
     notes: clean(c.notes, 300),
   };
   if (!customer.name || !/^0\d{8,9}$/.test(customer.phone)) return NextResponse.json({ error: "נא למלא שם וטלפון תקין." }, { status: 400 });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) return NextResponse.json({ error: "נא למלא כתובת מייל תקינה (לאישור ההזמנה)." }, { status: 400 });
   if (delivery === "post" && (!customer.address || !customer.city)) return NextResponse.json({ error: "נא למלא כתובת ועיר למשלוח." }, { status: 400 });
 
   const terminal = tranzilaTerminal();

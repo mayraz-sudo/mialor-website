@@ -72,6 +72,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
     e.preventDefault();
     if (!count) return setStatus({ kind: "error", msg: "הסל ריק. בחרו לפחות פריט אחד." });
     if (!form.name.trim() || !/^0\d{8,9}$/.test(form.phone.replace(/[-\s]/g, ""))) return setStatus({ kind: "error", msg: "נא למלא שם וטלפון תקין." });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return setStatus({ kind: "error", msg: "נא למלא כתובת מייל תקינה (לאישור ההזמנה)." });
     if (delivery === "post" && (!form.address.trim() || !form.city.trim())) return setStatus({ kind: "error", msg: "נא למלא כתובת ועיר למשלוח." });
     if (!agree) return setStatus({ kind: "error", msg: "נא לאשר את התקנון ומדיניות הביטול." });
     setStatus({ kind: "sending" });
@@ -191,8 +192,8 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
                 <input id="c-phone" type="tel" inputMode="tel" autoComplete="tel" dir="ltr" value={form.phone} onChange={set("phone")} className={`${field} text-right`} />
               </div>
               <div>
-                <label htmlFor="c-email" className={label}>מייל (לקבלה)</label>
-                <input id="c-email" type="email" autoComplete="email" dir="ltr" value={form.email} onChange={set("email")} className={`${field} text-right`} />
+                <label htmlFor="c-email" className={label}>מייל (לאישור ההזמנה)</label>
+                <input id="c-email" type="email" required autoComplete="email" dir="ltr" value={form.email} onChange={set("email")} className={`${field} text-right`} />
               </div>
             </div>
             {delivery === "post" && (
