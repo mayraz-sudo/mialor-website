@@ -11,6 +11,8 @@ export type ShopItem = {
   price: number;
   /** null = תמונה בקרוב (Coming soon) */
   image: string | null;
+  /** תמונה נוספת (לא חובה) – מתחלפת במעבר עכבר או בלחיצה */
+  image2?: string;
   /** כמות מקסימלית להזמנה אחת (לא חובה) */
   maxQty?: number;
   /** פריט לדוגמה – מוצג רק בזמן הבנייה, לא באתר החי */
@@ -53,7 +55,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     name: "מעמד ופמוטים מגבס",
     description: "מעמד ופמוטים מגבס בעבודת יד.",
     price: 200,
-    image: null, // תמונה בקרוב
+    image: "/images/products/shop-gypsum-stand-1.jpg",
+    image2: "/images/products/shop-gypsum-stand-2.jpg", // באריזה
   },
   {
     id: "blessing-stand",

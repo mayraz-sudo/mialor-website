@@ -92,7 +92,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
               <li key={item.id} className="flex flex-col">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-surface">
                   {item.image ? (
-                    <Image src={item.image} alt={item.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                    <ItemPhotos item={item} />
                   ) : (
                     <ComingSoon name={item.name} />
                   )}
@@ -254,6 +254,35 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/** תמונת פריט; אם יש תמונה שנייה – מתחלפת במעבר עכבר, ובנייד בלחיצה על הכפתור */
+function ItemPhotos({ item }: { item: ShopItem }) {
+  const [second, setSecond] = useState(false);
+  const sizes = "(min-width: 1024px) 25vw, 50vw";
+  if (!item.image2) return <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover" />;
+  return (
+    <div className="group absolute inset-0">
+      <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover" />
+      <Image
+        src={item.image2}
+        alt={`${item.name} – תמונה נוספת`}
+        fill
+        sizes={sizes}
+        className={`object-cover transition-opacity duration-500 ${second ? "opacity-100" : "opacity-0 [@media(hover:hover)]:group-hover:opacity-100"}`}
+      />
+      <button
+        type="button"
+        onClick={() => setSecond((s) => !s)}
+        aria-pressed={second}
+        aria-label={second ? "הצגת התמונה הראשית" : "הצגת תמונה נוספת"}
+        className="absolute bottom-2.5 left-2.5 flex gap-1.5 rounded-full bg-white/85 px-2.5 py-2"
+      >
+        <span className={`h-1.5 w-1.5 rounded-full ${second ? "bg-ink/30" : "bg-ink"}`} />
+        <span className={`h-1.5 w-1.5 rounded-full ${second ? "bg-ink" : "bg-ink/30"}`} />
+      </button>
     </div>
   );
 }
