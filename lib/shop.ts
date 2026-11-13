@@ -62,6 +62,20 @@ export const SHOP_ITEMS: ShopItem[] = [
     price: 150,
     image: null, // תמונה בקרוב
   },
+  {
+    id: "plate",
+    name: "צלחת בלבד",
+    description: "צלחת בעבודת יד, בלי פמוטים וברכה.",
+    price: 80,
+    image: null, // תמונה בקרוב
+  },
+  {
+    id: "plate-candlesticks-blessing",
+    name: "צלחת, פמוטים וברכה",
+    description: "סט מלא: צלחת, פמוטים וברכה.",
+    price: 199,
+    image: null, // תמונה בקרוב
+  },
 ];
 
 /** הפריטים שמוצגים: פריטים לדוגמה רק כשהחנות עוד לא פעילה */
