@@ -143,6 +143,15 @@ export const SHOP_ITEMS: ShopItem[] = [
     price: 70,
     image: img("tray-1"),
   },
+  {
+    // לתשלום ניסיון בלבד (בדיקת מיילים) – למחוק אחרי הבדיקה
+    id: "test-item",
+    name: "מוצר לניסיון",
+    description: "לבדיקת תשלום בלבד.",
+    price: 1,
+    image: null,
+    maxQty: 1,
+  },
 ];
 
 /** הפריטים שמוצגים: פריטים לדוגמה רק כשהחנות עוד לא פעילה */
