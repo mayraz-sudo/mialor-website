@@ -307,7 +307,7 @@ export const categoryBySlug = (slug: CategorySlug) => CATEGORIES.find((c) => c.s
 export const NAV = [
   { label: "בית", href: "/" },
   ...CATEGORIES.map((c) => ({ label: c.navLabel, href: categoryHref(c.slug) })),
-  { label: "קנייה אונליין", href: "/shop" },
+  { label: "חנות מוצרים", href: "/shop" },
   { label: "אודות", href: "/#about" },
   { label: "צור קשר", href: "/#contact" },
 ];

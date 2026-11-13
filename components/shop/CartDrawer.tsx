@@ -114,7 +114,7 @@ export default function CartDrawer() {
             <div className="px-5 py-14 text-center">
               <p className="text-muted">הסל ריק.</p>
               <Link href="/shop" onClick={closeCart} className="btn btn-primary mt-5">
-                לקנייה אונליין
+                לחנות המוצרים
               </Link>
             </div>
           ) : (
