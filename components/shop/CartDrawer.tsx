@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { SHOP, cartTotals, perLabel, type Delivery } from "@/lib/shop";
+import { SHOP, cartTotals, isUploadedImage, perLabel, type Delivery } from "@/lib/shop";
 import { IconClose } from "../Icons";
 import { useCart } from "./CartContext";
 import { useLaunchActive } from "./Launch";
@@ -34,7 +34,7 @@ export function Stepper({ value, onChange, max = 99, name, small = false }: { va
 }
 
 export default function CartDrawer() {
-  const { cart, count, setQty, isOpen, closeCart } = useCart();
+  const { items, cart, count, setQty, isOpen, closeCart } = useCart();
   const [delivery, setDelivery] = useState<Delivery>("pickup");
   const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", city: "", zip: "", notes: "" });
   const [agree, setAgree] = useState(false);
@@ -64,7 +64,7 @@ export default function CartDrawer() {
   }, [isOpen, closeCart, payment]);
 
   const launch = useLaunchActive();
-  const totals = useMemo(() => cartTotals(cart, delivery, launch), [cart, delivery, launch]);
+  const totals = useMemo(() => cartTotals(cart, delivery, launch, items), [cart, delivery, launch, items]);
   const postReady = SHOP.postPrice !== null;
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -134,7 +134,7 @@ export default function CartDrawer() {
                 {totals.rows.map(({ item, qty, unit, sum }) => (
                   <li key={item.id} className="flex gap-3 py-3.5">
                     <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-[2px] bg-surface">
-                      {item.image && <Image src={item.image} alt="" fill sizes="64px" className="object-cover" />}
+                      {item.images[0] && <Image src={item.images[0]} unoptimized={isUploadedImage(item.images[0])} alt="" fill sizes="64px" className="object-cover" />}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex items-start justify-between gap-2">

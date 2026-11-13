@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import ShopClient from "@/components/shop/ShopClient";
 import { IconChevron, IconGift, IconPen, IconTruck } from "@/components/Icons";
-import { CARE, SHOP, shopItems } from "@/lib/shop";
+import { CARE, SHOP } from "@/lib/shop";
+import { getVisibleItems } from "@/lib/catalog";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `${SHOP.title} | MIALOR`,
@@ -17,7 +20,8 @@ const FACTS = [
   { icon: IconGift, title: "איסוף עצמי מחולון", text: "בחינם, בתיאום מראש" },
 ];
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const items = await getVisibleItems();
   return (
     <>
       <PageHeader eyebrow="MIALOR" title={SHOP.title} intro={SHOP.intro} />
@@ -37,7 +41,7 @@ export default function ShopPage() {
       </section>
 
       <section className="bg-bg">
-        <ShopClient items={shopItems()} />
+        <ShopClient items={items} />
       </section>
 
       <section aria-labelledby="good-to-know" className="border-t border-line bg-bg">

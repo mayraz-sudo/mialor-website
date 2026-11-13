@@ -1,12 +1,14 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { shopItems, type CartLine } from "@/lib/shop";
+import { SHOP_ITEMS, type CartLine, type ShopItem } from "@/lib/shop";
 import CartDrawer from "./CartDrawer";
 
 const KEY = "mialor-cart";
 
 type CartState = {
+  /** רשימת המוצרים העדכנית (נטענת מהשרת) */
+  items: ShopItem[];
   cart: CartLine[];
   count: number;
   qtyOf: (id: string) => number;
@@ -31,14 +33,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setOpen] = useState(false);
 
-  // הסל נשמר במכשיר
+  const [items, setItems] = useState<ShopItem[]>(SHOP_ITEMS);
+
+  // הסל נשמר במכשיר; רשימת המוצרים העדכנית נטענת מהשרת
   useEffect(() => {
+    let saved: CartLine[] = [];
     try {
-      const valid = new Set(shopItems().filter((i) => !i.hidden).map((i) => i.id));
-      const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-      if (Array.isArray(saved)) setCart(saved.filter((l) => valid.has(l?.id) && Number.isFinite(l?.qty) && l.qty > 0));
+      const raw = JSON.parse(localStorage.getItem(KEY) || "[]");
+      if (Array.isArray(raw)) saved = raw.filter((l) => typeof l?.id === "string" && Number.isFinite(l?.qty) && l.qty > 0);
     } catch {}
+    setCart(saved);
     setLoaded(true);
+    fetch("/api/catalog", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { items?: ShopItem[] } | null) => {
+        if (!d?.items) return;
+        setItems(d.items);
+        const valid = new Set(d.items.map((i) => i.id));
+        setCart((c) => c.filter((l) => valid.has(l.id)));
+      })
+      .catch(() => {});
   }, []);
   useEffect(() => {
     if (!loaded) return;
@@ -57,6 +71,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<CartState>(
     () => ({
+      items,
       cart,
       count: cart.reduce((a, l) => a + l.qty, 0),
       qtyOf: (id) => cart.find((l) => l.id === id)?.qty ?? 0,
@@ -66,7 +81,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       openCart: () => setOpen(true),
       closeCart: () => setOpen(false),
     }),
-    [cart, isOpen, setQty, clear],
+    [items, cart, isOpen, setQty, clear],
   );
 
   return (

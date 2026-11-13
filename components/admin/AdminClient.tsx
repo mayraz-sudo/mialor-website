@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Order, Stage } from "@/lib/orders";
+import ProductsAdmin from "./ProductsAdmin";
 
 const STAGES: { id: Stage; label: string }[] = [
   { id: "new", label: "חדשה" },
@@ -27,6 +28,8 @@ export default function AdminClient() {
   const [filter, setFilter] = useState<Filter>("open");
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"orders" | "products">("orders");
+  const authLost = useCallback(() => setState("login"), []);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/orders", { cache: "no-store" });
@@ -97,13 +100,26 @@ export default function AdminClient() {
     <section className="bg-bg">
       <div className="mx-auto max-w-[1100px] px-4 py-8 sm:px-5 md:py-12">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="t-h2">ניהול הזמנות</h1>
+          <h1 className="t-h2">ניהול</h1>
           <div className="flex gap-2">
             <button onClick={load} className="btn btn-secondary btn-sm">רענון</button>
             <button onClick={logout} className="btn btn-secondary btn-sm">יציאה</button>
           </div>
         </div>
 
+        <div role="tablist" aria-label="אזורי ניהול" className="mt-5 flex gap-1 border-b border-line">
+          {([["orders", "הזמנות"], ["products", "מוצרים"]] as const).map(([id, l]) => (
+            <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
+              className={`-mb-px border-b-2 px-4 py-2.5 text-[1rem] ${tab === id ? "border-ink font-medium" : "border-transparent text-muted"}`}>
+              {l}
+            </button>
+          ))}
+        </div>
+
+        {tab === "products" ? (
+          <ProductsAdmin onAuthLost={authLost} />
+        ) : (
+          <>
         <div className="mt-6 grid grid-cols-3 gap-3">
           {[
             ["הזמנות פתוחות", String(openCount)],
@@ -153,6 +169,8 @@ export default function AdminClient() {
               );
             })}
           </ul>
+        )}
+          </>
         )}
       </div>
     </section>

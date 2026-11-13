@@ -7,36 +7,30 @@ import BuyBox from "@/components/shop/BuyBox";
 import TrackViewContent from "@/components/pixel/TrackViewContent";
 import { LaunchBadge, LaunchNote, LaunchPrice } from "@/components/shop/Launch";
 import { IconChevron } from "@/components/Icons";
-import { CARE, SHOP, shopItemById, shopItemHref, shopItemImages, shopItems } from "@/lib/shop";
+import { CARE, SHOP, isUploadedImage, shopItemHref } from "@/lib/shop";
+import { getItem, getVisibleItems } from "@/lib/catalog";
 
 type Params = { params: Promise<{ id: string }> };
 
-export const dynamicParams = false;
-export function generateStaticParams() {
-  return shopItems()
-    .filter((i) => !i.hidden)
-    .map((i) => ({ id: i.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const item = shopItemById((await params).id);
+  const item = await getItem((await params).id);
   if (!item) return {};
   return {
     title: `${item.name} | חנות מוצרים | MIALOR`,
     description: `${item.description} ${SHOP.material}`,
-    openGraph: { title: item.name, description: item.description, images: item.image ? [item.image] : [] },
+    openGraph: { title: item.name, description: item.description, images: item.images.slice(0, 1) },
   };
 }
 
 const money = (n: number) => `₪${n.toLocaleString("he-IL")}`;
 
 export default async function ShopItemPage({ params }: Params) {
-  const item = shopItemById((await params).id);
+  const item = await getItem((await params).id);
   if (!item) notFound();
-  const images = shopItemImages(item);
-  const others = shopItems()
-    .filter((i) => i.id !== item.id && !i.hidden)
-    .slice(0, 4);
+  const images = item.images;
+  const others = (await getVisibleItems()).filter((i) => i.id !== item.id).slice(0, 4);
 
   const facts = [
     { label: "חומר", value: "גבס איכותי, בעבודת יד" },
@@ -120,8 +114,8 @@ export default async function ShopItemPage({ params }: Params) {
                   <Link href={shopItemHref(o.id)} className="group block">
                     <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
                       <LaunchBadge />
-                      {o.image && (
-                        <Image src={o.image} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                      {o.images[0] && (
+                        <Image src={o.images[0]} unoptimized={isUploadedImage(o.images[0])} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                       )}
                     </div>
                     <p className="mt-3 leading-snug">{o.name}</p>

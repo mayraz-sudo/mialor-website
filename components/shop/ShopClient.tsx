@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { itemPrice, shopItemHref, type ShopItem } from "@/lib/shop";
+import { isUploadedImage, itemPrice, shopItemHref, type ShopItem } from "@/lib/shop";
 import { LaunchBadge, LaunchPrice, useLaunchActive } from "./Launch";
 import { ComingSoon } from "../ProductMedia";
 import { useCart } from "./CartContext";
@@ -34,7 +34,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
               <Link href={shopItemHref(item.id)} className="group block">
                 <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
                   <LaunchBadge />
-                  {item.image ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
+                  {item.images.length ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
                 </div>
                 <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug group-hover:text-accent-strong md:text-[1.25rem]">{item.name}</h2>
                 <p className="mt-1 text-[0.92rem] leading-relaxed text-muted">{item.description}</p>
@@ -78,13 +78,14 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
 /** תמונת פריט בכרטיס; אם יש תמונה שנייה – מתחלפת במעבר עכבר (את כל התמונות רואים בעמוד המוצר) */
 function ItemPhotos({ item }: { item: ShopItem }) {
   const sizes = "(min-width: 1024px) 25vw, 50vw";
+  const [main, second] = item.images;
   return (
     <>
-      <Image src={item.image!} alt={item.name} fill sizes={sizes} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-      {item.image2 && (
+      <Image src={main} unoptimized={isUploadedImage(main)} alt={item.name} fill sizes={sizes} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+      {second && (
         <>
-          <Image src={item.image2} alt="" fill sizes={sizes} className="object-cover opacity-0 transition-opacity duration-500 [@media(hover:hover)]:group-hover:opacity-100" />
-          <span className="absolute bottom-2.5 left-2.5 rounded-full bg-white/85 px-2 py-0.5 text-[0.75rem] text-ink">2 תמונות</span>
+          <Image src={second} unoptimized={isUploadedImage(second)} alt="" fill sizes={sizes} className="object-cover opacity-0 transition-opacity duration-500 [@media(hover:hover)]:group-hover:opacity-100" />
+          <span className="absolute bottom-2.5 left-2.5 rounded-full bg-white/85 px-2 py-0.5 text-[0.75rem] text-ink">{item.images.length} תמונות</span>
         </>
       )}
     </>

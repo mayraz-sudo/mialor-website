@@ -95,6 +95,7 @@ export default function ProductGallery({ product, square = false }: { product: P
               ) : (
                 <Image
                   src={s.src}
+                  unoptimized={s.src.startsWith("/media/")}
                   alt={`${product.name} – תמונה ${i + 1}`}
                   fill
                   priority={i === 0}
@@ -136,7 +137,7 @@ export default function ProductGallery({ product, square = false }: { product: P
               aria-current={i === active}
               className="relative aspect-square w-16 shrink-0 overflow-hidden rounded-[2px] opacity-60 ring-ink transition-opacity aria-[current=true]:opacity-100 aria-[current=true]:ring-1 md:w-20"
             >
-              <Image src={s.kind === "video" ? s.poster : s.src} alt="" fill sizes="80px" className="object-cover" />
+              <Image src={s.kind === "video" ? s.poster : s.src} unoptimized={(s.kind === "video" ? s.poster : s.src).startsWith("/media/")} alt="" fill sizes="80px" className="object-cover" />
               {s.kind === "video" && (
                 <span className="absolute inset-0 grid place-items-center bg-ink/25 text-bg" aria-hidden>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

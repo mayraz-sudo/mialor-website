@@ -4,23 +4,20 @@
  */
 
 export type ShopItem = {
+  /** מזהה קבוע באנגלית – משמש בכתובת המוצר, בקטלוג של מטא ובפיקסל. לא משנים אחרי שנוצר. */
   id: string;
   name: string;
   description: string;
-  /** מחיר ליחידה בשקלים (כולל הכול) */
+  /** מחיר מלא בשקלים (לפני מחירי השקה) */
   price: number;
   /** על מה המחיר: "pair" = לזוג, "unit" = ליחידה (לא חובה) */
   per?: "pair" | "unit";
-  /** null = תמונה בקרוב (Coming soon) */
-  image: string | null;
-  /** תמונה נוספת (לא חובה) – מתחלפת במעבר עכבר או בלחיצה */
-  image2?: string;
+  /** תמונות – הראשונה היא התמונה הראשית */
+  images: string[];
   /** כמות מקסימלית להזמנה אחת (לא חובה) */
   maxQty?: number;
-  /** פריט נסתר – מופיע רק בכתובת /shop?test=1 (לתשלום ניסיון) */
+  /** מוסתר מהחנות (למשל כשאזל) */
   hidden?: boolean;
-  /** פריט לדוגמה – מוצג רק בזמן הבנייה, לא באתר החי */
-  sample?: boolean;
 };
 
 export const SHOP = {
@@ -56,7 +53,10 @@ export const CARE = {
 
 const img = (n: string) => `/images/shop/${n}.jpg`;
 
-/** המוצרים בחנות – לפי הקובץ "MIALOR – פרטים לאתר" (גיליון מוצרים) */
+/**
+ * רשימת המוצרים ההתחלתית. מרגע שמאי עורכת מוצרים במערכת הניהול, הרשימה נשמרת באחסון של האתר
+ * (lib/catalog.ts) – והרשימה כאן משמשת רק כגיבוי אם האחסון ריק.
+ */
 export const SHOP_ITEMS: ShopItem[] = [
   {
     id: "rachel-candle",
@@ -64,15 +64,14 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: "פמוט מגבס עם הכיתוב \"הריני מדליקה נר זה לכבוד רחל אמנו\".",
     price: 120,
     per: "unit",
-    image: img("rachel-1"),
-    image2: img("rachel-2"),
+    images: [img("rachel-1"), img("rachel-2")],
   },
   {
     id: "hanukkiah",
     name: "חנוכייה",
     description: "חנוכייה מגבס בעיצוב נקי ומודרני.",
     price: 199,
-    image: img("hanukkiah-1"),
+    images: [img("hanukkiah-1")],
   },
   {
     id: "round-pair-shabbat-shalom",
@@ -80,8 +79,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: "זוג פמוטים עגולים מגבס, עם הכיתוב \"שבת\" ו\"שלום\".",
     price: 80,
     per: "pair",
-    image: img("round-pair-1"),
-    image2: img("round-pair-2"),
+    images: [img("round-pair-1"), img("round-pair-2")],
   },
   {
     id: "square-pair-shabbat-shalom",
@@ -89,71 +87,64 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: "זוג פמוטים מרובעים מגבס, עם הכיתוב \"שבת\" ו\"שלום\".",
     price: 99,
     per: "pair",
-    image: img("square-pair-1"),
-    image2: img("square-pair-2"),
+    images: [img("square-pair-1"), img("square-pair-2")],
   },
   {
     id: "stand-round-candlesticks",
     name: "מעמד הדלקת נרות ופמוטים עגולים",
     description: "מעמד עם ברכת הדלקת נרות שבת וזוג פמוטים עגולים \"שבת שלום\". המעמד בגודל 16 ס\"מ.",
     price: 199,
-    image: img("stand-round-1"),
+    images: [img("stand-round-1")],
   },
   {
     id: "stand-candlesticks-rachel",
     name: "מעמד הדלקת נרות, פמוטים שבת שלום ונר רחל אמנו",
     description: "מעמד עם ברכת הדלקת נרות שבת, זוג פמוטים \"שבת שלום\" ופמוט רחל אמנו. המעמד בגודל 16 ס\"מ.",
     price: 249,
-    image: img("stand-rachel-1"),
+    images: [img("stand-rachel-1")],
   },
   {
     id: "blessing-stand",
     name: "מעמד הדלקת נרות",
     description: "מעמד עם ברכת הדלקת נרות שבת. המעמד בגודל 16 ס\"מ.",
     price: 119,
-    image: img("blessing-stand-1"),
-    image2: img("blessing-stand-2"),
+    images: [img("blessing-stand-1"), img("blessing-stand-2")],
   },
   {
     id: "my-fire-stand",
     name: "מעמד הדלקת נרות האש שלי",
     description: "מעמד בצורת להבה עם שני פמוטים מחוברים.",
     price: 149,
-    image: img("fire-stand-1"),
-    image2: img("fire-stand-2"),
+    images: [img("fire-stand-1"), img("fire-stand-2")],
   },
   {
     id: "braid-candlesticks-tray",
     name: "פמוטים צמה ומגש",
     description: "פמוטים בעיצוב צמה, עם מגש אובלי.",
     price: 149,
-    image: img("braid-tray-1"),
+    images: [img("braid-tray-1")],
   },
   {
     id: "braid-candlesticks",
     name: "פמוטים צמה",
     description: "פמוטים בעיצוב צמה.",
     price: 99,
-    image: img("braid-tray-1"), // התמונה בדרייב זהה לזו של "פמוטים צמה ומגש" – כדאי תמונה בלי המגש
+    images: [img("braid-tray-1")],
   },
   {
     id: "tray",
     name: "מגש בלבד",
     description: "מגש אובלי מגבס.",
     price: 70,
-    image: img("tray-1"),
+    images: [img("tray-1")],
   },
 ];
 
-/** הפריטים שמוצגים: פריטים לדוגמה רק כשהחנות עוד לא פעילה */
-export const perLabel = (i: ShopItem) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");
-
-export const shopItems = () => SHOP_ITEMS.filter((i) => !i.sample || !SHOP.enabled);
+export const perLabel = (i: Pick<ShopItem, "per">) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");
 
 export type CartLine = { id: string; qty: number };
 export type Delivery = "pickup" | "post";
 
-/** חישוב סכום ההזמנה – משמש גם בדפדפן וגם בשרת (בשרת זה המחיר הקובע) */
 /**
  * מחירי השקה – הנחה באחוזים על כל מוצרי החנות, לפי תאריכים (שעון ישראל).
  * המחיר אחרי ההנחה מעוגל כלפי מטה לשקל שלם, כך שההנחה תמיד לפחות האחוז שכתוב.
@@ -180,11 +171,11 @@ export function isLaunchActive(date: Date = new Date()) {
 export const itemPrice = (item: Pick<ShopItem, "price">, launch: boolean) =>
   launch ? Math.floor((item.price * (100 - LAUNCH.percent)) / 100) : item.price;
 
-export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolean = isLaunchActive()) {
-  const items = shopItems();
+/** חישוב סכום ההזמנה – משמש גם בדפדפן וגם בשרת (בשרת זה המחיר הקובע) */
+export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolean, items: ShopItem[]) {
   const rows = lines
     .map((l) => {
-      const item = items.find((i) => i.id === l.id);
+      const item = items.find((i) => i.id === l.id && !i.hidden);
       if (!item) return null;
       const qty = Math.max(1, Math.min(Math.floor(l.qty), item.maxQty ?? 99));
       const unit = itemPrice(item, launch);
@@ -196,7 +187,6 @@ export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolea
   return { rows, subtotal, shipping, total: shipping === null ? null : subtotal + shipping };
 }
 
-export const shopItemById = (id: string) => shopItems().find((i) => i.id === id && !i.hidden);
 export const shopItemHref = (id: string) => `/shop/${id}`;
-/** כל התמונות של פריט, לגלריה */
-export const shopItemImages = (i: ShopItem) => [i.image, i.image2].filter((s): s is string => Boolean(s));
+/** תמונות שהועלו במערכת הניהול מוגשות מהאתר עצמו (בלי עיבוד נוסף של Next) */
+export const isUploadedImage = (src: string) => src.startsWith("/media/");

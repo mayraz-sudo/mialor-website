@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
-import { cartTotals, perLabel, type CartLine, type Delivery } from "@/lib/shop";
+import { cartTotals, isLaunchActive, perLabel, type CartLine, type Delivery } from "@/lib/shop";
+import { getCatalog } from "@/lib/catalog";
 import { createHandshake, iframeAction, tranzilaTerminal } from "@/lib/tranzila";
 import { saveOrder } from "@/lib/orders";
 
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
 
   const lines = Array.isArray(body.lines) ? body.lines.filter((l) => typeof l?.id === "string" && Number.isFinite(l?.qty)) : [];
   const delivery: Delivery = body.delivery === "post" ? "post" : "pickup";
-  const totals = cartTotals(lines, delivery);
+  const totals = cartTotals(lines, delivery, isLaunchActive(), await getCatalog());
   if (!totals.rows.length) return NextResponse.json({ error: "הסל ריק." }, { status: 400 });
   if (totals.total === null) return NextResponse.json({ error: "מחיר המשלוח עוד לא נקבע. אפשר לבחור איסוף עצמי." }, { status: 400 });
 

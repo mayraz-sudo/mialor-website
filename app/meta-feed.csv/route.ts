@@ -1,4 +1,5 @@
-import { SHOP, isLaunchActive, itemPrice, shopItemImages, shopItems } from "@/lib/shop";
+import { SHOP, isLaunchActive, itemPrice } from "@/lib/shop";
+import { getVisibleItems } from "@/lib/catalog";
 
 /**
  * קובץ מוצרים לקטלוג של Meta (פייסבוק ואינסטגרם): https://mialorshop.com/meta-feed.csv
@@ -17,12 +18,12 @@ const cell = (v: string) => {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
-export function GET() {
+export async function GET() {
   const launch = isLaunchActive();
-  const rows = shopItems()
-    .filter((i) => !i.hidden && !EXCLUDED.has(i.id) && i.image)
+  const rows = (await getVisibleItems())
+    .filter((i) => !EXCLUDED.has(i.id))
     .map((i) => {
-      const [main, ...extra] = shopItemImages(i);
+      const [main, ...extra] = i.images;
       return [
         i.id,
         i.name,
