@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bellefair, Heebo } from "next/font/google";
 import Header from "@/components/Header";
+import { CartProvider } from "@/components/shop/CartContext";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { PromoBar } from "@/components/Promo";
@@ -52,12 +53,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           דילוג לתוכן
         </a>
-        <PromoBar />
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <WhatsAppFloat />
-        <AccessibilityMenu />
+        <CartProvider>
+          <PromoBar />
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+          <WhatsAppFloat />
+          <AccessibilityMenu />
+        </CartProvider>
       </body>
     </html>
   );

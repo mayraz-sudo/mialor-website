@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LOGO, NAV, SITE, whatsappLink } from "@/lib/site";
-import { IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
+import { IconBag, IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
+import { SHOP } from "@/lib/shop";
+import { useCart } from "./shop/CartContext";
 
 function SearchForm({ id, compact = false }: { id: string; compact?: boolean }) {
   return (
@@ -30,6 +32,26 @@ type NavLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: stri
 /** "/" = ניווט מהיר של Next; קישורים עם # = קישור רגיל */
 function NavLink({ href, ...rest }: NavLinkProps) {
   return href.includes("#") ? <a href={href} {...rest} /> : <Link href={href} {...rest} />;
+}
+
+/** אייקון הסל בכותרת, עם מספר הפריטים */
+function CartButton() {
+  const { count, openCart } = useCart();
+  return (
+    <button
+      type="button"
+      onClick={openCart}
+      aria-label={count ? `הסל שלי, ${count} פריטים` : "הסל שלי (ריק)"}
+      className="relative grid h-10 w-10 place-items-center rounded-[2px] border border-line bg-surface text-ink transition-colors hover:border-accent lg:h-11 lg:w-11"
+    >
+      <IconBag className="h-[21px] w-[21px]" />
+      {count > 0 && (
+        <span aria-hidden className="absolute -top-1.5 -left-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1 text-[11px] font-medium text-bg tabular-nums">
+          {count}
+        </span>
+      )}
+    </button>
+  );
 }
 
 export default function Header() {
@@ -99,7 +121,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          <div className="flex items-center justify-self-end gap-3">
+          <div className="flex items-center justify-self-end gap-2 lg:gap-3">
             <div className="hidden w-52 xl:block">
               <SearchForm id="search-desktop" compact />
             </div>
@@ -113,6 +135,7 @@ export default function Header() {
               <IconInstagram className="h-[18px] w-[18px]" />
               <span className="hidden lg:inline">Instagram</span>
             </a>
+            {SHOP.enabled && <CartButton />}
           </div>
         </div>
 
