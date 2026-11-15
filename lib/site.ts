@@ -126,10 +126,10 @@ const img = (slug: string, n: number) => Array.from({ length: n }, (_, i) => `/i
 
 /** כל המוצרים – לפי הקובץ "MIALOR – פרטים לאתר" */
 export const PRODUCTS: Product[] = [
-  { id: "rachel-candle", name: "מארז נר סגולת רחל אמנו", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("rachel-candle", 1),
+  { id: "rachel-candle", name: "מארז נר סגולת רחל אמנו", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("rachel-candle", 1),
     description: "מארז מרגש ומלא משמעות בהשראת סגולת רחל אמנו, הכולל נר וברכה תואמת. מתנה מיוחדת לאורחות בהפרשת חלה ובאירועים מרגשים, עם אפשרות למיתוג אישי." },
   // בקובץ סומן "הזמנות לאירועים" – הועבר למארזים כי זה מארז (לאישור)
-  { id: "round-candlesticks-blessing", name: "מארז פמוטים עגולים וברכה שבת שלום", categories: ["packages"], priceFrom: 33, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks-blessing", 1),
+  { id: "round-candlesticks-blessing", name: "מארז פמוטים עגולים וברכה שבת שלום", categories: ["packages"], priceFrom: 33, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks-blessing", 1),
     description: "מארז שבת אלגנטי הכולל זוג פמוטים עגולים בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מתנה אישית ומלאת משמעות, עם אפשרות למיתוג בהתאמה לאירוע." },
   { id: "digital-invitation", name: "עיצוב הזמנה דיגיטלית", categories: ["invitations", "branding"], priceFrom: 100, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("digital-invitation", 4),
     description: "הזמנה דיגיטלית בעיצוב אישי ומוקפד, המותאמת לסגנון ולפרטי האירוע שלכם. דרך אלגנטית ומיוחדת להזמין את האורחים ולשתף את ההתרגשות לקראת היום הגדול." },
@@ -139,19 +139,19 @@ export const PRODUCTS: Product[] = [
     images: ["/images/products/digital-invitation-video-poster.jpg"],
     video: { src: "/images/products/digital-invitation-video.mp4", poster: "/images/products/digital-invitation-video-poster.jpg" },
     description: "הזמנה דיגיטלית מונפשת בעיצוב אישי, המשלבת תנועה, אלמנטים גרפיים ופרטי האירוע. דרך מרשימה ומקורית להזמין את האורחים וליצור ציפייה לקראת האירוע." },
-  { id: "square-candlesticks-blessing", name: "מארז פמוטים מרובעים וברכה שבת שלום", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks-blessing", 1),
+  { id: "square-candlesticks-blessing", name: "מארז פמוטים מרובעים וברכה שבת שלום", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks-blessing", 1),
     description: "מארז שבת קלאסי הכולל זוג פמוטים מרובעים בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מתנה שימושית ומרגשת עם אפשרות למיתוג אישי." },
-  { id: "shabbat-candles-blessing", name: "מארז ברכה ונרות שבת", categories: ["packages"], priceFrom: 10, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("shabbat-candles-blessing", 1),
+  { id: "shabbat-candles-blessing", name: "מארז ברכה ונרות שבת", categories: ["packages"], priceFrom: 10, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("shabbat-candles-blessing", 1),
     description: "מארז עדין ומלא משמעות הכולל נרות שבת וברכה מעוצבת להדלקת נרות. מתנה מקסימה להפרשת חלה, שבת חתן ואירועים משפחתיים, עם אפשרות להקדשה אישית." },
-  { id: "glass-candlesticks-blessing", name: "מארז פמוטים מזכוכית וברכה", categories: ["packages"], priceFrom: 22, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("glass-candlesticks-blessing", 1),
+  { id: "glass-candlesticks-blessing", name: "מארז פמוטים מזכוכית וברכה", categories: ["packages"], priceFrom: 22, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("glass-candlesticks-blessing", 1),
     description: "מארז אלגנטי הכולל פמוטים מזכוכית וברכה בעיצוב נקי וקלאסי. מזכרת מיוחדת ושימושית לאורחים, המשלבת יופי ועדינות ומתאימה למגוון אירועים." },
-  { id: "havdalah", name: "מארז הבדלה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("havdalah", 1),
+  { id: "havdalah", name: "מארז הבדלה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("havdalah", 1),
     description: "מארז מיוחד בהשראת מסורת ההבדלה, הכולל נר הבדלה וברכון מעוצב עם סדר ההבדלה. מתנה בעלת משמעות לסיום השבת, עם אפשרות למיתוג אישי." },
-  { id: "eshet-chayil-scarf", name: "מארז מטפחת לראש אשת חיל", categories: ["packages"], priceFrom: 25, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("eshet-chayil-scarf", 2),
+  { id: "eshet-chayil-scarf", name: "מארז מטפחת לראש אשת חיל", categories: ["packages"], priceFrom: 25, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("eshet-chayil-scarf", 2),
     description: "מארז נשי ואלגנטי הכולל מטפחת לראש בהשראת ברכת אשת חיל. מתנה אישית ומרגשת להפרשת חלה, שבת חתן ואירועים מיוחדים, עם אפשרות למיתוג והקדשה." },
-  { id: "round-candlesticks", name: "מארז פמוטים עגולים שבת שלום", categories: ["packages"], priceFrom: 26, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks", 1),
+  { id: "round-candlesticks", name: "מארז פמוטים עגולים שבת שלום", categories: ["packages"], priceFrom: 26, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks", 1),
     description: "זוג פמוטים עגולים בעבודת יד, בעיצוב מינימליסטי ועל־זמני. מתנה אלגנטית ושימושית לאורחים, עם אפשרות לאריזה ומיתוג בהתאמה לאירוע." },
-  { id: "square-candlesticks", name: "מארז פמוטים מרובעים שבת שלום", categories: ["packages"], priceFrom: 28, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks", 1),
+  { id: "square-candlesticks", name: "מארז פמוטים מרובעים שבת שלום", categories: ["packages"], priceFrom: 28, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks", 1),
     description: "זוג פמוטים מרובעים בעבודת יד, בעיצוב נקי ומוקפד. מזכרת מיוחדת מאירוע מרגש, המשלבת שימושיות, יופי ואפשרות למיתוג אישי." },
   { id: "booklet-mizmor-candles", name: "ברכון מזמור לתודה וסדר הדלקת נרות עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-mizmor-candles", 3),
     description: "ברכון מעוצב המשלב את מזמור לתודה וסדר הדלקת נרות שבת. בעיצוב קלאסי ועדין, עם סרט תחרה למראה חגיגי ואלגנטי. מזכרת מרגשת עם אפשרות להקדשה אישית." },
@@ -165,9 +165,9 @@ export const PRODUCTS: Product[] = [
     description: "ברכון מעוצב המשלב את סגולת רחל אמנו וסדר הדלקת נרות שבת. עם סרט תחרה עדין ואפשרות להקדשה אישית, ליצירת מזכרת מרגשת ומלאת משמעות." },
   { id: "menu-design", name: "עיצוב תפריט (קובץ בלבד)", categories: ["branding"], priceFrom: 169, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("menu-design", 2),
     description: "תפריט לאירוע בעיצוב אישי ואלגנטי, המותאם לקונספט, לצבעים ולמיתוג שלכם. הקובץ נשלח בפורמט דיגיטלי מוכן להדפסה, ללא שירותי הדפסה." },
-  { id: "round-candlesticks-bag", name: "מארז פמוטים עגולים שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 37, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks-bag", 1),
+  { id: "round-candlesticks-bag", name: "מארז פמוטים עגולים שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 37, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("round-candlesticks-bag", 1),
     description: "מארז שבת אלגנטי הכולל זוג פמוטים עגולים בעבודת יד וברכה מעוצבת להדלקת נרות שבת. המארז מגיע בשקית יוקרתית ומוקפדת, עם אפשרות למיתוג אישי בהתאמה לאירוע." },
-  { id: "square-candlesticks-bag", name: "מארז פמוטים מרובעים שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 38, unit: "ליחידה", minQty: 10, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks-bag", 1),
+  { id: "square-candlesticks-bag", name: "מארז פמוטים מרובעים שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 38, unit: "ליחידה", minQty: 20, leadTime: "תלוי בכמות", customization: PACKAGE_CUSTOM, images: img("square-candlesticks-bag", 1),
     description: "מארז שבת קלאסי ומוקפד הכולל זוג פמוטים מרובעים בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מוגש בשקית יוקרתית עם אפשרות למיתוג והקדשה אישית." },
 ];
 
@@ -189,7 +189,7 @@ export const homeFeatured = () =>
 export const PROMISES = [
   { title: "מיתוג והקדשה אישית", text: "מדבקה ממותגת על המארז והקדשה בתחתית הברכה" },
   { title: "עבודת יד", text: "פמוטים בעבודת יד ועטיפה מוקפדת לכל מארז" },
-  { title: "החל מ־10 יחידות", text: "מתאים גם לאירועים קטנים ואינטימיים" },
+  { title: "מארזים החל מ־20 יחידות", text: "מתאים גם לאירועים קטנים ואינטימיים" },
   { title: "עיצוב דיגיטלי מהיר", text: "הזמנה, לוגו או תפריט תוך יום עסקים אחד" },
 ];
 
@@ -251,7 +251,7 @@ export const FAQ: FaqItem[] = [
     q: "אפשר להחזיר מוצר שקניתי בחנות?",
     a: "כן, לפי חוק הגנת הצרכן: תוך 14 ימים מקבלת המוצר, כשהוא שלם, ללא שימוש ובאריזתו המקורית. כל הפרטים בתקנון.",
   },
-  { q: "מה הכמות המינימלית להזמנה?", a: "במארזים ובברכונים – 10 יחידות. בעיצוב גרפי (הזמנה דיגיטלית, לוגו לחתונה, תפריט) – עיצוב אחד." },
+  { q: "מה הכמות המינימלית להזמנה?", a: "במארזים – 20 יחידות. בברכונים – 10 יחידות. בעיצוב גרפי (הזמנה דיגיטלית, לוגו לחתונה, תפריט) – עיצוב אחד." },
   {
     q: "אפשר להתאים את המארז אישית?",
     a: "כן. אפשר להוסיף מדבקה במיתוג אישי על המארז והקדשה אישית בתחתית הברכה המצורפת. בברכונים אפשר להוסיף הקדשה אישית בתחתית הברכון.",
