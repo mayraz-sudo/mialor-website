@@ -147,12 +147,11 @@ export const SHOP_ITEMS: ShopItem[] = [
   {
     id: "corduroy-siddur",
     name: "סידור בכריכת בד קורדרוי",
-    description: "סידור בכריכת בד קורדרוי, לבחירה בשישה צבעים. אפשר להוסיף הטבעה אישית – שם או שם האירוע – בתוספת ₪20.",
+    description: "סידור בכריכת בד קורדרוי, לבחירה בשישה צבעים.",
     price: 100,
     per: "unit",
-    images: [img("siddur-colors"), img("siddur-orange"), img("siddur-pink-engraved")],
+    images: [img("siddur-colors"), img("siddur-orange")],
     colors: ["ורוד", "בז׳", "תכלת", "כתום", "חום", "כחול כהה"],
-    engraving: { price: 20, maxLength: 25 },
     material: "כריכת בד קורדרוי",
   },
 ];

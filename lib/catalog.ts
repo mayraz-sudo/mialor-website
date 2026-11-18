@@ -51,6 +51,21 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
     },
   },
+  {
+    // אין הטבעה על הסידורים הצבעוניים
+    id: "2026-11-18-siddur-no-engraving",
+    apply: (items) =>
+      items.map((i) =>
+        i.id === "corduroy-siddur"
+          ? {
+              ...i,
+              engraving: undefined,
+              description: i.description.replace(/\s*אפשר להוסיף הטבעה אישית[^.]*\./, "").trim(),
+              images: i.images.filter((s) => !s.includes("siddur-pink-engraved")),
+            }
+          : i,
+      ),
+  },
 ];
 
 let migrationsChecked = false;
