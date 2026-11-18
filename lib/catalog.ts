@@ -72,6 +72,11 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
     apply: (items) =>
       items.map((i) => (i.id === "corduroy-siddur" || /סידור|ספר דברים/.test(i.name) ? { ...i, noDiscount: true } : i)),
   },
+  {
+    id: "2026-11-18-prices-siddur-120-dvarim-100",
+    apply: (items) =>
+      items.map((i) => (i.id === "corduroy-siddur" ? { ...i, price: 120 } : i.id === "p-mwls55jrm7t" ? { ...i, price: 100 } : i)),
+  },
 ];
 
 let migrationsChecked = false;

@@ -150,7 +150,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     id: "corduroy-siddur",
     name: "סידור בכריכת בד קורדרוי",
     description: "סידור בכריכת בד קורדרוי, לבחירה בשישה צבעים.",
-    price: 100,
+    price: 120,
     per: "unit",
     images: [img("siddur-colors"), img("siddur-orange")],
     colors: ["ורוד", "בז׳", "תכלת", "כתום", "חום", "כחול כהה"],
