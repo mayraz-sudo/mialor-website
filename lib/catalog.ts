@@ -53,11 +53,15 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
   },
 ];
 
+let migrationsChecked = false;
+
 async function applyMigrations(store: Awaited<ReturnType<typeof blobStore>>, items: ShopItem[]) {
-  const read = await withTimeout<string[] | null | "timeout">(store.getJSON<string[]>("migrations"), 4000, "timeout");
-  if (read === "timeout") return items; // לא ברור מה כבר רץ – לא משנים כלום הפעם
+  if (migrationsChecked) return items;
+  // באחסון של Netlify קריאה של מפתח שלא קיים לפעמים לא חוזרת – לכן "לא ענה" = עוד לא נוצר
+  const read = await withTimeout<string[] | null>(store.getJSON<string[]>("migrations"), 1500, null);
   const done = read ?? [];
   const pending = MIGRATIONS.filter((m) => !done.includes(m.id));
+  migrationsChecked = true;
   if (!pending.length) return items;
   const next = pending.reduce((acc, m) => m.apply(acc), items);
   await withTimeout(store.setJSON(KEY, next), 4000, undefined);
