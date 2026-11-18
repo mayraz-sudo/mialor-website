@@ -30,7 +30,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
             <li key={item.id} className="flex flex-col">
               <Link href={shopItemHref(item.id)} className="group block">
                 <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
-                  <LaunchBadge />
+                  <LaunchBadge item={item} />
                   {item.images.length ? <ItemPhotos item={item} /> : <ComingSoon name={item.name} />}
                 </div>
                 <h2 className="t-h3 mt-3.5 text-[1.1rem] leading-snug group-hover:text-accent-strong md:text-[1.25rem]">{item.name}</h2>

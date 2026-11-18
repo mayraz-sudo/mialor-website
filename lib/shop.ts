@@ -24,6 +24,8 @@ export type ShopItem = {
   engraving?: { price: number; maxLength: number };
   /** חומר, אם המוצר לא מגבס (למשל "כריכת בד קורדרוי") */
   material?: string;
+  /** לא נכלל במבצעים (מחירי השקה וכו') */
+  noDiscount?: boolean;
 };
 
 export const SHOP = {
@@ -153,6 +155,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     images: [img("siddur-colors"), img("siddur-orange")],
     colors: ["ורוד", "בז׳", "תכלת", "כתום", "חום", "כחול כהה"],
     material: "כריכת בד קורדרוי",
+    noDiscount: true,
   },
 ];
 
@@ -182,8 +185,8 @@ export const LAUNCH = {
   start: "2026-11-13",
   end: "2026-11-30",
   name: "מחירי השקה",
-  bar: "מחירי השקה: 15% הנחה על כל מוצרי החנות, עד סוף נובמבר",
-  barShort: "מחירי השקה: 15% הנחה בחנות",
+  bar: "מחירי השקה: 15% הנחה על מוצרי הגבס בחנות, עד סוף נובמבר (לא כולל סידורים וספרים)",
+  barShort: "מחירי השקה: 15% על מוצרי הגבס (לא כולל סידורים)",
   badge: "15% הנחה",
 };
 
@@ -194,8 +197,8 @@ export function isLaunchActive(date: Date = new Date()) {
 }
 
 /** המחיר לתשלום לפריט (עם הנחת ההשקה אם פעילה) */
-export const itemPrice = (item: Pick<ShopItem, "price">, launch: boolean) =>
-  launch ? Math.floor((item.price * (100 - LAUNCH.percent)) / 100) : item.price;
+export const itemPrice = (item: Pick<ShopItem, "price" | "noDiscount">, launch: boolean) =>
+  launch && !item.noDiscount ? Math.floor((item.price * (100 - LAUNCH.percent)) / 100) : item.price;
 
 /** חישוב סכום ההזמנה – משמש גם בדפדפן וגם בשרת (בשרת זה המחיר הקובע) */
 export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolean, items: ShopItem[]) {

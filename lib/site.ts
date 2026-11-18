@@ -344,9 +344,11 @@ export const PROMO = {
   name: "מבצע נובמבר",
   /** על אילו קטגוריות חלה ההנחה */
   categories: ["packages", "prints"] as CategorySlug[],
-  bar: "מבצע נובמבר: 5% הנחה על מארזים וברכונים בהזמנות שנשלחות בחודש נובמבר",
+  bar: "מבצע נובמבר: 5% הנחה על מארזים וברכונים בהזמנות שנשלחות בחודש נובמבר (לא כולל סידורים וספר דברים)",
   /** נוסח קצר לטלפון */
-  barShort: "5% הנחה על מארזים וברכונים",
+  barShort: "5% על מארזים וברכונים (לא כולל סידורים)",
+  /** מוצרים שלא נכללים במבצע */
+  excludeIds: ["corduroy-siddur-event", "sefer-dvarim-event"],
   badge: "5% הנחה",
 };
 
@@ -363,7 +365,7 @@ export const formatAmount = (n: number) =>
 
 /** האם ההנחה חלה על המוצר (לפי קטגוריה, ורק כשיש מחיר) */
 export const isPromoProduct = (p: Product) =>
-  p.priceFrom !== null && p.categories.some((c) => PROMO.categories.includes(c));
+  p.priceFrom !== null && !PROMO.excludeIds.includes(p.id) && p.categories.some((c) => PROMO.categories.includes(c));
 
 export const discounted = (price: number) => Math.round(price * (100 - PROMO.percent)) / 100;
 

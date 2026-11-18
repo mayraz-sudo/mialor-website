@@ -66,6 +66,12 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
           : i,
       ),
   },
+  {
+    // סידורים וספרים לא נכללים במבצעים
+    id: "2026-11-18-books-no-discount",
+    apply: (items) =>
+      items.map((i) => (i.id === "corduroy-siddur" || /סידור|ספר דברים/.test(i.name) ? { ...i, noDiscount: true } : i)),
+  },
 ];
 
 let migrationsChecked = false;
@@ -121,6 +127,7 @@ export function cleanItem(raw: unknown): ShopItem | null {
           }
         : undefined,
     material: str(r.material, 60) || undefined,
+    noDiscount: r.noDiscount === true ? true : undefined,
   };
 }
 

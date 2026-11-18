@@ -104,7 +104,8 @@ export default function ProductsAdmin({ onAuthLost }: { onAuthLost: () => void }
               <p className="line-clamp-2 font-medium leading-snug">{p.name}</p>
               <p className="text-[0.88rem] text-muted tabular-nums">
                 {money(p.price)} {perLabel(p)}
-                {launch && <span> · בהשקה {money(itemPrice(p, true))}</span>}
+                {launch && !p.noDiscount && <span> · בהשקה {money(itemPrice(p, true))}</span>}
+                {p.noDiscount && <span className="ms-2 rounded-full bg-bg-alt px-2 py-0.5 text-ink">בלי מבצעים</span>}
                 {p.hidden && <span className="ms-2 rounded-full bg-bg-alt px-2 py-0.5 text-ink">מוסתר</span>}
                 {!p.images.length && <span className="ms-2 rounded-full bg-[#fde2e2] px-2 py-0.5 text-[#9b2c2c]">אין תמונה – לא מוצג</span>}
               </p>
@@ -314,6 +315,10 @@ function Editor({
             </ul>
           </fieldset>
 
+          <label className="flex items-center gap-2.5">
+            <input type="checkbox" checked={!!item.noDiscount} onChange={(e) => setItem({ ...item, noDiscount: e.target.checked || undefined })} className="h-4 w-4 accent-[var(--color-text)]" />
+            <span>לא נכלל במבצעים (המחיר תמיד מלא)</span>
+          </label>
           <label className="flex items-center gap-2.5">
             <input type="checkbox" checked={!!item.hidden} onChange={(e) => setItem({ ...item, hidden: e.target.checked || undefined })} className="h-4 w-4 accent-[var(--color-text)]" />
             <span>להסתיר מהחנות (למשל כשהמוצר אזל)</span>

@@ -20,7 +20,7 @@ export function LaunchPrice({ item, large = false }: { item: ShopItem; large?: b
   return (
     <span className="tabular-nums">
       <span className={large ? "text-[1.35rem]" : "font-medium"}>{money(price)}</span>
-      {active && (
+      {active && !item.noDiscount && (
         <>
           <span className="sr-only"> במקום </span>
           <s className={`ms-2 text-muted ${large ? "text-[1.05rem]" : "text-[0.88rem] font-normal"}`}>{money(item.price)}</s>
@@ -32,9 +32,9 @@ export function LaunchPrice({ item, large = false }: { item: ShopItem; large?: b
 }
 
 /** תגית על תמונת המוצר */
-export function LaunchBadge() {
+export function LaunchBadge({ item }: { item: Pick<ShopItem, "noDiscount"> }) {
   const active = useLaunchActive();
-  if (!active) return null;
+  if (!active || item.noDiscount) return null;
   return (
     <span className="absolute top-2.5 right-2.5 z-10 rounded-full bg-ink px-2.5 py-1 text-[0.78rem] leading-none font-medium text-bg">
       {LAUNCH.badge}
@@ -55,8 +55,8 @@ export function LaunchStrip() {
   );
 }
 
-export function LaunchNote() {
+export function LaunchNote({ item }: { item: Pick<ShopItem, "noDiscount"> }) {
   const active = useLaunchActive();
-  if (!active) return null;
+  if (!active || item.noDiscount) return null;
   return <p className="mt-1.5 text-[0.9rem] text-accent-strong">{LAUNCH.name}: {LAUNCH.percent}% הנחה עד סוף נובמבר</p>;
 }

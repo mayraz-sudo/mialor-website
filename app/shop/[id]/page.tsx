@@ -67,7 +67,7 @@ export default async function ShopItemPage({ params }: Params) {
               <p className="mt-3">
                 <LaunchPrice item={item} large />
               </p>
-              <LaunchNote />
+              <LaunchNote item={item} />
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{item.description}</p>
 
@@ -117,7 +117,7 @@ export default async function ShopItemPage({ params }: Params) {
                 <li key={o.id}>
                   <Link href={shopItemHref(o.id)} className="group block">
                     <div className="relative aspect-square overflow-hidden rounded-[2px] bg-surface">
-                      <LaunchBadge />
+                      <LaunchBadge item={o} />
                       {o.images[0] && (
                         <Image src={o.images[0]} unoptimized={isUploadedImage(o.images[0])} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                       )}
