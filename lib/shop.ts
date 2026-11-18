@@ -157,6 +157,17 @@ export const SHOP_ITEMS: ShopItem[] = [
     material: "כריכת בד קורדרוי",
     noDiscount: true,
   },
+  {
+    id: "tehillim",
+    name: "תהילים",
+    description: "ספר תהילים בכריכת בד מהודרת, לבחירה בשלושה צבעים.",
+    price: 100,
+    per: "unit",
+    images: [img("tehillim-white"), img("tehillim-navy"), img("tehillim-beige")],
+    colors: ["לבן", "כחול כהה", "בז׳"],
+    material: "כריכת בד",
+    noDiscount: true,
+  },
 ];
 
 export const perLabel = (i: Pick<ShopItem, "per">) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");

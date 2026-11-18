@@ -77,6 +77,13 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
     apply: (items) =>
       items.map((i) => (i.id === "corduroy-siddur" ? { ...i, price: 120 } : i.id === "p-mwls55jrm7t" ? { ...i, price: 100 } : i)),
   },
+  {
+    id: "2026-11-18-tehillim",
+    apply: (items) => {
+      const seed = SHOP_ITEMS.find((i) => i.id === "tehillim");
+      return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
+    },
+  },
 ];
 
 let migrationsChecked = false;
