@@ -23,11 +23,13 @@ export async function getCatalog(): Promise<ShopItem[]> {
   const res = await withTimeout<Res>(store.getJSON<ShopItem[]>(KEY).then((v) => ({ v })), 4000, { timeout: true });
   if ("v" in res) {
     if (Array.isArray(res.v) && res.v.length) {
-      cache = { at: Date.now(), items: res.v };
-      return res.v;
+      const items = await applyMigrations(store, res.v);
+      cache = { at: Date.now(), items };
+      return items;
     }
     // פעם ראשונה: שומרים את הרשימה ההתחלתית באחסון, כדי שכל קריאה הבאה תהיה מהירה
     await withTimeout(store.setJSON(KEY, SHOP_ITEMS), 4000, undefined);
+    await withTimeout(store.setJSON("migrations", MIGRATIONS.map((m) => m.id)), 4000, undefined);
     cache = { at: Date.now(), items: SHOP_ITEMS };
     return SHOP_ITEMS;
   }
@@ -35,6 +37,32 @@ export async function getCatalog(): Promise<ShopItem[]> {
   const items = cache?.items ?? SHOP_ITEMS;
   cache = { at: Date.now() - TTL + 15000, items };
   return items;
+}
+
+/**
+ * מוצרים שאני (Claude) מוסיף מהקוד לרשימה שכבר שמורה באתר.
+ * כל שינוי רץ פעם אחת בלבד – אם מאי מוחקת את המוצר אחר כך, הוא לא יחזור.
+ */
+const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
+  {
+    id: "2026-11-18-corduroy-siddur",
+    apply: (items) => {
+      const seed = SHOP_ITEMS.find((i) => i.id === "corduroy-siddur");
+      return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
+    },
+  },
+];
+
+async function applyMigrations(store: Awaited<ReturnType<typeof blobStore>>, items: ShopItem[]) {
+  const read = await withTimeout<string[] | null | "timeout">(store.getJSON<string[]>("migrations"), 4000, "timeout");
+  if (read === "timeout") return items; // לא ברור מה כבר רץ – לא משנים כלום הפעם
+  const done = read ?? [];
+  const pending = MIGRATIONS.filter((m) => !done.includes(m.id));
+  if (!pending.length) return items;
+  const next = pending.reduce((acc, m) => m.apply(acc), items);
+  await withTimeout(store.setJSON(KEY, next), 4000, undefined);
+  await withTimeout(store.setJSON("migrations", [...done, ...pending.map((m) => m.id)]), 4000, undefined);
+  return next;
 }
 
 /** המוצרים שמוצגים בחנות */
@@ -63,6 +91,17 @@ export function cleanItem(raw: unknown): ShopItem | null {
     images,
     maxQty: Number.isInteger(maxQty) && maxQty > 0 && maxQty < 1000 ? maxQty : undefined,
     hidden: r.hidden === true ? true : undefined,
+    colors: Array.isArray(r.colors)
+      ? [...new Set(r.colors.map((c) => str(c, 30)).filter(Boolean))].slice(0, 20)
+      : undefined,
+    engraving:
+      r.engraving && typeof r.engraving === "object" && Number((r.engraving as Record<string, unknown>).price) >= 0
+        ? {
+            price: Math.round(Number((r.engraving as Record<string, unknown>).price) * 100) / 100,
+            maxLength: Math.min(60, Math.max(5, Number((r.engraving as Record<string, unknown>).maxLength) || 25)),
+          }
+        : undefined,
+    material: str(r.material, 60) || undefined,
   };
 }
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { isUploadedImage, itemPrice, shopItemHref, type ShopItem } from "@/lib/shop";
+import { cartTotals, hasOptions, isUploadedImage, itemPrice, shopItemHref, type ShopItem } from "@/lib/shop";
 import { LaunchBadge, LaunchPrice, useLaunchActive } from "./Launch";
 import { ComingSoon } from "../ProductMedia";
 import { useCart } from "./CartContext";
@@ -13,10 +13,7 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
   const { qtyOf, setQty, count, cart, openCart } = useCart();
   const visible = items.filter((i) => !i.hidden);
   const launch = useLaunchActive();
-  const subtotal = cart.reduce((a, l) => {
-    const i = items.find((x) => x.id === l.id);
-    return a + (i ? itemPrice(i, launch) : 0) * l.qty;
-  }, 0);
+  const subtotal = cartTotals(cart, "pickup", launch, items).subtotal;
 
   const add = (id: string) => {
     setQty(id, 1);
@@ -43,7 +40,11 @@ export default function ShopClient({ items }: { items: ShopItem[] }) {
                 <LaunchPrice item={item} />
               </p>
               <div className="mt-auto pt-3">
-                {q === 0 ? (
+                {hasOptions(item) ? (
+                  <Link href={shopItemHref(item.id)} className="btn btn-primary btn-sm w-full">
+                    {item.colors?.length ? "לבחירת צבע" : "לבחירה"}
+                  </Link>
+                ) : q === 0 ? (
                   <button type="button" onClick={() => add(item.id)} className="btn btn-primary btn-sm w-full">
                     הוספה לסל
                   </button>

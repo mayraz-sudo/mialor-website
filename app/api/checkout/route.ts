@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
-import { cartTotals, isLaunchActive, perLabel, type CartLine, type Delivery } from "@/lib/shop";
+import { cartTotals, isLaunchActive, optionsLabel, perLabel, type CartLine, type Delivery } from "@/lib/shop";
 import { getCatalog } from "@/lib/catalog";
 import { createHandshake, iframeAction, tranzilaTerminal } from "@/lib/tranzila";
 import { saveOrder } from "@/lib/orders";
@@ -49,7 +49,12 @@ export async function POST(req: Request) {
   // מספר הזמנה קצר, כדי לזהות את ההזמנה בטרנזילה
   const d = new Date();
   const orderId = `M${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${randomBytes(2).toString("hex").toUpperCase()}`;
-  const items = totals.rows.map((r) => `${r.item.name} ×${r.qty}${r.item.per ? ` (${perLabel(r.item)})` : ""}`).join(", ");
+  const items = totals.rows
+    .map((r) => {
+      const opts = optionsLabel(r);
+      return `${r.item.name}${opts ? ` [${opts}]` : ""} ×${r.qty}${r.item.per ? ` (${perLabel(r.item)})` : ""}`;
+    })
+    .join(", ");
   const deliveryText = delivery === "post" ? `משלוח בדואר ישראל: ${customer.address}, ${customer.city}` : "איסוף עצמי מחולון";
   const sum = totals.total;
 
@@ -67,7 +72,7 @@ export async function POST(req: Request) {
     city: delivery === "post" ? customer.city : "",
     zip: customer.zip,
     country: "ישראל",
-    pdesc: `הזמנה ${orderId}: ${items}`.slice(0, 250),
+    pdesc: `הזמנה ${orderId}: ${items}`.slice(0, 500),
     remarks: [deliveryText, customer.notes && `הערות: ${customer.notes}`].filter(Boolean).join(" | ").slice(0, 250),
     success_url_address: `${base}/api/tranzila/return?r=ok&o=${orderId}`,
     fail_url_address: `${base}/api/tranzila/return?r=fail&o=${orderId}`,
@@ -97,7 +102,7 @@ export async function POST(req: Request) {
       id: orderId,
       createdAt: now,
       updatedAt: now,
-      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.unit, per: perLabel(r.item) || undefined, sum: r.sum })),
+      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.unit, per: perLabel(r.item) || undefined, sum: r.sum, color: r.color, engrave: r.engrave })),
       subtotal: totals.subtotal,
       shipping: totals.shipping ?? 0,
       total: sum,

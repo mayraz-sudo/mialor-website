@@ -164,6 +164,8 @@ function Editor({
 }) {
   const [item, setItem] = useState<ShopItem>(initial);
   const [price, setPrice] = useState(initial.price ? String(initial.price) : "");
+  const [colors, setColors] = useState((initial.colors ?? []).join(", "));
+  const [engrPrice, setEngrPrice] = useState(initial.engraving ? String(initial.engraving.price) : "");
   const [uploading, setUploading] = useState(0);
   const [localError, setLocalError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
@@ -216,7 +218,18 @@ function Editor({
     if (!item.name.trim()) return setLocalError("נא למלא שם מוצר.");
     if (!Number.isFinite(p) || p <= 0) return setLocalError("נא למלא מחיר תקין.");
     if (!item.images.length) return setLocalError("נא להעלות לפחות תמונה אחת.");
-    onSave({ ...item, name: item.name.trim(), description: item.description.trim(), price: p });
+    const colorList = colors.split(/[,،\n]/).map((c) => c.trim()).filter(Boolean);
+    const ep = engrPrice.trim() === "" ? null : Number(engrPrice.replace(",", "."));
+    if (ep !== null && (!Number.isFinite(ep) || ep < 0)) return setLocalError("מחיר ההטבעה לא תקין.");
+    onSave({
+      ...item,
+      name: item.name.trim(),
+      description: item.description.trim(),
+      price: p,
+      colors: colorList.length ? colorList : undefined,
+      engraving: ep === null ? undefined : { price: ep, maxLength: item.engraving?.maxLength ?? 25 },
+      material: item.material?.trim() || undefined,
+    });
   };
 
   return (
@@ -248,6 +261,28 @@ function Editor({
                 <option value="unit">ליחידה</option>
                 <option value="pair">לזוג</option>
               </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="p-colors" className={label}>צבעים לבחירה (לא חובה)</label>
+            <input
+              id="p-colors"
+              value={colors}
+              onChange={(e) => setColors(e.target.value)}
+              placeholder="למשל: ורוד, בז׳, תכלת"
+              className={field}
+            />
+            <p className="mt-1 text-[0.8rem] text-muted">מפרידים בפסיק. אם יש צבעים – הלקוחה חייבת לבחור אחד.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="p-engr" className={label}>תוספת הטבעה (₪, לא חובה)</label>
+              <input id="p-engr" inputMode="decimal" dir="ltr" value={engrPrice} onChange={(e) => setEngrPrice(e.target.value)} placeholder="ריק = בלי הטבעה" className={`${field} text-right`} />
+            </div>
+            <div>
+              <label htmlFor="p-material" className={label}>חומר (אם לא גבס)</label>
+              <input id="p-material" value={item.material ?? ""} onChange={(e) => setItem({ ...item, material: e.target.value || undefined })} placeholder="למשל: כריכת בד" className={field} />
             </div>
           </div>
 

@@ -161,7 +161,7 @@ export default function AdminClient() {
                     <PayBadge o={o} />
                     <span className="rounded-full bg-bg px-2.5 py-0.5 text-[0.82rem]">{stageLabel(o.stage)}</span>
                     <span className="w-full text-[0.88rem] text-muted">
-                      {o.items.map((i) => `${i.name} ×${i.qty}`).join(" · ")} — {o.delivery === "post" ? `משלוח: ${o.customer.city}` : "איסוף עצמי"}
+                      {o.items.map((i) => `${i.name}${i.color ? ` (${i.color})` : ""} ×${i.qty}`).join(" · ")} — {o.delivery === "post" ? `משלוח: ${o.customer.city}` : "איסוף עצמי"}
                     </span>
                   </button>
                   {open && <Details o={o} onUpdate={(p) => update(o.id, p)} />}
@@ -208,8 +208,12 @@ function Details({ o, onUpdate }: { o: Order; onUpdate: (p: { stage?: Stage; adm
         <h3 className="mt-3 font-medium">פריטים</h3>
         <ul>
           {o.items.map((i) => (
-            <li key={i.id} className="flex justify-between gap-3 tabular-nums">
-              <span>{i.name} ×{i.qty}{i.per ? ` (${money(i.price)} ${i.per})` : ""}</span>
+            <li key={`${i.id}-${i.color ?? ""}-${i.engrave ?? ""}`} className="flex justify-between gap-3 tabular-nums">
+              <span>
+                {i.name} ×{i.qty}{i.per ? ` (${money(i.price)} ${i.per})` : ""}
+                {i.color && <span className="block text-[0.9rem] text-muted">צבע: {i.color}</span>}
+                {i.engrave && <span className="block text-[0.9rem] font-medium">הטבעה: &quot;{i.engrave}&quot;</span>}
+              </span>
               <span>{money(i.sum)}</span>
             </li>
           ))}

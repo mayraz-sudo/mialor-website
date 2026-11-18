@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!item) return {};
   return {
     title: `${item.name} | חנות מוצרים | MIALOR`,
-    description: `${item.description} ${SHOP.material}`,
+    description: item.material ? item.description : `${item.description} ${SHOP.material}`,
     openGraph: { title: item.name, description: item.description, images: item.images.slice(0, 1) },
   };
 }
@@ -33,7 +33,9 @@ export default async function ShopItemPage({ params }: Params) {
   const others = (await getVisibleItems()).filter((i) => i.id !== item.id).slice(0, 4);
 
   const facts = [
-    { label: "חומר", value: "גבס איכותי, בעבודת יד" },
+    { label: "חומר", value: item.material ?? "גבס איכותי, בעבודת יד" },
+    ...(item.colors?.length ? [{ label: "צבעים", value: item.colors.join(", ") }] : []),
+    ...(item.engraving ? [{ label: "הטבעה אישית", value: `אפשרית, בתוספת ₪${item.engraving.price}` }] : []),
     { label: "זמן הכנה ומשלוח", value: `${SHOP.leadTime}, כולל ההכנה והשילוח` },
     { label: "משלוח", value: `דואר ישראל לכל הארץ – ${money(SHOP.postPrice ?? 0)}` },
     { label: "איסוף עצמי", value: "מחולון, בחינם ובתיאום מראש" },
@@ -82,8 +84,9 @@ export default async function ShopItemPage({ params }: Params) {
                 ))}
               </dl>
 
-              <p className="mt-5 text-[0.92rem] leading-relaxed text-muted">{SHOP.handmadeNote}</p>
+              {!item.material && <p className="mt-5 text-[0.92rem] leading-relaxed text-muted">{SHOP.handmadeNote}</p>}
 
+              {!item.material && (
               <details className="group mt-5 rounded-[2px] border border-line bg-surface">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-medium [&::-webkit-details-marker]:hidden">
                   {CARE.title}
@@ -99,6 +102,7 @@ export default async function ShopItemPage({ params }: Params) {
                   </ul>
                 </div>
               </details>
+              )}
             </div>
           </div>
         </div>

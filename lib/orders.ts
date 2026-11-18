@@ -14,7 +14,7 @@ export type Order = {
   id: string;
   createdAt: string;
   updatedAt: string;
-  items: { id: string; name: string; qty: number; price: number; per?: string; sum: number }[];
+  items: { id: string; name: string; qty: number; price: number; per?: string; sum: number; color?: string; engrave?: string }[];
   subtotal: number;
   shipping: number;
   total: number;

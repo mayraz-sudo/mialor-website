@@ -131,30 +131,48 @@ export default function CartDrawer() {
           ) : (
             <form onSubmit={submit} noValidate className="px-5 pt-2 pb-6">
               <ul className="divide-y divide-line border-b border-line">
-                {totals.rows.map(({ item, qty, unit, sum }) => (
-                  <li key={item.id} className="flex gap-3 py-3.5">
+                {totals.rows.map(({ key, item, qty, unit, sum, color, engrave }) => {
+                  const base = unit - (engrave && item.engraving ? item.engraving.price : 0);
+                  return (
+                  <li key={key} className="flex gap-3 py-3.5">
                     <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-[2px] bg-surface">
                       {item.images[0] && <Image src={item.images[0]} unoptimized={isUploadedImage(item.images[0])} alt="" fill sizes="64px" className="object-cover" />}
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex items-start justify-between gap-2">
                         <span className="leading-snug">{item.name}</span>
-                        <button type="button" onClick={() => setQty(item.id, 0)} aria-label={`הסרת ${item.name} מהסל`} className="-mt-1.5 -ml-2 grid h-9 w-9 shrink-0 place-items-center text-muted hover:text-ink">
+                        <button type="button" onClick={() => setQty(key, 0)} aria-label={`הסרת ${item.name}${color ? ` בצבע ${color}` : ""} מהסל`} className="-mt-1.5 -ml-2 grid h-9 w-9 shrink-0 place-items-center text-muted hover:text-ink">
                           ×
                         </button>
                       </div>
+                      {(color || engrave) && (
+                        <span className="text-[0.88rem] leading-snug">
+                          {color && <span className="block">צבע: {color}</span>}
+                          {engrave && (
+                            <span className="block">
+                              הטבעה: &quot;{engrave}&quot; <span className="text-muted">(+{money(item.engraving!.price)})</span>
+                            </span>
+                          )}
+                        </span>
+                      )}
                       <span className="text-[0.88rem] text-muted tabular-nums">
-                        {money(unit)}
-                        {unit !== item.price && <s className="ms-1.5">{money(item.price)}</s>}
+                        {money(base)}
+                        {base !== item.price && (
+                          <>
+                            {" "}
+                            <s className="ms-1">{money(item.price)}</s>
+                          </>
+                        )}
                         {item.per ? ` ${perLabel(item)}` : ""}
                       </span>
                       <div className="mt-auto flex items-center justify-between pt-1.5">
-                        <Stepper small value={qty} onChange={(n) => setQty(item.id, n)} max={item.maxQty} name={item.name} />
+                        <Stepper small value={qty} onChange={(n) => setQty(key, n)} max={item.maxQty} name={item.name} />
                         <span className="font-medium tabular-nums">{money(sum)}</span>
                       </div>
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
 
               <fieldset className="mt-5">

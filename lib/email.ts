@@ -13,7 +13,7 @@ const money = (n: number) => `₪${n.toLocaleString("he-IL", { maximumFractionDi
 
 function orderTable(o: Order) {
   const rows = o.items
-    .map((i) => `<tr><td style="padding:6px 0">${esc(i.name)} ×${i.qty}${i.per ? ` <span style="color:#8a7a6a">(${money(i.price)} ${esc(i.per)})</span>` : ""}</td><td style="padding:6px 0;text-align:left">${money(i.sum)}</td></tr>`)
+    .map((i) => `<tr><td style="padding:6px 0">${esc(i.name)}${i.color ? `<br><span style="color:#8a7a6a">צבע: ${esc(i.color)}</span>` : ""}${i.engrave ? `<br><span style="color:#8a7a6a">הטבעה: "${esc(i.engrave)}"</span>` : ""} ×${i.qty}${i.per ? ` <span style="color:#8a7a6a">(${money(i.price)} ${esc(i.per)})</span>` : ""}</td><td style="padding:6px 0;text-align:left">${money(i.sum)}</td></tr>`)
     .join("");
   return `<table style="width:100%;border-collapse:collapse;font-size:15px">${rows}
 <tr><td style="padding:6px 0;color:#8a7a6a">משלוח</td><td style="padding:6px 0;text-align:left;color:#8a7a6a">${o.shipping ? money(o.shipping) : "חינם"}</td></tr>

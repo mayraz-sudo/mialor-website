@@ -27,7 +27,7 @@ export async function GET() {
       return [
         i.id,
         i.name,
-        `${i.description} ${SHOP.material}`,
+        i.material ? i.description : `${i.description} ${SHOP.material}`,
         "in stock",
         "new",
         `${itemPrice(i, launch).toFixed(2)} ILS`,

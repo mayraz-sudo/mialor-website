@@ -18,19 +18,25 @@ export type ShopItem = {
   maxQty?: number;
   /** מוסתר מהחנות (למשל כשאזל) */
   hidden?: boolean;
+  /** צבעים לבחירה (אם יש – הלקוחה חייבת לבחור צבע) */
+  colors?: string[];
+  /** הטבעה אישית בתוספת תשלום (לא חובה) */
+  engraving?: { price: number; maxLength: number };
+  /** חומר, אם המוצר לא מגבס (למשל "כריכת בד קורדרוי") */
+  material?: string;
 };
 
 export const SHOP = {
   /** false = העמוד לא מופיע בתפריט ולא בגוגל (עדיין בבנייה) */
   enabled: true,
   title: "חנות מוצרים",
-  intro: "מוצרי גבס איכותי בעבודת יד, לקנייה מיידית באשראי. משלוח לכל הארץ בדואר ישראל, או איסוף בחינם מחולון.",
+  intro: "מוצרי גבס איכותי בעבודת יד וסידורים בהטבעה אישית, לקנייה מיידית באשראי. משלוח לכל הארץ בדואר ישראל, או איסוף בחינם מחולון.",
   /** מחיר משלוח בדואר ישראל בשקלים. null = עדיין לא נקבע */
   postPrice: 35 as number | null,
   /** זמן הכנה ומשלוח */
   leadTime: "עד 7 ימי עסקים",
   shippingNote: "משלוח לכל הארץ באמצעות דואר ישראל (₪35), עד 7 ימי עסקים כולל הכנה ושילוח",
-  material: "כל המוצרים עשויים מגבס איכותי, בעבודת יד.",
+  material: "מוצרי הגבס עשויים מגבס איכותי, בעבודת יד.",
   handmadeNote:
     "כל המוצרים מיוצרים בעבודת יד מתוך תשומת לב מלאה לפרטים. המידות המצוינות הן גודל ממוצע של פריט מסוג זה, וייתכנו סטיות קטנות בגודל המוצר בפועל ואי־שלמויות האופייניות לעבודת יד, בשל חומרי הגלם ואופי הייצור. ייתכנו גם הבדלים קלים בגוון, במרקם ובגימור – אלו חלק מהייחודיות של כל פריט.",
 };
@@ -138,11 +144,32 @@ export const SHOP_ITEMS: ShopItem[] = [
     price: 70,
     images: [img("tray-1")],
   },
+  {
+    id: "corduroy-siddur",
+    name: "סידור בכריכת בד קורדרוי",
+    description: "סידור בכריכת בד קורדרוי, לבחירה בשישה צבעים. אפשר להוסיף הטבעה אישית – שם או שם האירוע – בתוספת ₪20.",
+    price: 100,
+    per: "unit",
+    images: [img("siddur-colors"), img("siddur-orange"), img("siddur-pink-engraved")],
+    colors: ["ורוד", "בז׳", "תכלת", "כתום", "חום", "כחול כהה"],
+    engraving: { price: 20, maxLength: 25 },
+    material: "כריכת בד קורדרוי",
+  },
 ];
 
 export const perLabel = (i: Pick<ShopItem, "per">) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");
 
-export type CartLine = { id: string; qty: number };
+export type CartLine = { id: string; qty: number; color?: string; engrave?: string };
+/** מפתח לשורה בסל: אותו מוצר בצבע או בהטבעה אחרים = שורה נפרדת */
+export const lineKey = (l: Pick<CartLine, "id" | "color" | "engrave">) => [l.id, l.color ?? "", l.engrave ?? ""].join("|");
+/** האם למוצר יש אפשרויות לבחירה (צבע / הטבעה) */
+export const hasOptions = (i: ShopItem) => Boolean(i.colors?.length || i.engraving);
+/** ניקוי טקסט הטבעה */
+export const cleanEngrave = (s: unknown, max: number) =>
+  typeof s === "string" ? s.replace(/[\u0000-\u001f<>"]/g, " ").replace(/\s+/g, " ").trim().slice(0, max) : "";
+/** תיאור האפשרויות שנבחרו, לתצוגה */
+export const optionsLabel = (l: { color?: string; engrave?: string }) =>
+  [l.color && `צבע: ${l.color}`, l.engrave && `הטבעה: "${l.engrave}"`].filter(Boolean).join(" · ");
 export type Delivery = "pickup" | "post";
 
 /**
@@ -173,15 +200,20 @@ export const itemPrice = (item: Pick<ShopItem, "price">, launch: boolean) =>
 
 /** חישוב סכום ההזמנה – משמש גם בדפדפן וגם בשרת (בשרת זה המחיר הקובע) */
 export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolean, items: ShopItem[]) {
+  type Row = { key: string; item: ShopItem; qty: number; unit: number; sum: number; color?: string; engrave?: string };
   const rows = lines
-    .map((l) => {
+    .map((l): Row | null => {
       const item = items.find((i) => i.id === l.id && !i.hidden);
       if (!item) return null;
+      // צבע: חייב להיות אחד מהצבעים של המוצר
+      const color = item.colors?.length ? (item.colors.includes(l.color ?? "") ? l.color : undefined) : undefined;
+      if (item.colors?.length && !color) return null;
+      const engrave = item.engraving ? cleanEngrave(l.engrave, item.engraving.maxLength) || undefined : undefined;
       const qty = Math.max(1, Math.min(Math.floor(l.qty), item.maxQty ?? 99));
-      const unit = itemPrice(item, launch);
-      return { item, qty, unit, sum: unit * qty };
+      const unit = itemPrice(item, launch) + (engrave && item.engraving ? item.engraving.price : 0);
+      return { key: lineKey({ id: item.id, color, engrave }), item, qty, unit, sum: unit * qty, color, engrave };
     })
-    .filter((r): r is { item: ShopItem; qty: number; unit: number; sum: number } => Boolean(r));
+    .filter((r): r is Row => Boolean(r));
   const subtotal = rows.reduce((a, r) => a + r.sum, 0);
   const shipping = delivery === "post" ? SHOP.postPrice : 0;
   return { rows, subtotal, shipping, total: shipping === null ? null : subtotal + shipping };
