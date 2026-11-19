@@ -1,6 +1,7 @@
 import { getOrder, saveOrder } from "@/lib/orders";
 import { sendOrderEmails } from "@/lib/email";
 import { markCouponUsed } from "@/lib/coupon-store";
+import { sendPaidOrderToSystem } from "@/lib/mialor-system";
 
 /** עדכון סטטוס התשלום של הזמנה לפי מה שטרנזילה שלחה */
 export async function recordPayment(params: URLSearchParams, orderIdHint: string | null) {
@@ -35,6 +36,8 @@ export async function recordPayment(params: URLSearchParams, orderIdHint: string
     } catch (err) {
       console.error("[email]", err);
     }
+    // ההזמנה נכנסת גם למערכת הניהול (פעם אחת בלבד – המערכת לא תיצור כפילות)
+    await sendPaidOrderToSystem(next);
   }
   return next;
 }

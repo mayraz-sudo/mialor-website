@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { DELIVERY, EVENT_TYPES, detailedOrderMessage, whatsappLink, type Product } from "@/lib/site";
 import { IconWhatsApp } from "./Icons";
+import { isValidPhone } from "@/lib/phone";
+import { getUtm } from "@/lib/attribution";
 
 const field =
   "h-12 w-full rounded-[2px] border border-line bg-surface px-3.5 text-[1rem] text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none";
@@ -15,6 +17,9 @@ export default function OrderForm({ product }: { product: Product }) {
   const [date, setDate] = useState("");
   const [eventType, setEventType] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  // שדה מלכודת לבוטים – מוסתר מאנשים
+  const [website, setWebsite] = useState("");
   const [notes, setNotes] = useState("");
   // משלוח או איסוף – רק במוצרים פיזיים (לא בעיצוב דיגיטלי)
   const [delivery, setDelivery] = useState<"" | "pickup" | "shipping">("");
@@ -30,7 +35,37 @@ export default function OrderForm({ product }: { product: Product }) {
       setError(`הכמות המינימלית להזמנה היא ${product.minQty}`);
       return;
     }
+    if (!name.trim()) {
+      setError("נשמח לדעת איך קוראים לך");
+      return;
+    }
+    if (!isValidPhone(phone)) {
+      setError("נא להזין מספר טלפון תקין");
+      return;
+    }
     setError("");
+    const deliveryText = delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח בדואר ישראל" : "";
+    // הפנייה נשמרת גם במערכת הניהול – ברקע, בלי לעכב את המעבר לוואטסאפ
+    try {
+      fetch("/api/lead", {
+        method: "POST",
+        keepalive: true,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          product_id: product.id,
+          name,
+          phone,
+          quantity: q,
+          date,
+          eventType,
+          notes,
+          delivery: deliveryText,
+          city: delivery === "shipping" ? city : "",
+          website,
+          utm: getUtm(),
+        }),
+      }).catch(() => {});
+    } catch {}
     const url = whatsappLink(
       detailedOrderMessage(
         product,
@@ -40,7 +75,7 @@ export default function OrderForm({ product }: { product: Product }) {
           eventType,
           name,
           notes,
-          delivery: delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח בדואר ישראל" : "",
+          delivery: deliveryText,
           city: delivery === "shipping" ? city : "",
         },
         window.location.href,
@@ -141,7 +176,31 @@ export default function OrderForm({ product }: { product: Product }) {
         <label htmlFor="order-name" className={label}>
           שם
         </label>
-        <input id="order-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={field} />
+        <input id="order-name" type="text" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} className={field} />
+      </div>
+
+      <div className="mt-4">
+        <label htmlFor="order-phone" className={label}>
+          טלפון
+        </label>
+        <input
+          id="order-phone"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          dir="ltr"
+          required
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="050-0000000"
+          className={`${field} text-right`}
+        />
+      </div>
+
+      {/* מלכודת לבוטים: מוסתר מאנשים ומקוראי מסך */}
+      <div aria-hidden="true" className="sr-only">
+        <label htmlFor="order-website">Website</label>
+        <input id="order-website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
       </div>
 
       <div className="mt-4">
