@@ -17,6 +17,7 @@ function orderTable(o: Order) {
     .join("");
   return `<table style="width:100%;border-collapse:collapse;font-size:15px">${rows}
 <tr><td style="padding:6px 0;color:#8a7a6a">משלוח</td><td style="padding:6px 0;text-align:left;color:#8a7a6a">${o.shipping ? money(o.shipping) : "חינם"}</td></tr>
+${o.coupon ? `<tr><td style="padding:6px 0;color:#2f5d2a">קופון ${esc(o.coupon.code)}</td><td style="padding:6px 0;text-align:left;color:#2f5d2a">−${money(o.coupon.discount)}</td></tr>` : ""}
 <tr><td style="padding:8px 0;border-top:1px solid #e6dccf;font-weight:bold">סה״כ שולם</td><td style="padding:8px 0;border-top:1px solid #e6dccf;text-align:left;font-weight:bold">${money(o.total)}</td></tr></table>`;
 }
 

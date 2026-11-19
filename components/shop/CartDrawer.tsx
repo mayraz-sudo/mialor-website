@@ -8,6 +8,7 @@ import { IconClose } from "../Icons";
 import { useCart } from "./CartContext";
 import { useLaunchActive } from "./Launch";
 import { track } from "@/lib/pixel";
+import { couponDiscount, couponLabel, type Coupon } from "@/lib/coupons";
 
 export const money = (n: number) =>
   `₪${n.toLocaleString("he-IL", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
@@ -41,6 +42,9 @@ export default function CartDrawer() {
   const [status, setStatus] = useState<{ kind: "idle" | "sending" | "error"; msg?: string }>({ kind: "idle" });
   const [payment, setPayment] = useState<{ action: string; fields: Record<string, string> } | null>(null);
   const [frameReady, setFrameReady] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<Pick<Coupon, "code" | "kind" | "value"> | null>(null);
+  const [couponMsg, setCouponMsg] = useState<{ kind: "error" | "ok" | "checking"; text: string } | null>(null);
   const payForm = useRef<HTMLFormElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
 
@@ -68,6 +72,22 @@ export default function CartDrawer() {
   const postReady = SHOP.postPrice !== null;
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const applyCoupon = async () => {
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponMsg({ kind: "checking", text: "בודק…" });
+    const res = await fetch("/api/coupon", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) }).catch(() => null);
+    const d = res ? await res.json().catch(() => ({})) : {};
+    if (!res?.ok || !d.coupon) {
+      setCoupon(null);
+      return setCouponMsg({ kind: "error", text: d.error || "לא הצלחנו לבדוק את הקוד. נסו שוב." });
+    }
+    setCoupon(d.coupon);
+    setCouponMsg({ kind: "ok", text: `הקופון הופעל: ${couponLabel(d.coupon)}` });
+  };
+  const discount = coupon ? couponDiscount(coupon, totals.subtotal) : 0;
+  const payTotal = totals.total === null ? null : Math.max(0, Math.round((totals.total - discount) * 100) / 100);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!count) return setStatus({ kind: "error", msg: "הסל ריק. בחרו לפחות פריט אחד." });
@@ -80,13 +100,22 @@ export default function CartDrawer() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lines: cart, delivery, customer: form }),
+        body: JSON.stringify({ lines: cart, delivery, customer: form, coupon: coupon?.code }),
       });
       const data = await res.json();
+      if (res.ok && data.free && data.orderId) {
+        // הקופון כיסה את כל הסכום – אין תשלום
+        location.href = `/shop/thanks?o=${data.orderId}`;
+        return;
+      }
+      if (data.couponError) {
+        setCoupon(null);
+        setCouponMsg({ kind: "error", text: String(data.error || "").replace(/^קופון: /, "") });
+      }
       if (!res.ok || !data.action || !data.fields) throw new Error(data.error || "לא הצלחנו לפתוח את דף התשלום. נסו שוב או כתבו לנו בוואטסאפ.");
       setPayment({ action: data.action, fields: data.fields });
       track("InitiateCheckout", {
-        value: totals.total ?? totals.subtotal,
+        value: payTotal ?? totals.subtotal,
         num_items: count,
         content_ids: totals.rows.map((r) => r.item.id),
         content_type: "product",
@@ -235,6 +264,41 @@ export default function CartDrawer() {
                 </div>
               </div>
 
+              <div className="mt-5">
+                <label htmlFor="c-coupon" className={label}>קוד קופון (אם יש)</label>
+                <div className="flex gap-2">
+                  <input
+                    id="c-coupon"
+                    dir="ltr"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        applyCoupon();
+                      }
+                    }}
+                    autoCapitalize="characters"
+                    autoComplete="off"
+                    className={`${field} flex-1 text-right uppercase`}
+                  />
+                  {coupon ? (
+                    <button type="button" onClick={() => (setCoupon(null), setCouponInput(""), setCouponMsg(null))} className="btn btn-secondary btn-sm !min-h-12">
+                      הסרה
+                    </button>
+                  ) : (
+                    <button type="button" onClick={applyCoupon} disabled={couponMsg?.kind === "checking"} className="btn btn-secondary btn-sm !min-h-12">
+                      הפעלה
+                    </button>
+                  )}
+                </div>
+                {couponMsg && (
+                  <p role={couponMsg.kind === "error" ? "alert" : "status"} className={`mt-1.5 text-[0.88rem] ${couponMsg.kind === "error" ? "text-[#9b3b2a]" : couponMsg.kind === "ok" ? "text-[#2f5d2a]" : "text-muted"}`}>
+                    {couponMsg.text}
+                  </p>
+                )}
+              </div>
+
               <dl className="mt-5 space-y-1.5 border-t border-line pt-4 text-[0.97rem] tabular-nums">
                 <div className="flex justify-between">
                   <dt>סכום פריטים</dt>
@@ -244,9 +308,15 @@ export default function CartDrawer() {
                   <dt>{delivery === "post" ? "משלוח בדואר ישראל" : "איסוף עצמי"}</dt>
                   <dd>{totals.shipping === null ? "יעודכן" : totals.shipping === 0 ? "חינם" : money(totals.shipping)}</dd>
                 </div>
+                {coupon && discount > 0 && (
+                  <div className="flex justify-between text-[#2f5d2a]">
+                    <dt>קופון {coupon.code}</dt>
+                    <dd>−{money(discount)}</dd>
+                  </div>
+                )}
                 <div className="flex justify-between pt-1 text-[1.1rem] font-medium">
                   <dt>סה״כ לתשלום</dt>
-                  <dd>{totals.total === null ? "—" : money(totals.total)}</dd>
+                  <dd>{payTotal === null ? "—" : money(payTotal)}</dd>
                 </div>
               </dl>
 
@@ -265,7 +335,7 @@ export default function CartDrawer() {
               )}
 
               <button type="submit" disabled={status.kind === "sending" || (delivery === "post" && !postReady)} className="btn btn-primary mt-4 w-full disabled:opacity-50">
-                {status.kind === "sending" ? "פותח דף תשלום…" : "מעבר לתשלום מאובטח"}
+                {status.kind === "sending" ? "שולח…" : payTotal === 0 ? "אישור ההזמנה (בלי תשלום)" : "מעבר לתשלום מאובטח"}
               </button>
               <p className="mt-2 text-center text-[0.82rem] text-muted">התשלום מתבצע בדף המאובטח של טרנזילה. פרטי האשראי לא נשמרים באתר.</p>
             </form>
@@ -290,8 +360,8 @@ export default function CartDrawer() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                {totals.total !== null && (
-                  <span className="rounded-full bg-bg-alt px-3 py-1 text-[0.95rem] font-medium tabular-nums">{money(totals.total)}</span>
+                {payTotal !== null && (
+                  <span className="rounded-full bg-bg-alt px-3 py-1 text-[0.95rem] font-medium tabular-nums">{money(payTotal)}</span>
                 )}
                 <button type="button" onClick={() => setPayment(null)} aria-label="סגירת דף התשלום וחזרה לסל" className="-ml-1.5 grid h-11 w-11 place-items-center">
                   <IconClose />

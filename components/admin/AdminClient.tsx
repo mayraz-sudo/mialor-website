@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Order, Stage } from "@/lib/orders";
 import ProductsAdmin from "./ProductsAdmin";
+import CouponsAdmin from "./CouponsAdmin";
 
 const STAGES: { id: Stage; label: string }[] = [
   { id: "new", label: "חדשה" },
@@ -28,7 +29,7 @@ export default function AdminClient() {
   const [filter, setFilter] = useState<Filter>("open");
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
-  const [tab, setTab] = useState<"orders" | "products">("orders");
+  const [tab, setTab] = useState<"orders" | "products" | "coupons">("orders");
   const authLost = useCallback(() => setState("login"), []);
 
   const load = useCallback(async () => {
@@ -108,7 +109,7 @@ export default function AdminClient() {
         </div>
 
         <div role="tablist" aria-label="אזורי ניהול" className="mt-5 flex gap-1 border-b border-line">
-          {([["orders", "הזמנות"], ["products", "מוצרים"]] as const).map(([id, l]) => (
+          {([["orders", "הזמנות"], ["products", "מוצרים"], ["coupons", "קופונים"]] as const).map(([id, l]) => (
             <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
               className={`-mb-px border-b-2 px-4 py-2.5 text-[1rem] ${tab === id ? "border-ink font-medium" : "border-transparent text-muted"}`}>
               {l}
@@ -118,6 +119,8 @@ export default function AdminClient() {
 
         {tab === "products" ? (
           <ProductsAdmin onAuthLost={authLost} />
+        ) : tab === "coupons" ? (
+          <CouponsAdmin onAuthLost={authLost} />
         ) : (
           <>
         <div className="mt-6 grid grid-cols-3 gap-3">
@@ -218,6 +221,7 @@ function Details({ o, onUpdate }: { o: Order; onUpdate: (p: { stage?: Stage; adm
             </li>
           ))}
           <li className="flex justify-between text-muted"><span>משלוח</span><span>{o.shipping ? money(o.shipping) : "חינם"}</span></li>
+          {o.coupon && <li className="flex justify-between text-[#2f5d2a]"><span>קופון {o.coupon.code}</span><span>−{money(o.coupon.discount)}</span></li>}
           <li className="flex justify-between font-medium"><span>סה״כ</span><span>{money(o.total)}</span></li>
         </ul>
       </div>

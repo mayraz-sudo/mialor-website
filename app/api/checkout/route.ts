@@ -3,7 +3,10 @@ import { randomBytes } from "node:crypto";
 import { cartTotals, isLaunchActive, optionsLabel, perLabel, type CartLine, type Delivery } from "@/lib/shop";
 import { getCatalog } from "@/lib/catalog";
 import { createHandshake, iframeAction, tranzilaTerminal } from "@/lib/tranzila";
-import { saveOrder } from "@/lib/orders";
+import { saveOrder, type Order } from "@/lib/orders";
+import { couponDiscount, couponLabel, couponProblem } from "@/lib/coupons";
+import { findCoupon, markCouponUsed } from "@/lib/coupon-store";
+import { sendOrderEmails } from "@/lib/email";
 
 /**
  * פתיחת תשלום בטרנזילה.
@@ -14,7 +17,7 @@ const clean = (v: unknown, max = 120) =>
   (typeof v === "string" ? v : "").replace(/[\u0000-\u001f<>]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 
 export async function POST(req: Request) {
-  let body: { lines?: CartLine[]; delivery?: Delivery; customer?: Record<string, unknown> };
+  let body: { lines?: CartLine[]; delivery?: Delivery; customer?: Record<string, unknown>; coupon?: string };
   try {
     body = await req.json();
   } catch {
@@ -56,7 +59,45 @@ export async function POST(req: Request) {
     })
     .join(", ");
   const deliveryText = delivery === "post" ? `משלוח בדואר ישראל: ${customer.address}, ${customer.city}` : "איסוף עצמי מחולון";
-  const sum = totals.total;
+  // קופון (אם הוזן) – ההנחה על סכום הפריטים, בלי המשלוח
+  let coupon: { code: string; discount: number; label: string } | undefined;
+  if (body.coupon) {
+    const c = await findCoupon(body.coupon);
+    const problem = couponProblem(c);
+    if (problem || !c) return NextResponse.json({ error: `קופון: ${problem}`, couponError: true }, { status: 400 });
+    coupon = { code: c.code, discount: couponDiscount(c, totals.subtotal), label: couponLabel(c) };
+  }
+  const sum = Math.round((totals.total - (coupon?.discount ?? 0)) * 100) / 100;
+
+  const now = new Date().toISOString();
+  const order: Order = {
+    id: orderId,
+    createdAt: now,
+    updatedAt: now,
+    items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.unit, per: perLabel(r.item) || undefined, sum: r.sum, color: r.color, engrave: r.engrave })),
+    subtotal: totals.subtotal,
+    shipping: totals.shipping ?? 0,
+    total: sum,
+    delivery,
+    customer,
+    pay: "pending",
+    stage: "new",
+    ...(coupon ? { coupon: { code: coupon.code, discount: coupon.discount } } : {}),
+  };
+
+  // קופון שמכסה את כל הסכום – אין מה לחייב: ההזמנה נקלטת מיד כ"שולמה"
+  if (sum <= 0) {
+    const paid: Order = { ...order, pay: "paid", payment: { response: "coupon", sum: "0", at: now } };
+    try {
+      await saveOrder(paid);
+      if (coupon) await markCouponUsed(coupon.code);
+      await sendOrderEmails(paid);
+    } catch (err) {
+      console.error("[checkout] free order", orderId, err);
+    }
+    console.log(`[checkout] ${orderId} ₪0 (coupon ${coupon?.code}) – ${items}`);
+    return NextResponse.json({ orderId, free: true });
+  }
 
   const base = (process.env.URL || new URL(req.url).origin).replace(/\/$/, "");
   const fields: Record<string, string> = {
@@ -72,7 +113,7 @@ export async function POST(req: Request) {
     city: delivery === "post" ? customer.city : "",
     zip: customer.zip,
     country: "ישראל",
-    pdesc: `הזמנה ${orderId}: ${items}`.slice(0, 500),
+    pdesc: `הזמנה ${orderId}: ${items}${coupon ? ` | קופון ${coupon.code}: −₪${coupon.discount}` : ""}`.slice(0, 500),
     remarks: [deliveryText, customer.notes && `הערות: ${customer.notes}`].filter(Boolean).join(" | ").slice(0, 250),
     success_url_address: `${base}/api/tranzila/return?r=ok&o=${orderId}`,
     fail_url_address: `${base}/api/tranzila/return?r=fail&o=${orderId}`,
@@ -96,21 +137,8 @@ export async function POST(req: Request) {
   }
 
   // שמירת ההזמנה במערכת הניהול (ממתינה לתשלום עד שטרנזילה מאשרת)
-  const now = new Date().toISOString();
   try {
-    await saveOrder({
-      id: orderId,
-      createdAt: now,
-      updatedAt: now,
-      items: totals.rows.map((r) => ({ id: r.item.id, name: r.item.name, qty: r.qty, price: r.unit, per: perLabel(r.item) || undefined, sum: r.sum, color: r.color, engrave: r.engrave })),
-      subtotal: totals.subtotal,
-      shipping: totals.shipping ?? 0,
-      total: sum,
-      delivery,
-      customer,
-      pay: "pending",
-      stage: "new",
-    });
+    await saveOrder(order);
   } catch (err) {
     console.error("[checkout] could not save order", orderId, err);
   }

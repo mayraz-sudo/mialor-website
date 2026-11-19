@@ -1,5 +1,6 @@
 import { getOrder, saveOrder } from "@/lib/orders";
 import { sendOrderEmails } from "@/lib/email";
+import { markCouponUsed } from "@/lib/coupon-store";
 
 /** עדכון סטטוס התשלום של הזמנה לפי מה שטרנזילה שלחה */
 export async function recordPayment(params: URLSearchParams, orderIdHint: string | null) {
@@ -28,6 +29,7 @@ export async function recordPayment(params: URLSearchParams, orderIdHint: string
   await saveOrder(next);
   // מיילים רק בפעם הראשונה שההזמנה עוברת ל"שולם"
   if (ok && order.pay !== "paid") {
+    if (order.coupon) await markCouponUsed(order.coupon.code).catch((err) => console.error("[coupon]", err));
     try {
       await sendOrderEmails(next);
     } catch (err) {

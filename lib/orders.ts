@@ -23,6 +23,8 @@ export type Order = {
   pay: PayStatus;
   payment?: { index?: string; last4?: string; response?: string; sum?: string; at?: string; mismatch?: boolean };
   stage: Stage;
+  /** קופון שהופעל בהזמנה */
+  coupon?: { code: string; discount: number };
   adminNote?: string;
 };
 
