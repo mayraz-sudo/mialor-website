@@ -101,4 +101,8 @@ review/            צילומי מסך של דף הבית (מחשב ומוביי
 | `MIALOR_SYSTEM_URL` | כתובת מערכת הניהול, למשל `https://mialor-business-manager.vercel.app` |
 | `MIALOR_INGEST_SECRET` | אותו מפתח סודי שמוגדר ב-Vercel של מערכת הניהול (24 תווים לפחות) |
 
-בלי שני המשתנים החיבור כבוי, והאתר עובד בדיוק כמו קודם. קבצים: `lib/mialor-system.ts`, `lib/attribution.ts`, `app/api/lead`, `app/api/event`, `components/system/SystemTracking.tsx`.
+- **צ'אט באתר** (כפתור בצד שמאל למטה): ההודעות נכנסות למסך "שיחות" במערכת הניהול, ועונים הבוט או מאי. הכפתור מופיע רק כשהחיבור מוגדר. מזהה המבקרת הוא מספר אקראי שנשמר בדפדפן שלה. קבצים: `components/system/ChatWidget.tsx`, `app/api/chat`.
+
+בלי שני המשתנים החיבור כבוי, והאתר עובד בדיוק כמו קודם.
+
+מדיניות הפרטיות (`/terms#privacy`) עודכנה בהתאם – זו הכתובת שנותנים ל-Meta באישור האפליקציה. מומלץ שעורך/ת דין יעבור/תעבור עליה. קבצים: `lib/mialor-system.ts`, `lib/attribution.ts`, `app/api/lead`, `app/api/event`, `components/system/SystemTracking.tsx`.

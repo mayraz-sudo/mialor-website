@@ -4,6 +4,8 @@ import Header from "@/components/Header";
 import { CartProvider } from "@/components/shop/CartContext";
 import MetaPixel from "@/components/pixel/MetaPixel";
 import SystemTracking from "@/components/system/SystemTracking";
+import ChatWidget from "@/components/system/ChatWidget";
+import { systemConfigured } from "@/lib/mialor-system";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { PromoBar } from "@/components/Promo";
@@ -65,6 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </CartProvider>
         <MetaPixel />
         <SystemTracking />
+        {/* הצ'אט מופיע רק כשהחיבור למערכת הניהול מוגדר */}
+        {systemConfigured() && <ChatWidget />}
       </body>
     </html>
   );
