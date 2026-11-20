@@ -8,7 +8,7 @@ export default function CategoryGrid() {
   return (
     <section id="categories" aria-labelledby="categories-title" className="bg-surface py-12 md:py-20">
       <div className="mx-auto max-w-[1240px] px-4 sm:px-5">
-        <SectionTitle id="categories-title" eyebrow="מה אנחנו יוצרים" title="הקטגוריות שלנו" />
+        <SectionTitle id="categories-title" eyebrow="לאירועים · הזמנה בכמויות" title="הקטגוריות שלנו" />
         <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-7">
           {CATEGORIES.map((cat) => (
             <li key={cat.slug}>

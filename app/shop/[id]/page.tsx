@@ -9,6 +9,7 @@ import { LaunchBadge, LaunchNote, LaunchPrice } from "@/components/shop/Launch";
 import { IconChevron } from "@/components/Icons";
 import { CARE, SHOP, isUploadedImage, shopItemHref } from "@/lib/shop";
 import { getItem, getVisibleItems } from "@/lib/catalog";
+import { eventTwinOf, productHref } from "@/lib/site";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -30,6 +31,7 @@ export default async function ShopItemPage({ params }: Params) {
   const item = await getItem((await params).id);
   if (!item) notFound();
   const images = item.images;
+  const eventTwin = eventTwinOf(item.id);
   const others = (await getVisibleItems()).filter((i) => i.id !== item.id).slice(0, 4);
 
   const facts = [
@@ -62,12 +64,19 @@ export default async function ShopItemPage({ params }: Params) {
             <ProductGallery product={{ name: item.name, images }} square />
 
             <div>
-              <p className="t-label">{SHOP.title}</p>
+              <p className="t-label">קנייה אישית · גם פריט אחד</p>
               <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.2] text-balance md:text-[2.4rem]">{item.name}</h1>
               <p className="mt-3">
                 <LaunchPrice item={item} large />
               </p>
               <LaunchNote item={item} />
+              {eventTwin && (
+                <p className="mt-3 text-[0.95rem]">
+                  <Link href={productHref(eventTwin)} className="font-medium text-accent-strong underline underline-offset-4 hover:text-ink">
+                    מזמינה לאירוע? יש מחיר כמות ←
+                  </Link>
+                </p>
+              )}
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{item.description}</p>
 

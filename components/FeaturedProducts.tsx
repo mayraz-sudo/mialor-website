@@ -8,7 +8,7 @@ export default function FeaturedProducts() {
   return (
     <section aria-labelledby="featured-title" className="bg-bg-alt py-12 md:py-20">
       <div className="mx-auto max-w-[1080px] px-4 sm:px-5">
-        <SectionTitle id="featured-title" eyebrow="נבחרו במיוחד" title="מוצרים מובילים" />
+        <SectionTitle id="featured-title" eyebrow="לאירועים · נבחרו במיוחד" title="מוצרים מובילים לאירועים" />
         <ul className="grid grid-cols-2 gap-x-3.5 gap-y-10 sm:gap-x-5 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-14">
           {products.map((p) => (
             <li key={p.id}>

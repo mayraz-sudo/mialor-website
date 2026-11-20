@@ -1,4 +1,4 @@
-import { categoryBySlug, productHref, type Product } from "@/lib/site";
+import { categoryBySlug, isBulk, productHref, type Product } from "@/lib/site";
 import { PromoBadge, PromoPrice } from "./Promo";
 import ProductMedia from "./ProductMedia";
 
@@ -11,6 +11,9 @@ export default function ProductCard({ product, sizes }: { product: Product; size
         <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-surface">
           <ProductMedia product={product} sizes={sizes} />
           <PromoBadge product={product} />
+          <span className="absolute right-2.5 bottom-2.5 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[0.75rem] leading-none text-ink md:right-3 md:bottom-3">
+            לאירועים
+          </span>
         </div>
       </a>
       <div className="flex flex-1 flex-col pt-3.5 md:pt-5">
@@ -24,6 +27,9 @@ export default function ProductCard({ product, sizes }: { product: Product; size
         <p className="mt-2 text-[0.95rem] text-ink tabular-nums md:mt-2.5">
           <PromoPrice product={product} />
         </p>
+        {isBulk(product) && (
+          <p className="mt-1 text-[0.88rem] font-medium text-accent-strong">מינימום הזמנה: {product.minQty} יחידות</p>
+        )}
         <div className="mt-auto pt-3.5 md:pt-5">
           <a href={href} aria-label={`לפרטים והזמנה: ${product.name}`} className="btn btn-secondary btn-sm w-full">
             לפרטים והזמנה

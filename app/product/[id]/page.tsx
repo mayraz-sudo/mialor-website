@@ -9,7 +9,10 @@ import {
   ALL_PRODUCTS_HREF,
   DELIVERY,
   PRODUCTS,
+  SHOP_TWINS,
   categoryBySlug,
+  formatAmount,
+  isBulk,
   categoryHref,
   productById,
   relatedProducts,
@@ -37,6 +40,7 @@ export default async function ProductPage({ params }: Params) {
   if (!product) notFound();
   const category = categoryBySlug(product.categories[0]);
   const related = relatedProducts(product);
+  const twin = SHOP_TWINS[product.id];
 
   const facts = [
     { label: "כמות מינימלית", value: product.minQty > 1 ? `${product.minQty} יחידות` : "עיצוב אחד" },
@@ -76,11 +80,24 @@ export default async function ProductPage({ params }: Params) {
             <ProductGallery product={product} />
 
             <div>
-              <p className="t-label">{category.title}</p>
+              <p className="t-label">לאירועים · {category.title}</p>
               <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.2] text-balance md:text-[2.4rem]">{product.name}</h1>
               <p className="mt-3 text-[1.15rem] tabular-nums">
                 <PromoPrice product={product} large />
               </p>
+              {isBulk(product) && product.priceFrom !== null && (
+                <div className="mt-3 rounded-[2px] border border-line bg-surface px-4 py-3 text-[0.97rem]">
+                  <p className="font-medium">הזמנה לאירוע · מינימום {product.minQty} יחידות</p>
+                  <p className="mt-0.5 text-muted tabular-nums">
+                    לדוגמה: {product.minQty} יחידות – החל מ־{formatAmount(product.priceFrom * product.minQty)} (לפני הנחות)
+                  </p>
+                  {twin && (
+                    <Link href={`/shop/${twin}`} className="mt-2 inline-block font-medium text-accent-strong underline underline-offset-4 hover:text-ink">
+                      צריכה רק אחד? לקנייה אישית בחנות ←
+                    </Link>
+                  )}
+                </div>
+              )}
               <PromoNote product={product} />
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{product.description}</p>

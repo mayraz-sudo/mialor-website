@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import ShopClient from "@/components/shop/ShopClient";
 import { IconChevron, IconGift, IconPen, IconTruck } from "@/components/Icons";
@@ -24,7 +25,13 @@ export default async function ShopPage() {
   const items = await getVisibleItems();
   return (
     <>
-      <PageHeader eyebrow="MIALOR" title={SHOP.title} intro={SHOP.intro} />
+      <PageHeader eyebrow="קנייה אישית · גם פריט אחד" title={SHOP.title} intro={SHOP.intro} />
+      <p className="border-b border-line bg-bg px-5 pb-6 text-center text-[0.95rem] text-muted">
+        מזמינה מתנות לאורחים לאירוע?{" "}
+        <Link href="/products" className="font-medium whitespace-nowrap text-accent-strong underline underline-offset-4 hover:text-ink">
+          למארזים במחירי כמות ←
+        </Link>
+      </p>
 
       <section aria-label="מידע על המוצרים" className="border-b border-line bg-bg-alt">
         <ul className="mx-auto grid max-w-[1180px] gap-4 px-4 py-5 sm:grid-cols-3 sm:px-5">

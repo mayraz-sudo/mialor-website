@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { CATEGORIES, PRODUCTS, type CategorySlug } from "@/lib/site";
 import ProductCard from "./ProductCard";
 
@@ -37,11 +38,18 @@ export default function ProductsBrowser() {
     <>
       <section className="border-b border-line bg-bg">
         <div className="mx-auto max-w-[1240px] px-5 pt-10 pb-6 text-center md:pt-16 md:pb-8">
-          <p className="eyebrow">{active ? "קטגוריה" : "הקולקציה"}</p>
+          <p className="eyebrow">לאירועים · הזמנה בכמויות</p>
           <h1 className="t-h2 mt-2.5">{active ? active.title : "כל המוצרים"}</h1>
           <span aria-hidden className="rule mx-auto mt-4" />
           <p className="t-lead mx-auto mt-4 max-w-xl">
             {active ? active.description : "מארזים, הזמנות, עיצוב גרפי וברכונים – כל המוצרים של MIALOR במקום אחד."}
+          </p>
+          <p className="mx-auto mt-5 max-w-xl rounded-[2px] border border-line bg-surface px-4 py-3 text-[0.95rem] leading-relaxed">
+            <span className="font-medium">המחירים כאן ליחידה, בהזמנה לאירוע:</span>{" "}
+            <span className="text-muted">מארזים מ־20 יחידות, ברכונים מ־10, סידורים וספרים מ־40. עיצוב גרפי – מחיר לעיצוב.</span>{" "}
+            <Link href="/shop" className="font-medium whitespace-nowrap text-accent-strong underline underline-offset-4 hover:text-ink">
+              רוצה פריט אחד? לקנייה אישית ←
+            </Link>
           </p>
         </div>
         {/* סינון: בנייד גלילה צדדית בתוך השורה בלבד */}
