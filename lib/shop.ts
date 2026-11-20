@@ -168,6 +168,15 @@ export const SHOP_ITEMS: ShopItem[] = [
     material: "כריכת בד",
     noDiscount: true,
   },
+  {
+    id: "rachel-segula-set",
+    name: "סט סגולת רחל אמנו",
+    description:
+      "סט מלא לסגולת רחל אמנו – 40 ימים רצופים: כרטיס עם סדר הסגולה ותפילת רחל אמנו, קופת צדקה, פמוט לנר ו-40 נרות שבת. ארוז בשקית מתנה עם חלון וסרט סאטן.",
+    price: 50,
+    per: "unit",
+    images: [img("rachel-segula-1")],
+  },
 ];
 
 export const perLabel = (i: Pick<ShopItem, "per">) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");

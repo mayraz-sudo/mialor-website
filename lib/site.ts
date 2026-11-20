@@ -325,13 +325,50 @@ export const EVENT_TYPES = ["חתונה", "חינה", "אירוסין", "הפר�
 export const categoryHref = (slug: CategorySlug) => `/products#${slug}`;
 export const categoryBySlug = (slug: CategorySlug) => CATEGORIES.find((c) => c.slug === slug)!;
 
-export const NAV = [
+/** group: "events" = מוצרים לאירועים (הזמנה בכמויות), "shop" = קנייה אישית של פריט בודד */
+export type NavItem = { label: string; href: string; group?: "events" | "shop" };
+export const NAV: NavItem[] = [
   { label: "בית", href: "/" },
-  ...CATEGORIES.map((c) => ({ label: c.navLabel, href: categoryHref(c.slug) })),
-  { label: "חנות מוצרים", href: "/shop" },
+  ...CATEGORIES.map((c) => ({ label: c.navLabel, href: categoryHref(c.slug), group: "events" as const })),
+  { label: "קנייה אישית", href: "/shop", group: "shop" },
   { label: "אודות", href: "/#about" },
   { label: "צור קשר", href: "/#contact" },
 ];
+
+/** שני "העולמות" של האתר – כדי שיהיה ברור מה נקנה בכמויות ומה אפשר לקנות כפריט בודד */
+export const PATHS = {
+  events: {
+    title: "מתנות לאורחים באירוע",
+    short: "לאירועים",
+    note: "הזמנה בכמויות",
+    points: ["הזמנה בכמויות: מארזים מ־20 יחידות, ברכונים מ־10", "מיתוג והקדשה אישית לאירוע שלכם", "גם עיצוב הזמנות, לוגו ותפריטים"],
+    cta: "למוצרים לאירועים",
+    href: ALL_PRODUCTS_HREF,
+    image: "/images/products/round-candlesticks-blessing-1.jpg",
+    imageAlt: "מארז פמוטים וברכת שבת שלום לאורחים",
+  },
+  shop: {
+    title: "קנייה אישית",
+    short: "קנייה אישית",
+    note: "גם פריט אחד",
+    points: ["קונים גם פריט אחד – בלי מינימום", "תשלום מאובטח באשראי", "משלוח עד הבית או איסוף מחולון"],
+    cta: "לחנות",
+    href: "/shop",
+    image: "/images/shop/round-pair-1.jpg",
+    imageAlt: "זוג פמוטים מגבס שבת שלום",
+  },
+};
+
+/** מוצר שנמכר בכמויות לאירוע (ולא עיצוב אחד) */
+export const isBulk = (p: Pick<Product, "minQty">) => p.minQty > 1;
+
+/** אותו מוצר בשני העולמות: מזהה המוצר לאירועים ← מזהה הפריט בחנות */
+export const SHOP_TWINS: Record<string, string> = {
+  "corduroy-siddur-event": "corduroy-siddur",
+  "tehillim-event": "tehillim",
+  "sefer-dvarim-event": "p-mwls55jrm7t",
+};
+export const eventTwinOf = (shopId: string) => Object.keys(SHOP_TWINS).find((k) => SHOP_TWINS[k] === shopId);
 
 /**
  * מבצע לפי תאריכים. מחוץ לטווח – לא מוצג באתר בכלל.

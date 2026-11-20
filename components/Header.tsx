@@ -108,11 +108,13 @@ export default function Header() {
           <nav aria-label="ניווט ראשי" className="hidden justify-self-center lg:block">
             <ul className="flex items-center gap-1">
               {NAV.map((item) => (
-                <li key={item.href}>
+                <li key={item.href} className={item.group === "shop" ? "mx-1 border-x border-line px-2" : undefined}>
                   <NavLink
                     href={item.href}
                     aria-current={isCurrent(item.href) ? "page" : undefined}
-                    className="relative block px-3 py-2 text-[15px] whitespace-nowrap transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-center after:scale-x-0 after:bg-accent after:transition-transform hover:text-accent-strong hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
+                    className={item.group === "shop"
+                      ? "block rounded-full border border-ink px-3.5 py-1.5 text-[15px] whitespace-nowrap transition-colors hover:bg-ink hover:text-bg aria-[current=page]:bg-ink aria-[current=page]:text-bg"
+                      : "relative block px-3 py-2 text-[15px] whitespace-nowrap transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:origin-center after:scale-x-0 after:bg-accent after:transition-transform hover:text-accent-strong hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"}
                   >
                     {item.label}
                   </NavLink>
@@ -170,17 +172,27 @@ export default function Header() {
           </button>
         </div>
         <ul className="flex-1 overflow-y-auto px-5 py-2">
-          {NAV.map((item) => (
-            <li key={item.href}>
-              <NavLink
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="flex min-h-[56px] items-center border-b border-line font-serif text-[1.3rem]"
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
+          {NAV.map((item, i) => {
+            const prev = NAV[i - 1]?.group;
+            const heading =
+              item.group === "events" && prev !== "events"
+                ? "לאירועים · הזמנה בכמויות"
+                : item.group === "shop" && prev !== "shop"
+                  ? "קנייה אישית · גם פריט אחד"
+                  : null;
+            return (
+              <li key={item.href}>
+                {heading && <p className="t-label pt-5 pb-1 text-accent-strong">{heading}</p>}
+                <NavLink
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`flex min-h-[56px] items-center border-b border-line font-serif text-[1.3rem] ${item.group ? "pr-3" : ""}`}
+                >
+                  {item.group === "shop" ? "חנות מוצרים" : item.label}
+                </NavLink>
+              </li>
+            );
+          })}
         </ul>
         <div className="border-t border-line p-5">
           <a
