@@ -110,7 +110,7 @@ export default function OrderForm({ product }: { product: Product }) {
             className={`${field} tabular-nums`}
           />
           <p id="order-qty-hint" className="mt-1 text-[0.82rem] text-muted">
-            מינימום {product.minQty}
+            מחיר הכמות – החל מ־{product.minQty} יחידות
           </p>
         </div>
         <div>

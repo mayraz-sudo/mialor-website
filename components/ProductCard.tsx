@@ -28,7 +28,7 @@ export default function ProductCard({ product, sizes }: { product: Product; size
           <PromoPrice product={product} />
         </p>
         {isBulk(product) && (
-          <p className="mt-1 text-[0.88rem] font-medium text-accent-strong">מינימום הזמנה: {product.minQty} יחידות</p>
+          <p className="mt-1 text-[0.88rem] font-medium text-accent-strong">מחיר כמות · מ־{product.minQty} יחידות</p>
         )}
         <div className="mt-auto pt-3.5 md:pt-5">
           <a href={href} aria-label={`לפרטים והזמנה: ${product.name}`} className="btn btn-secondary btn-sm w-full">

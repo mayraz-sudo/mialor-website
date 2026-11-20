@@ -91,6 +91,11 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
     },
   },
+  {
+    // הסט הוא מארז מתנה, לא מוצר גבס – בלי הנחת ההשקה, מחיר 50 ₪
+    id: "2026-11-20-rachel-segula-set-no-discount",
+    apply: (items) => items.map((i) => (i.id === "rachel-segula-set" ? { ...i, material: "מארז מתנה", noDiscount: true } : i)),
+  },
 ];
 
 let migrationsChecked = false;

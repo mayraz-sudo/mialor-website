@@ -176,6 +176,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     price: 50,
     per: "unit",
     images: [img("rachel-segula-1")],
+    material: "מארז מתנה",
+    noDiscount: true,
   },
 ];
 
