@@ -14,7 +14,9 @@ export default function ProductsBrowser() {
 
   useEffect(() => {
     const read = () => {
-      const h = decodeURIComponent(window.location.hash.slice(1));
+      const raw = decodeURIComponent(window.location.hash.slice(1));
+      // ברכונים אוחדו עם המארזים – קישורים ישנים ל־#prints מובילים למארזים
+      const h = raw === "prints" ? "packages" : raw;
       setFilter(isFilter(h) ? h : "all");
     };
     read();
