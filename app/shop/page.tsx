@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const FACTS = [
   { icon: IconPen, title: "גבס איכותי בעבודת יד", text: "כל פריט נוצק ומעובד ביד" },
-  { icon: IconTruck, title: "משלוח בדואר ישראל", text: `לכל הארץ ב־₪${SHOP.postPrice}, ${SHOP.leadTime}` },
+  { icon: IconTruck, title: "משלוח בדואר ישראל", text: `לכל הארץ ב־₪${SHOP.postPrice}, חינם מ־₪${SHOP.freeShippingFrom}` },
   { icon: IconGift, title: "איסוף עצמי מחולון", text: "בחינם, בתיאום מראש" },
 ];
 

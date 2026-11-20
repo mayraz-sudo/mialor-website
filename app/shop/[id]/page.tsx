@@ -40,7 +40,7 @@ export default async function ShopItemPage({ params }: Params) {
     ...(item.colors?.length ? [{ label: "צבעים", value: item.colors.join(", ") }] : []),
     ...(item.engraving ? [{ label: "הטבעה אישית", value: `אפשרית, בתוספת ₪${item.engraving.price}` }] : []),
     { label: "זמן הכנה ומשלוח", value: `${SHOP.leadTime}, כולל ההכנה והשילוח` },
-    { label: "משלוח", value: `דואר ישראל לכל הארץ – ${money(SHOP.postPrice ?? 0)}` },
+    { label: "משלוח", value: `דואר ישראל לכל הארץ – ${money(SHOP.postPrice ?? 0)}${SHOP.freeShippingFrom ? `, חינם בהזמנה מ־${money(SHOP.freeShippingFrom)}` : ""}` },
     { label: "איסוף עצמי", value: "מחולון, בחינם ובתיאום מראש" },
   ];
 

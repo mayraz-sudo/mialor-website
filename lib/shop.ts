@@ -35,9 +35,11 @@ export const SHOP = {
   intro: "מוצרי גבס איכותי בעבודת יד וסידורים בהטבעה אישית, לקנייה מיידית באשראי. משלוח לכל הארץ בדואר ישראל, או איסוף בחינם מחולון.",
   /** מחיר משלוח בדואר ישראל בשקלים. null = עדיין לא נקבע */
   postPrice: 35 as number | null,
+  /** משלוח חינם מסכום פריטים זה (אחרי מחירי ההשקה). null = בלי משלוח חינם */
+  freeShippingFrom: 249 as number | null,
   /** זמן הכנה ומשלוח */
   leadTime: "עד 7 ימי עסקים",
-  shippingNote: "משלוח לכל הארץ באמצעות דואר ישראל (₪35), עד 7 ימי עסקים כולל הכנה ושילוח",
+  shippingNote: "משלוח לכל הארץ באמצעות דואר ישראל (₪35, חינם בהזמנה מ־₪249), עד 7 ימי עסקים כולל הכנה ושילוח",
   material: "מוצרי הגבס עשויים מגבס איכותי, בעבודת יד.",
   handmadeNote:
     "כל המוצרים מיוצרים בעבודת יד מתוך תשומת לב מלאה לפרטים. המידות המצוינות הן גודל ממוצע של פריט מסוג זה, וייתכנו סטיות קטנות בגודל המוצר בפועל ואי־שלמויות האופייניות לעבודת יד, בשל חומרי הגלם ואופי הייצור. ייתכנו גם הבדלים קלים בגוון, במרקם ובגימור – אלו חלק מהייחודיות של כל פריט.",
@@ -173,11 +175,10 @@ export const SHOP_ITEMS: ShopItem[] = [
     name: "סט סגולת רחל אמנו",
     description:
       "סט מלא לסגולת רחל אמנו – 40 ימים רצופים: כרטיס עם סדר הסגולה ותפילת רחל אמנו, קופת צדקה, פמוט לנר ו-40 נרות שבת. ארוז בשקית מתנה עם חלון וסרט סאטן.",
-    price: 50,
+    price: 130,
     per: "unit",
     images: [img("rachel-segula-1")],
     material: "מארז מתנה",
-    noDiscount: true,
   },
 ];
 
@@ -239,7 +240,8 @@ export function cartTotals(lines: CartLine[], delivery: Delivery, launch: boolea
     })
     .filter((r): r is Row => Boolean(r));
   const subtotal = rows.reduce((a, r) => a + r.sum, 0);
-  const shipping = delivery === "post" ? SHOP.postPrice : 0;
+  const freeShipping = SHOP.freeShippingFrom !== null && subtotal >= SHOP.freeShippingFrom;
+  const shipping = delivery === "post" ? (freeShipping ? 0 : SHOP.postPrice) : 0;
   return { rows, subtotal, shipping, total: shipping === null ? null : subtotal + shipping };
 }
 
