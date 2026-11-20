@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: Params) {
   const twin = SHOP_TWINS[product.id];
 
   const facts = [
-    { label: "כמות מינימלית", value: product.minQty > 1 ? `${product.minQty} יחידות` : "עיצוב אחד" },
+    { label: product.minQty > 1 ? "מחיר כמות" : "כמות", value: product.minQty > 1 ? `החל מ־${product.minQty} יחידות` : "עיצוב אחד" },
     { label: "זמן הכנה", value: product.leadTime },
     ...(product.customization ? [{ label: "התאמה אישית", value: product.customization }] : []),
     ...(product.minQty > 1 ? [{ label: "משלוח ואיסוף", value: `${DELIVERY.pickup}, או ${DELIVERY.shipping}` }] : []),
@@ -87,13 +87,13 @@ export default async function ProductPage({ params }: Params) {
               </p>
               {isBulk(product) && product.priceFrom !== null && (
                 <div className="mt-3 rounded-[2px] border border-line bg-surface px-4 py-3 text-[0.97rem]">
-                  <p className="font-medium">הזמנה לאירוע · מינימום {product.minQty} יחידות</p>
+                  <p className="font-medium">מחיר כמות לאירוע · מ־{product.minQty} יחידות</p>
                   <p className="mt-0.5 text-muted tabular-nums">
                     לדוגמה: {product.minQty} יחידות – החל מ־{formatAmount(product.priceFrom * product.minQty)} (לפני הנחות)
                   </p>
                   {twin && (
                     <Link href={`/shop/${twin}`} className="mt-2 inline-block font-medium text-accent-strong underline underline-offset-4 hover:text-ink">
-                      צריכה רק אחד? לקנייה אישית בחנות ←
+                      רוצה פחות? אפשר לקנות גם בבודדים בחנות ←
                     </Link>
                   )}
                 </div>

@@ -91,6 +91,16 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
     },
   },
+  {
+    // הסט הוא מארז מתנה, לא מוצר גבס – בלי הנחת ההשקה, מחיר 50 ₪
+    id: "2026-11-20-rachel-segula-set-no-discount",
+    apply: (items) => items.map((i) => (i.id === "rachel-segula-set" ? { ...i, material: "מארז מתנה", noDiscount: true } : i)),
+  },
+  {
+    // קנייה בודדת 130 ₪ (בכמות לאירוע – 50 ₪, בעמוד האירועים). נכלל בהנחת ההשקה כמו כל מוצרי החנות
+    id: "2026-11-20-rachel-segula-set-single-130",
+    apply: (items) => items.map((i) => (i.id === "rachel-segula-set" ? { ...i, price: 130, noDiscount: undefined } : i)),
+  },
 ];
 
 let migrationsChecked = false;

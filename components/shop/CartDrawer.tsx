@@ -210,7 +210,7 @@ export default function CartDrawer() {
                   {(
                     [
                       { id: "pickup", title: "איסוף עצמי מחולון", sub: "בחינם, בתיאום מראש" },
-                      { id: "post", title: "משלוח בדואר ישראל", sub: postReady ? `לכל הארץ, ${SHOP.leadTime} – ${money(SHOP.postPrice!)}` : `לכל הארץ, ${SHOP.leadTime} – המחיר יעודכן בקרוב` },
+                      { id: "post", title: "משלוח בדואר ישראל", sub: postReady ? `לכל הארץ, ${SHOP.leadTime} – ${money(SHOP.postPrice!)}${SHOP.freeShippingFrom ? ` (חינם מ־${money(SHOP.freeShippingFrom)})` : ""}` : `לכל הארץ, ${SHOP.leadTime} – המחיר יעודכן בקרוב` },
                     ] as const
                   ).map((o) => (
                     <label
@@ -308,6 +308,9 @@ export default function CartDrawer() {
                   <dt>{delivery === "post" ? "משלוח בדואר ישראל" : "איסוף עצמי"}</dt>
                   <dd>{totals.shipping === null ? "יעודכן" : totals.shipping === 0 ? "חינם" : money(totals.shipping)}</dd>
                 </div>
+                {delivery === "post" && SHOP.freeShippingFrom !== null && totals.subtotal < SHOP.freeShippingFrom && (
+                  <p className="text-[0.85rem] text-accent-strong">עוד {money(SHOP.freeShippingFrom - totals.subtotal)} ומשלוח חינם</p>
+                )}
                 {coupon && discount > 0 && (
                   <div className="flex justify-between text-[#2f5d2a]">
                     <dt>קופון {coupon.code}</dt>

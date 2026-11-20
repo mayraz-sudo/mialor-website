@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductGallery from "@/components/ProductGallery";
 import BuyBox from "@/components/shop/BuyBox";
+import BulkCta from "@/components/shop/BulkCta";
 import TrackViewContent from "@/components/pixel/TrackViewContent";
 import { LaunchBadge, LaunchNote, LaunchPrice } from "@/components/shop/Launch";
 import { IconChevron } from "@/components/Icons";
@@ -39,7 +40,7 @@ export default async function ShopItemPage({ params }: Params) {
     ...(item.colors?.length ? [{ label: "צבעים", value: item.colors.join(", ") }] : []),
     ...(item.engraving ? [{ label: "הטבעה אישית", value: `אפשרית, בתוספת ₪${item.engraving.price}` }] : []),
     { label: "זמן הכנה ומשלוח", value: `${SHOP.leadTime}, כולל ההכנה והשילוח` },
-    { label: "משלוח", value: `דואר ישראל לכל הארץ – ${money(SHOP.postPrice ?? 0)}` },
+    { label: "משלוח", value: `דואר ישראל לכל הארץ – ${money(SHOP.postPrice ?? 0)}${SHOP.freeShippingFrom ? `, חינם בהזמנה מ־${money(SHOP.freeShippingFrom)}` : ""}` },
     { label: "איסוף עצמי", value: "מחולון, בחינם ובתיאום מראש" },
   ];
 
@@ -70,18 +71,15 @@ export default async function ShopItemPage({ params }: Params) {
                 <LaunchPrice item={item} large />
               </p>
               <LaunchNote item={item} />
-              {eventTwin && (
-                <p className="mt-3 text-[0.95rem]">
-                  <Link href={productHref(eventTwin)} className="font-medium text-accent-strong underline underline-offset-4 hover:text-ink">
-                    מזמינה לאירוע? יש מחיר כמות ←
-                  </Link>
-                </p>
-              )}
               <span aria-hidden className="rule mt-5" />
               <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{item.description}</p>
 
               <div className="mt-6">
                 <BuyBox item={item} />
+              </div>
+
+              <div className="mt-5">
+                <BulkCta itemName={item.name} eventHref={eventTwin ? productHref(eventTwin) : undefined} />
               </div>
 
               <dl className="mt-6 divide-y divide-line border-y border-line">

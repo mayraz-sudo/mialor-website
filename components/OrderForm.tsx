@@ -44,7 +44,7 @@ export default function OrderForm({ product }: { product: Product }) {
       return;
     }
     setError("");
-    const deliveryText = delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח בדואר ישראל" : "";
+    const deliveryText = delivery === "pickup" ? "איסוף עצמי מחולון" : delivery === "shipping" ? "משלוח בתיאום מראש" : "";
     // הפנייה נשמרת גם במערכת הניהול – ברקע, בלי לעכב את המעבר לוואטסאפ
     try {
       fetch("/api/lead", {
@@ -110,7 +110,7 @@ export default function OrderForm({ product }: { product: Product }) {
             className={`${field} tabular-nums`}
           />
           <p id="order-qty-hint" className="mt-1 text-[0.82rem] text-muted">
-            מינימום {product.minQty}
+            מחיר הכמות – החל מ־{product.minQty} יחידות
           </p>
         </div>
         <div>
@@ -140,7 +140,7 @@ export default function OrderForm({ product }: { product: Product }) {
             {(
               [
                 { id: "pickup", title: "איסוף עצמי", sub: "מחולון, בחינם" },
-                { id: "shipping", title: "משלוח", sub: "לכל הארץ, דואר ישראל" },
+                { id: "shipping", title: "משלוח", sub: "בתיאום מראש, בעיקר באזור המרכז" },
               ] as const
             ).map((o) => (
               <label
