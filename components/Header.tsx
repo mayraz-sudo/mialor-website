@@ -171,29 +171,49 @@ export default function Header() {
             <IconClose />
           </button>
         </div>
-        <ul className="flex-1 overflow-y-auto px-5 py-2">
-          {NAV.map((item, i) => {
-            const prev = NAV[i - 1]?.group;
-            const heading =
-              item.group === "events" && prev !== "events"
-                ? "לאירועים · הזמנה בכמויות"
-                : item.group === "shop" && prev !== "shop"
-                  ? "קנייה אישית · גם פריט אחד"
-                  : null;
-            return (
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {/* שתי עמודות: לאירועים (בכמויות) / קנייה אישית (בבודדים) */}
+          <div className="grid grid-cols-2 gap-3">
+            <section aria-labelledby="menu-events" className="rounded-[2px] border border-line bg-surface p-3">
+              <p id="menu-events" className="font-serif text-[1.15rem] leading-tight">לאירועים</p>
+              <p className="text-[0.78rem] text-accent-strong">הזמנה בכמויות</p>
+              <ul className="mt-2">
+                {NAV.filter((i) => i.group === "events").map((item) => (
+                  <li key={item.href}>
+                    <NavLink href={item.href} onClick={() => setOpen(false)} className="flex min-h-11 items-center border-b border-line text-[1rem] last:border-0">
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <section aria-labelledby="menu-shop" className="flex flex-col rounded-[2px] border border-ink bg-surface p-3">
+              <p id="menu-shop" className="font-serif text-[1.15rem] leading-tight">קנייה אישית</p>
+              <p className="text-[0.78rem] text-accent-strong">הזמנה בבודדים</p>
+              <ul className="mt-2 space-y-1.5 text-[0.85rem] text-muted">
+                <li>✓ גם פריט אחד</li>
+                <li>✓ תשלום באשראי</li>
+                <li>✓ עד 7 ימי עסקים</li>
+              </ul>
+              <Link href="/shop" onClick={() => setOpen(false)} className="btn btn-primary btn-sm mt-auto w-full">
+                לחנות
+              </Link>
+            </section>
+          </div>
+          <ul className="mt-3">
+            {NAV.filter((i) => !i.group).map((item) => (
               <li key={item.href}>
-                {heading && <p className="t-label pt-5 pb-1 text-accent-strong">{heading}</p>}
                 <NavLink
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`flex min-h-[56px] items-center border-b border-line font-serif text-[1.3rem] ${item.group ? "pr-3" : ""}`}
+                  className="flex min-h-[56px] items-center border-b border-line font-serif text-[1.3rem]"
                 >
-                  {item.group === "shop" ? "חנות מוצרים" : item.label}
+                  {item.label}
                 </NavLink>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        </div>
         <div className="border-t border-line p-5">
           <a
             href={whatsappLink()}
