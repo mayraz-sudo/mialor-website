@@ -106,6 +106,15 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
     id: "2026-11-20-rachel-segula-set-single-130",
     apply: (items) => items.map((i) => (i.id === "rachel-segula-set" ? { ...i, price: 130, noDiscount: undefined } : i)),
   },
+  {
+    // שלושת מוצרי רחל אמנו – תיאור שמבהיר את ההבדל ביניהם
+    id: "2026-11-20-rachel-descriptions",
+    apply: (items) =>
+      items.map((i) => {
+        const seed = (i.id === "rachel-candle" || i.id === "rachel-segula-set") && SHOP_ITEMS.find((x) => x.id === i.id);
+        return seed ? { ...i, description: seed.description } : i;
+      }),
+  },
 ];
 
 let migrationsChecked = false;

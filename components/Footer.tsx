@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES, LOGO, SITE, categoryHref, whatsappLink } from "@/lib/site";
+import { CATEGORIES, LOGO, SITE, TERMS, categoryHref, whatsappLink } from "@/lib/site";
 
 const INFO_LINKS = [
   { label: "אודות", href: "/#about" },
@@ -77,7 +77,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-line">
         <p className="mx-auto max-w-[1180px] px-5 py-5 text-center text-[0.85rem] text-muted md:text-right">
-          © {new Date().getFullYear()} MIALOR · כל הזכויות שמורות
+          © {new Date().getFullYear()} MIALOR · כל הזכויות שמורות{TERMS.businessId ? ` · ${TERMS.businessType} ${TERMS.businessId}` : ""}
         </p>
       </div>
     </footer>
