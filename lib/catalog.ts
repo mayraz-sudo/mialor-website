@@ -6,6 +6,11 @@ import { blobStore, withTimeout } from "@/lib/blobstore";
  * כל עוד לא נשמר כלום, משתמשים ברשימה ההתחלתית שבקוד (SHOP_ITEMS).
  */
 const KEY = "items";
+
+/** ספרים (סידורים, תהילים, ספר דברים) לעולם לא נכללים במבצעים – גם אם נוספו בניהול בלי הסימון */
+const BOOK = /סידור|תהילים|תהלים|ספר דברים/;
+const withBookRule = (items: ShopItem[]) =>
+  items.map((i) => (BOOK.test(i.name) && !i.noDiscount ? { ...i, noDiscount: true } : i));
 let cache: { at: number; items: ShopItem[] } | null = null;
 const TTL = 3000;
 
@@ -23,7 +28,7 @@ export async function getCatalog(): Promise<ShopItem[]> {
   const res = await withTimeout<Res>(store.getJSON<ShopItem[]>(KEY).then((v) => ({ v })), 4000, { timeout: true });
   if ("v" in res) {
     if (Array.isArray(res.v) && res.v.length) {
-      const items = await applyMigrations(store, res.v);
+      const items = withBookRule(await applyMigrations(store, res.v));
       cache = { at: Date.now(), items };
       return items;
     }
@@ -156,7 +161,7 @@ export function cleanItem(raw: unknown): ShopItem | null {
           }
         : undefined,
     material: str(r.material, 60) || undefined,
-    noDiscount: r.noDiscount === true ? true : undefined,
+    noDiscount: r.noDiscount === true || BOOK.test(name) ? true : undefined,
   };
 }
 
