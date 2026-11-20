@@ -47,7 +47,7 @@ export const HERO = {
   imagePosition: "center 72%",
 };
 
-export type CategorySlug = "packages" | "invitations" | "branding" | "prints";
+export type CategorySlug = "packages" | "invitations" | "branding";
 
 export type Category = {
   slug: CategorySlug;
@@ -64,9 +64,9 @@ export type Category = {
 export const CATEGORIES: Category[] = [
   {
     slug: "packages",
-    title: "מארזים לאירועים",
-    navLabel: "מארזים",
-    description: "מארזי שבת, פמוטים, נרות וסגולות, עם מיתוג אישי והקדשה.",
+    title: "מארזים וברכונים לאירועים",
+    navLabel: "מארזים וברכונים",
+    description: "מארזי שבת, פמוטים, נרות, סגולות וברכונים עם סרט תחרה – עם מיתוג אישי והקדשה.",
     shortDescription: "מתנות לאורחים בעיצוב אישי",
     image: "/images/products/round-candlesticks-blessing-1.jpg",
     imageAlt: "מארז פמוטים עגולים וברכת שבת שלום עטוף בצלופן וסרט סאטן",
@@ -88,15 +88,6 @@ export const CATEGORIES: Category[] = [
     shortDescription: "לוגו זוגי ושפה גרפית",
     image: "/images/products/wedding-logo-2.jpg",
     imageAlt: "לוגו זוגי בזהב עם עיטורים על בד שמנת",
-  },
-  {
-    slug: "prints",
-    title: "ברכונים והדפסות",
-    navLabel: "ברכונים והדפסות",
-    description: "ברכונים מעוצבים עם סרט תחרה והקדשה אישית.",
-    shortDescription: "ברכונים עם סרט תחרה",
-    image: "/images/products/booklet-mizmor-candles-1.jpg",
-    imageAlt: "ברכון סדר הדלקת נרות ומזמור לתודה עם סרט תחרה",
   },
 ];
 
@@ -157,19 +148,19 @@ export const PRODUCTS: Product[] = [
     description: "זוג פמוטים עגולים בעבודת יד, בעיצוב מינימליסטי ועל־זמני. מתנה אלגנטית ושימושית לאורחים, עם אפשרות לאריזה ומיתוג בהתאמה לאירוע." },
   { id: "square-candlesticks", name: "מארז פמוטים מרובעים שבת שלום", categories: ["packages"], priceFrom: 28, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("square-candlesticks", 1),
     description: "זוג פמוטים מרובעים בעבודת יד, בעיצוב נקי ומוקפד. מזכרת מיוחדת מאירוע מרגש, המשלבת שימושיות, יופי ואפשרות למיתוג אישי." },
-  { id: "booklet-mizmor-candles", name: "ברכון מזמור לתודה וסדר הדלקת נרות עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-mizmor-candles", 3),
+  { id: "booklet-mizmor-candles", name: "ברכון מזמור לתודה וסדר הדלקת נרות עם סרט תחרה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-mizmor-candles", 3),
     description: "ברכון מעוצב המשלב את מזמור לתודה וסדר הדלקת נרות שבת. בעיצוב קלאסי ועדין, עם סרט תחרה למראה חגיגי ואלגנטי. מזכרת מרגשת עם אפשרות להקדשה אישית." },
-  { id: "booklet-mini-tehillim", name: "ברכון סדר הדלקת נרות ומזמור לתודה עם תהילים קטן", categories: ["prints"], priceFrom: 25, unit: "ליחידה", minQty: 20, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-mini-tehillim", 1),
+  { id: "booklet-mini-tehillim", name: "ברכון סדר הדלקת נרות ומזמור לתודה עם תהילים קטן", categories: ["packages"], priceFrom: 25, unit: "ליחידה", minQty: 20, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-mini-tehillim", 1),
     description: "ברכון סדר הדלקת נרות שבת ומזמור לתודה עם סרט תחרה, יחד עם ספר תהילים קטן בשקית אורגנזה, ארוז בשקית שקופה עם פפיון. מזכרת מרגשת עם אפשרות להקדשה אישית." },
-  { id: "booklet-tealights", name: "ברכון סדר הדלקת נרות ומזמור לתודה עם נרות שבת", categories: ["prints"], priceFrom: 22, unit: "ליחידה", minQty: 20, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-tealights", 1),
+  { id: "booklet-tealights", name: "ברכון סדר הדלקת נרות ומזמור לתודה עם נרות שבת", categories: ["packages"], priceFrom: 22, unit: "ליחידה", minQty: 20, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-tealights", 1),
     description: "ברכון סדר הדלקת נרות שבת ומזמור לתודה עם סרט תחרה, יחד עם זוג נרות שבת, ארוז בשקית שקופה עם פפיון. מזכרת מרגשת עם אפשרות להקדשה אישית." },
-  { id: "booklet-shacharit", name: "ברכון ברכת השחר וברכות התורה עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-shacharit", 2),
+  { id: "booklet-shacharit", name: "ברכון ברכת השחר וברכות התורה עם סרט תחרה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: img("booklet-shacharit", 2),
     description: "ברכון מעוצב הכולל את ברכות השחר וברכות התורה, בעיצוב מוקפד עם סרט תחרה עדין. מתנה בעלת משמעות, המתאימה למגוון אירועים ולמיתוג אישי." },
-  { id: "booklet-candles-eshet-chayil", name: "ברכון סדר הדלקת נרות שבת ואשת חיל עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
+  { id: "booklet-candles-eshet-chayil", name: "ברכון סדר הדלקת נרות שבת ואשת חיל עם סרט תחרה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
     description: "ברכון אלגנטי המשלב את סדר הדלקת נרות שבת ומזמור אשת חיל. מעוטר בסרט תחרה עדין, ומשמש מזכרת אישית ומרגשת מאירוע מיוחד." },
-  { id: "booklet-mizmor-candles-challah", name: "ברכון מזמור לתודה, סדר הדלקת נרות והפרשת חלה עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
+  { id: "booklet-mizmor-candles-challah", name: "ברכון מזמור לתודה, סדר הדלקת נרות והפרשת חלה עם סרט תחרה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
     description: "ברכון חגיגי המשלב את מזמור לתודה, סדר הדלקת נרות שבת וסדר הפרשת חלה. מעוצב בסגנון קלאסי עם סרט תחרה, ומתאים במיוחד כמתנה לאורחות בערב הפרשת חלה." },
-  { id: "booklet-rachel-candles", name: "ברכון רחל אמנו וסדר הדלקת נרות שבת עם סרט תחרה", categories: ["prints"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
+  { id: "booklet-rachel-candles", name: "ברכון רחל אמנו וסדר הדלקת נרות שבת עם סרט תחרה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 10, leadTime: "3 ימי עסקים", customization: BOOKLET_CUSTOM, images: [],
     description: "ברכון מעוצב המשלב את סגולת רחל אמנו וסדר הדלקת נרות שבת. עם סרט תחרה עדין ואפשרות להקדשה אישית, ליצירת מזכרת מרגשת ומלאת משמעות." },
   { id: "menu-design", name: "עיצוב תפריט (קובץ בלבד)", categories: ["branding"], priceFrom: 169, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("menu-design", 2),
     description: "תפריט לאירוע בעיצוב אישי ואלגנטי, המותאם לקונספט, לצבעים ולמיתוג שלכם. הקובץ נשלח בפורמט דיגיטלי מוכן להדפסה, ללא שירותי הדפסה." },
@@ -393,7 +384,7 @@ export const PROMO = {
   end: "2026-11-30",
   name: "מבצע נובמבר",
   /** על אילו קטגוריות חלה ההנחה */
-  categories: ["packages", "prints"] as CategorySlug[],
+  categories: ["packages"] as CategorySlug[],
   bar: "מבצע נובמבר: 5% הנחה על מארזים וברכונים בהזמנות שנשלחות בחודש נובמבר (לא כולל סידורים וספרים)",
   /** נוסח קצר לטלפון */
   barShort: "5% על מארזים וברכונים (לא כולל סידורים)",
