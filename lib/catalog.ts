@@ -84,6 +84,13 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
     },
   },
+  {
+    id: "2026-11-20-rachel-segula-set",
+    apply: (items) => {
+      const seed = SHOP_ITEMS.find((i) => i.id === "rachel-segula-set");
+      return seed && !items.some((i) => i.id === seed.id) ? [...items, seed] : items;
+    },
+  },
 ];
 
 let migrationsChecked = false;
