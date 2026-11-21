@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES, categoryHref } from "@/lib/site";
+import { CATEGORIES, PACKAGE_EVENTS, PACKAGE_KINDS, categoryHref } from "@/lib/site";
 import { IconArrow } from "./Icons";
 import SectionTitle from "./SectionTitle";
 
@@ -34,6 +34,28 @@ export default function CategoryGrid() {
             </li>
           ))}
         </ul>
+        <div className="mt-10 space-y-4 text-center md:mt-14">
+          <p className="t-label">מארזים לפי אירוע</p>
+          <ul className="flex flex-wrap justify-center gap-2">
+            {PACKAGE_EVENTS.map((e) => (
+              <li key={e.slug}>
+                <a href={`/products#packages&event=${e.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-line bg-bg px-4 text-[0.95rem] transition-colors hover:border-ink">
+                  {e.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="t-label pt-2">מארזים לפי סוג</p>
+          <ul className="flex flex-wrap justify-center gap-2">
+            {PACKAGE_KINDS.map((k) => (
+              <li key={k.slug}>
+                <a href={`/products#packages&kind=${k.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-line bg-bg px-4 text-[0.95rem] transition-colors hover:border-ink">
+                  {k.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

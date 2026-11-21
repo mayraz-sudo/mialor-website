@@ -381,6 +381,61 @@ export const PATHS = {
   },
 };
 
+/** סוגי מארזים – סינון בתוך "מארזים וברכונים" */
+export const PACKAGE_KINDS = [
+  { slug: "gypsum", label: "מארזים מגבס" },
+  { slug: "glass", label: "מארזים מזכוכית" },
+  { slug: "booklets", label: "ברכונים" },
+  { slug: "candles", label: "מארזים מנרות" },
+  { slug: "misc", label: "מארזים שונים" },
+] as const;
+export type PackageKind = (typeof PACKAGE_KINDS)[number]["slug"];
+
+/** אירועים – סינון המארזים לפי סוג האירוע */
+export const PACKAGE_EVENTS = [
+  { slug: "challah", label: "הפרשת חלה" },
+  { slug: "henna", label: "חינה" },
+  { slug: "shabbat-chatan", label: "שבת חתן" },
+  { slug: "birthday", label: "יום הולדת" },
+  { slug: "brit", label: "ברית" },
+] as const;
+export type PackageEvent = (typeof PACKAGE_EVENTS)[number]["slug"];
+
+const ALL_EVENTS: PackageEvent[] = ["challah", "henna", "shabbat-chatan", "birthday", "brit"];
+
+/** לכל מארז: סוג ואירועים מתאימים (מוצר בלי רשומה כאן – לא מופיע בסינון המשני) */
+export const PACKAGE_TAGS: Record<string, { kind: PackageKind; events: PackageEvent[] }> = {
+  "rachel-segula-set-event": { kind: "gypsum", events: ["challah", "henna", "birthday"] },
+  "rachel-candle": { kind: "gypsum", events: ["challah", "henna", "birthday"] },
+  "round-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
+  "square-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
+  "round-candlesticks": { kind: "gypsum", events: ALL_EVENTS },
+  "square-candlesticks": { kind: "gypsum", events: ALL_EVENTS },
+  "round-candlesticks-bag": { kind: "gypsum", events: ALL_EVENTS },
+  "square-candlesticks-bag": { kind: "gypsum", events: ALL_EVENTS },
+  "glass-candlesticks-blessing": { kind: "glass", events: ALL_EVENTS },
+  "square-glass-blessing": { kind: "glass", events: ALL_EVENTS },
+  "booklet-mizmor-candles": { kind: "booklets", events: ALL_EVENTS },
+  "booklet-mini-tehillim": { kind: "booklets", events: ALL_EVENTS },
+  "booklet-tealights": { kind: "booklets", events: ALL_EVENTS },
+  "booklet-shacharit": { kind: "booklets", events: ["shabbat-chatan", "brit", "birthday"] },
+  "booklet-candles-eshet-chayil": { kind: "booklets", events: ["challah", "henna", "shabbat-chatan", "birthday"] },
+  "booklet-mizmor-candles-challah": { kind: "booklets", events: ["challah"] },
+  "booklet-rachel-candles": { kind: "booklets", events: ["challah", "henna", "birthday"] },
+  "hamsa-candle-mizmor": { kind: "candles", events: ["henna", "birthday", "challah"] },
+  "rose-candles-shabbat": { kind: "candles", events: ALL_EVENTS },
+  "shabbat-candles-blessing": { kind: "candles", events: ALL_EVENTS },
+  "havdalah": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
+  "eshet-chayil-scarf": { kind: "misc", events: ["challah", "henna", "shabbat-chatan", "birthday"] },
+  "corduroy-siddur-event": { kind: "misc", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
+  "siddur-corduroy-event": { kind: "misc", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
+  "siddur-kis-event": { kind: "misc", events: ["challah", "henna", "birthday"] },
+  "tehillim-event": { kind: "misc", events: ALL_EVENTS },
+  "tehillim-stone-event": { kind: "misc", events: ALL_EVENTS },
+  "sefer-dvarim-event": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
+  "dvarim-stone-event": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
+};
+
 /** מוצר שנמכר בכמויות לאירוע (ולא עיצוב אחד) */
 export const isBulk = (p: Pick<Product, "minQty">) => p.minQty > 1;
 

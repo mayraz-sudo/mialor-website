@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LOGO, NAV, SITE, whatsappLink } from "@/lib/site";
+import { LOGO, NAV, PACKAGE_EVENTS, SITE, whatsappLink } from "@/lib/site";
 import { IconBag, IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
 import { SHOP } from "@/lib/shop";
 import { useCart } from "./shop/CartContext";
@@ -183,6 +183,16 @@ export default function Header() {
                     <NavLink href={item.href} onClick={() => setOpen(false)} className="flex min-h-11 items-center border-b border-line text-[1rem] last:border-0">
                       {item.label}
                     </NavLink>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-[0.78rem] text-accent-strong">לפי אירוע</p>
+              <ul className="mt-1">
+                {PACKAGE_EVENTS.map((e) => (
+                  <li key={e.slug}>
+                    <a href={`/products#packages&event=${e.slug}`} onClick={() => setOpen(false)} className="flex min-h-9 items-center text-[0.92rem] text-muted hover:text-ink">
+                      {e.label}
+                    </a>
                   </li>
                 ))}
               </ul>
