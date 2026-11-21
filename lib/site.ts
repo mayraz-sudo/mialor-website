@@ -142,6 +142,8 @@ export const PRODUCTS: Product[] = [
     description: "מארז שבת קלאסי הכולל זוג פמוטים מרובעים מגבס בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מתנה שימושית ומרגשת עם אפשרות למיתוג אישי." },
   { id: "shabbat-candles-blessing", name: "מארז ברכה ונרות שבת", categories: ["packages"], priceFrom: 10, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("shabbat-candles-blessing", 1),
     description: "מארז עדין ומלא משמעות הכולל נרות שבת וברכה מעוצבת להדלקת נרות. מתנה מקסימה להפרשת חלה, שבת חתן ואירועים משפחתיים, עם אפשרות להקדשה אישית." },
+  { id: "square-glass-blessing", name: "מארז פמוטים מרובעים מזכוכית וברכה", categories: ["packages"], priceFrom: 26, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: ["/images/products/square-glass-blessing-1.jpg"],
+    description: "זוג פמוטים מרובעים מזכוכית עם נרות, וברכת סדר הדלקת נרות שבת מעוצבת, באריזת צלופן עם סרט סאטן ותגית מיתוג אישית. מתנה אלגנטית לאורחים בכל אירוע." },
   { id: "glass-candlesticks-blessing", name: "מארז פמוטים מזכוכית וברכה", categories: ["packages"], priceFrom: 22, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("glass-candlesticks-blessing", 1),
     description: "מארז אלגנטי הכולל פמוטים מזכוכית וברכה בעיצוב נקי וקלאסי. מזכרת מיוחדת ושימושית לאורחים, המשלבת יופי ועדינות ומתאימה למגוון אירועים." },
   { id: "havdalah", name: "מארז הבדלה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("havdalah", 1),
