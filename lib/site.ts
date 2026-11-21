@@ -174,12 +174,20 @@ export const PRODUCTS: Product[] = [
     description: "מארז שבת אלגנטי הכולל זוג פמוטים עגולים מגבס בעבודת יד וברכה מעוצבת להדלקת נרות שבת. המארז מגיע בשקית יוקרתית ומוקפדת, עם אפשרות למיתוג אישי בהתאמה לאירוע." },
   { id: "square-candlesticks-bag", name: "מארז פמוטים מרובעים מגבס שבת שלום וברכה בשקית יוקרתית", categories: ["packages"], priceFrom: 38, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("square-candlesticks-bag", 1),
     description: "מארז שבת קלאסי ומוקפד הכולל זוג פמוטים מרובעים מגבס בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מוגש בשקית יוקרתית עם אפשרות למיתוג והקדשה אישית." },
-  { id: "corduroy-siddur-event", name: "סידור בכריכת בד קורדרוי", categories: ["packages"], priceFrom: 50, unit: "ליחידה", minQty: 40, leadTime: EVENT_LEAD_TIME, customization: "במגוון צבעים: ורוד, בז׳, תכלת, כתום, חום וכחול כהה. כתבו בהערות איזה צבע תרצו. (בסידור הזה אין אפשרות להטבעה.)", images: img("corduroy-siddur", 2),
-    description: "סידור בכריכת בד קורדרוי, מתנה מכובדת ושימושית לאורחים. קיים במגוון צבעים. ₪50 ליחידה, מחיר כמות, מ־40 יחידות." },
-  { id: "sefer-dvarim-event", name: "ספר דברים", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 40, leadTime: EVENT_LEAD_TIME, customization: "במגוון צבעים. אפשר להוסיף הטבעה מיוחדת של שם האירוע – ₪45 ליחידה במקום ₪40. כתבו בהערות את הצבע ואת הנוסח להטבעה.", images: img("sefer-dvarim", 3),
-    description: "ספר דברים בכריכה מהודרת, מתנה מכובדת לאורחים. קיים במגוון צבעים, ויש אפשרות להטבעה מיוחדת של שם האירוע. ₪40 ליחידה, או ₪45 ליחידה עם הטבעה. מחיר כמות, מ־40 יחידות." },
-  { id: "tehillim-event", name: "תהילים", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 40, leadTime: EVENT_LEAD_TIME, customization: "בשלושה צבעים: לבן, כחול כהה ובז׳. אפשר להוסיף הטבעה מיוחדת של שם האירוע – ₪45 ליחידה במקום ₪40. כתבו בהערות את הצבע ואת הנוסח להטבעה.", images: img("tehillim", 3),
-    description: "ספר תהילים בכריכת בד מהודרת, מתנה מכובדת לאורחים. קיים בשלושה צבעים, ויש אפשרות להטבעה מיוחדת של שם האירוע. ₪40 ליחידה, או ₪45 ליחידה עם הטבעה. מחיר כמות, מ־40 יחידות." },
+  { id: "corduroy-siddur-event", name: "סידור בכריכת בד קורדרוי צבעוני", categories: ["packages"], priceFrom: 50, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "במגוון צבעים: ורוד, בז׳, תכלת, כתום, חום וכחול כהה. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: img("corduroy-siddur", 2),
+    description: "סידור בכריכת בד קורדרוי, מתנה מכובדת ושימושית לאורחים, בשישה צבעים. ₪50 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "siddur-corduroy-event", name: "סידור מבד קורדרוי", categories: ["packages"], priceFrom: 45, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "בשלושה צבעים: כחול כהה, לבן וחום. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: ["/images/products/siddur-corduroy-navy.jpg", "/images/products/siddur-corduroy-white.jpg", "/images/products/siddur-corduroy-brown.jpg"],
+    description: "סידור בכריכת בד קורדרוי עם הטבעת ״סידור״, מתנה מכובדת לאורחים. ₪45 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "siddur-kis-event", name: "סידור כיס ״כוונת הלב״", categories: ["packages"], priceFrom: 30, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "בשלושה גוונים: לבן עם זהב, לבן עם כסף, ולבן עם ורוד. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: ["/images/products/siddur-kis-pink.jpg", "/images/products/siddur-kis-gold.jpg", "/images/products/siddur-kis-silver.jpg"],
+    description: "סידור כיס ״כוונת הלב לבת ישראל״ בכריכה חלקה ומהודרת, קטן ונוח לתיק. ₪30 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "tehillim-event", name: "תהילים מבד קורדרוי", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "בשלושה צבעים: כחול כהה, לבן וחום. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: ["/images/products/tehillim-corduroy-navy.jpg", "/images/products/tehillim-corduroy-white.jpg", "/images/products/tehillim-corduroy-brown.jpg"],
+    description: "ספר תהילים בכריכת בד קורדרוי מהודרת, מתנה מכובדת לאורחים. ₪40 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "tehillim-stone-event", name: "תהילים בסגנון אבן ירושלמית", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "בשלושה צבעים: ורוד, לבן ובז׳. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: ["/images/products/tehillim-stone-beige.jpg", "/images/products/tehillim-stone-pink.jpg", "/images/products/tehillim-stone-white.jpg"],
+    description: "ספר תהילים בכריכה בעיצוב אבני הכותל, עם הטבעה מבריקה. ₪35 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "sefer-dvarim-event", name: "ספר דברים מבד קורדרוי", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "במגוון צבעים. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: img("sefer-dvarim", 3),
+    description: "ספר דברים בכריכת בד קורדרוי מהודרת, מתנה מכובדת לאורחים. ₪40 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
+  { id: "dvarim-stone-event", name: "ספר דברים בסגנון אבן ירושלמית", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 30, leadTime: EVENT_LEAD_TIME, customization: "בשלושה צבעים: ורוד, לבן ובז׳. כתבו בהערות איזה צבע תרצו. אפשר להוסיף הטבעה של שם האירוע – ₪250 לכל ההזמנה, בלי קשר לכמות.", images: ["/images/products/dvarim-stone-white.jpg", "/images/products/dvarim-stone-pink.jpg", "/images/products/dvarim-stone-beige.jpg"],
+    description: "ספר דברים בכריכה בעיצוב אבני הכותל, עם הטבעה מבריקה. ₪35 ליחידה, מחיר כמות מ־30 יחידות. הטבעה של שם האירוע – ₪250 לכל ההזמנה." },
 ];
 
 /** אילו מוצרים מוצגים בדף הבית ובאיזה סדר (6 מובילים). אפשר להחליף מזהים כאן. */
@@ -269,7 +277,7 @@ export const FAQ: FaqItem[] = [
     q: "אפשר להחזיר מוצר שקניתי בחנות?",
     a: "כן, לפי חוק הגנת הצרכן: תוך 14 ימים מקבלת המוצר, כשהוא שלם, ללא שימוש ובאריזתו המקורית. כל הפרטים בתקנון.",
   },
-  { q: "אפשר לקנות פחות מהכמות לאירוע?", a: "כן. המחירים בעמודי האירועים הם מחירי כמות: במארזים מ־20 יחידות (בסידורים, בספר דברים ובתהילים – מ־40), ובברכונים מ־10 (בברכונים עם תהילים או נרות – מ־20). במארזים ובספרים אפשר לקנות גם בבודדים, במחיר אחר – בחנות או בפנייה אלינו. ברכונים נמכרים בהזמנת כמות בלבד. בעיצוב גרפי (הזמנה דיגיטלית, לוגו לחתונה, תפריט) – המחיר הוא לעיצוב אחד." },
+  { q: "אפשר לקנות פחות מהכמות לאירוע?", a: "כן. המחירים בעמודי האירועים הם מחירי כמות: במארזים מ־20 יחידות (בסידורים, בספר דברים ובתהילים – מ־30), ובברכונים מ־10 (בברכונים עם תהילים או נרות – מ־20). במארזים ובספרים אפשר לקנות גם בבודדים, במחיר אחר – בחנות או בפנייה אלינו. ברכונים נמכרים בהזמנת כמות בלבד. בעיצוב גרפי (הזמנה דיגיטלית, לוגו לחתונה, תפריט) – המחיר הוא לעיצוב אחד." },
   {
     q: "אפשר להתאים את המארז אישית?",
     a: "כן. אפשר להוסיף מדבקה במיתוג אישי על המארז והקדשה אישית בתחתית הברכה המצורפת. בברכונים אפשר להוסיף הקדשה אישית בתחתית הברכון.",
@@ -379,8 +387,11 @@ export const isBulk = (p: Pick<Product, "minQty">) => p.minQty > 1;
 /** אותו מוצר בשני העולמות: מזהה המוצר לאירועים ← מזהה הפריט בחנות */
 export const SHOP_TWINS: Record<string, string> = {
   "corduroy-siddur-event": "corduroy-siddur",
-  "tehillim-event": "tehillim",
+  "siddur-corduroy-event": "p-mwmn1ekmlts",
+  "tehillim-event": "p-mwmndjicin0",
+  "tehillim-stone-event": "p-mwmn30f2oeg",
   "sefer-dvarim-event": "p-mwls55jrm7t",
+  "dvarim-stone-event": "sefer-dvarim-stone",
   "rachel-segula-set-event": "rachel-segula-set",
 };
 export const eventTwinOf = (shopId: string) => Object.keys(SHOP_TWINS).find((k) => SHOP_TWINS[k] === shopId);

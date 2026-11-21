@@ -180,6 +180,17 @@ export const SHOP_ITEMS: ShopItem[] = [
     images: [img("rachel-segula-1")],
     material: "מארז מתנה",
   },
+  {
+    id: "sefer-dvarim-stone",
+    name: "ספר דברים בסגנון אבן ירושלמית",
+    description: "ספר דברים בכריכה בעיצוב אבני הכותל, עם הטבעה מבריקה. לבחירה בשלושה צבעים.",
+    price: 89,
+    per: "unit",
+    images: [img("dvarim-stone-white"), img("dvarim-stone-pink"), img("dvarim-stone-beige")],
+    colors: ["ורוד", "לבן", "בז׳"],
+    material: "כריכה בעיצוב אבן ירושלמית",
+    noDiscount: true,
+  },
 ];
 
 export const perLabel = (i: Pick<ShopItem, "per">) => (i.per === "pair" ? "לזוג" : i.per === "unit" ? "ליחידה" : "");
