@@ -115,6 +115,15 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
         return seed ? { ...i, description: seed.description } : i;
       }),
   },
+  {
+    // הפמוט בסט עשוי גבס
+    id: "2026-11-21-segula-set-gypsum",
+    apply: (items) =>
+      items.map((i) => {
+        const seed = i.id === "rachel-segula-set" && SHOP_ITEMS.find((x) => x.id === i.id);
+        return seed ? { ...i, description: seed.description } : i;
+      }),
+  },
 ];
 
 let migrationsChecked = false;
