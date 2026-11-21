@@ -124,6 +124,16 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
         return seed ? { ...i, description: seed.description } : i;
       }),
   },
+  {
+    // מחירי ספרים חדשים (אושר 22.11): קורדרוי 120, אבן ירושלמית 89; ספר דברים אבן ירושלמית חדש
+    id: "2026-11-22-books-prices",
+    apply: (items) => {
+      const price: Record<string, number> = { "p-mwmn1ekmlts": 120, "p-mwmndjicin0": 120, "p-mwls55jrm7t": 120, "p-mwmn30f2oeg": 89 };
+      const next = items.map((i) => (price[i.id] ? { ...i, price: price[i.id] } : i));
+      const seed = SHOP_ITEMS.find((i) => i.id === "sefer-dvarim-stone");
+      return seed && !next.some((i) => i.id === seed.id) ? [...next, seed] : next;
+    },
+  },
 ];
 
 let migrationsChecked = false;
