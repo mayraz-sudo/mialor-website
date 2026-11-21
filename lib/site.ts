@@ -388,6 +388,7 @@ export const PACKAGE_KINDS = [
   { slug: "booklets", label: "ברכונים" },
   { slug: "candles", label: "מארזים מנרות" },
   { slug: "misc", label: "מארזים שונים" },
+  { slug: "books", label: "סידורים וספרים" },
 ] as const;
 export type PackageKind = (typeof PACKAGE_KINDS)[number]["slug"];
 
@@ -405,7 +406,7 @@ const ALL_EVENTS: PackageEvent[] = ["challah", "henna", "shabbat-chatan", "birth
 
 /** לכל מארז: סוג ואירועים מתאימים (מוצר בלי רשומה כאן – לא מופיע בסינון המשני) */
 export const PACKAGE_TAGS: Record<string, { kind: PackageKind; events: PackageEvent[] }> = {
-  "rachel-segula-set-event": { kind: "gypsum", events: ["challah", "henna", "birthday"] },
+  "rachel-segula-set-event": { kind: "misc", events: ["challah", "henna", "birthday"] },
   "rachel-candle": { kind: "gypsum", events: ["challah", "henna", "birthday"] },
   "round-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
   "square-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
@@ -427,14 +428,57 @@ export const PACKAGE_TAGS: Record<string, { kind: PackageKind; events: PackageEv
   "shabbat-candles-blessing": { kind: "candles", events: ALL_EVENTS },
   "havdalah": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
   "eshet-chayil-scarf": { kind: "misc", events: ["challah", "henna", "shabbat-chatan", "birthday"] },
-  "corduroy-siddur-event": { kind: "misc", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
-  "siddur-corduroy-event": { kind: "misc", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
-  "siddur-kis-event": { kind: "misc", events: ["challah", "henna", "birthday"] },
-  "tehillim-event": { kind: "misc", events: ALL_EVENTS },
-  "tehillim-stone-event": { kind: "misc", events: ALL_EVENTS },
-  "sefer-dvarim-event": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
-  "dvarim-stone-event": { kind: "misc", events: ["shabbat-chatan", "brit", "birthday"] },
+  "corduroy-siddur-event": { kind: "books", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
+  "siddur-corduroy-event": { kind: "books", events: ["shabbat-chatan", "brit", "challah", "birthday"] },
+  "siddur-kis-event": { kind: "books", events: ["challah", "henna", "birthday"] },
+  "tehillim-event": { kind: "books", events: ALL_EVENTS },
+  "tehillim-stone-event": { kind: "books", events: ALL_EVENTS },
+  "sefer-dvarim-event": { kind: "books", events: ["shabbat-chatan", "brit", "birthday"] },
+  "dvarim-stone-event": { kind: "books", events: ["shabbat-chatan", "brit", "birthday"] },
 };
+
+/** שמות קצרים לתפריט, לפי הסדר שבו יופיעו בכל סוג */
+export const MENU_LABELS: Record<string, string> = {
+  "round-candlesticks-blessing": "פמוטים עגולים וברכה",
+  "square-candlesticks-blessing": "פמוטים מרובעים וברכה",
+  "round-candlesticks": "פמוטים עגולים",
+  "square-candlesticks": "פמוטים מרובעים",
+  "round-candlesticks-bag": "פמוטים עגולים בשקית יוקרתית",
+  "square-candlesticks-bag": "פמוטים מרובעים בשקית יוקרתית",
+  "rachel-candle": "נר רחל אמנו",
+  "glass-candlesticks-blessing": "פמוטים עגולים מזכוכית",
+  "square-glass-blessing": "פמוטים מרובעים מזכוכית",
+  "rose-candles-shabbat": "נרות פרחים",
+  "hamsa-candle-mizmor": "נר חמסה",
+  "shabbat-candles-blessing": "ברכה ונרות שבת",
+  "havdalah": "מארז הבדלה",
+  "eshet-chayil-scarf": "מטפחת לראש",
+  "rachel-segula-set-event": "סט שלם רחל אמנו",
+  "booklet-mizmor-candles": "מזמור לתודה והדלקת נרות",
+  "booklet-tealights": "ברכון עם נרות שבת",
+  "booklet-mini-tehillim": "ברכון עם תהילים קטן",
+  "booklet-shacharit": "ברכת השחר וברכות התורה",
+  "booklet-candles-eshet-chayil": "הדלקת נרות ואשת חיל",
+  "booklet-mizmor-candles-challah": "הפרשת חלה",
+  "booklet-rachel-candles": "רחל אמנו והדלקת נרות",
+  "corduroy-siddur-event": "סידור קורדרוי צבעוני",
+  "siddur-corduroy-event": "סידור קורדרוי",
+  "siddur-kis-event": "סידור כיס כוונת הלב",
+  "tehillim-event": "תהילים קורדרוי",
+  "tehillim-stone-event": "תהילים אבן ירושלמית",
+  "sefer-dvarim-event": "ספר דברים קורדרוי",
+  "dvarim-stone-event": "ספר דברים אבן ירושלמית",
+};
+
+/** תפריט המארזים: לכל סוג – המוצרים שלו (שם קצר וקישור לעמוד המוצר) */
+export const packageMenu = () =>
+  PACKAGE_KINDS.map((k) => ({
+    ...k,
+    href: `/products#packages&kind=${k.slug}`,
+    items: Object.keys(MENU_LABELS)
+      .filter((id) => PACKAGE_TAGS[id]?.kind === k.slug && PRODUCTS.some((p) => p.id === id))
+      .map((id) => ({ label: MENU_LABELS[id], href: productHref(id) })),
+  }));
 
 /** מוצר שנמכר בכמויות לאירוע (ולא עיצוב אחד) */
 export const isBulk = (p: Pick<Product, "minQty">) => p.minQty > 1;
