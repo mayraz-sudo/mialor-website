@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LOGO, NAV, PACKAGE_EVENTS, SITE, whatsappLink } from "@/lib/site";
-import { IconBag, IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
+import { LOGO, NAV, PACKAGE_EVENTS, PACKAGE_KINDS, SITE, categoryHref, whatsappLink } from "@/lib/site";
+import { IconBag, IconChevron, IconClose, IconInstagram, IconMenu, IconSearch, IconWhatsApp } from "./Icons";
 import { SHOP } from "@/lib/shop";
 import { useCart } from "./shop/CartContext";
 
@@ -108,7 +108,7 @@ export default function Header() {
           <nav aria-label="ניווט ראשי" className="hidden justify-self-center lg:block">
             <ul className="flex items-center gap-1">
               {NAV.map((item) => (
-                <li key={item.href} className={item.group === "shop" ? "mx-1 border-x border-line px-2" : undefined}>
+                <li key={item.href} className={item.group === "shop" ? "mx-1 border-x border-line px-2" : item.href === categoryHref("packages") ? "group relative" : undefined}>
                   <NavLink
                     href={item.href}
                     aria-current={isCurrent(item.href) ? "page" : undefined}
@@ -118,6 +118,28 @@ export default function Header() {
                   >
                     {item.label}
                   </NavLink>
+                  {item.href === categoryHref("packages") && (
+                    <div className="invisible absolute top-full right-0 z-50 pt-2 opacity-0 transition-opacity group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                      <div className="grid w-[420px] grid-cols-2 gap-6 rounded-[2px] border border-line bg-bg p-5 shadow-[0_18px_40px_-20px_rgba(58,42,32,0.35)]">
+                        {[
+                          { title: "לפי סוג", items: PACKAGE_KINDS.map((k) => ({ label: k.label, href: `/products#packages&kind=${k.slug}` })) },
+                          { title: "לפי אירוע", items: PACKAGE_EVENTS.map((e) => ({ label: `מארזים ל${e.label}`, href: `/products#packages&event=${e.slug}` })) },
+                        ].map((g) => (
+                          <div key={g.title}>
+                            <p className="t-label mb-2 text-accent-strong">{g.title}</p>
+                            <ul className="space-y-1.5">
+                              {g.items.map((x) => (
+                                <li key={x.href}>
+                                  <a href={x.href} className="text-[0.95rem] hover:text-accent-strong">{x.label}</a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                        <a href={item.href} className="col-span-2 border-t border-line pt-3 text-[0.92rem] font-medium hover:text-accent-strong">כל המארזים והברכונים ←</a>
+                      </div>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -178,23 +200,49 @@ export default function Header() {
               <p id="menu-events" className="font-serif text-[1.15rem] leading-tight">לאירועים</p>
               <p className="text-[0.78rem] text-accent-strong">הזמנה בכמויות</p>
               <ul className="mt-2">
-                {NAV.filter((i) => i.group === "events").map((item) => (
-                  <li key={item.href}>
-                    <NavLink href={item.href} onClick={() => setOpen(false)} className="flex min-h-11 items-center border-b border-line text-[1rem] last:border-0">
-                      {item.label}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 text-[0.78rem] text-accent-strong">לפי אירוע</p>
-              <ul className="mt-1">
-                {PACKAGE_EVENTS.map((e) => (
-                  <li key={e.slug}>
-                    <a href={`/products#packages&event=${e.slug}`} onClick={() => setOpen(false)} className="flex min-h-9 items-center text-[0.92rem] text-muted hover:text-ink">
-                      {e.label}
-                    </a>
-                  </li>
-                ))}
+                {NAV.filter((i) => i.group === "events").map((item) =>
+                  item.href === categoryHref("packages") ? (
+                    <li key={item.href} className="border-b border-line">
+                      <details className="group">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[1rem] [&::-webkit-details-marker]:hidden">
+                          {item.label}
+                          <IconChevron className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
+                        </summary>
+                        <div className="pb-2 pr-2">
+                          <a href={item.href} onClick={() => setOpen(false)} className="flex min-h-9 items-center text-[0.92rem] font-medium">
+                            כל המארזים
+                          </a>
+                          {[
+                            { title: "לפי סוג", items: PACKAGE_KINDS.map((k) => ({ label: k.label, href: `/products#packages&kind=${k.slug}` })) },
+                            { title: "לפי אירוע", items: PACKAGE_EVENTS.map((e) => ({ label: e.label, href: `/products#packages&event=${e.slug}` })) },
+                          ].map((g) => (
+                            <details key={g.title} className="group/sub">
+                              <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between text-[0.92rem] text-accent-strong [&::-webkit-details-marker]:hidden">
+                                {g.title}
+                                <IconChevron className="h-3.5 w-3.5 shrink-0 transition-transform group-open/sub:rotate-180" />
+                              </summary>
+                              <ul className="pr-2">
+                                {g.items.map((x) => (
+                                  <li key={x.href}>
+                                    <a href={x.href} onClick={() => setOpen(false)} className="flex min-h-9 items-center text-[0.9rem] text-muted hover:text-ink">
+                                      {x.label}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </details>
+                          ))}
+                        </div>
+                      </details>
+                    </li>
+                  ) : (
+                    <li key={item.href}>
+                      <NavLink href={item.href} onClick={() => setOpen(false)} className="flex min-h-11 items-center border-b border-line text-[1rem] last:border-0">
+                        {item.label}
+                      </NavLink>
+                    </li>
+                  ),
+                )}
               </ul>
             </section>
             <section aria-labelledby="menu-shop" className="flex flex-col rounded-[2px] border border-ink bg-surface p-3">
