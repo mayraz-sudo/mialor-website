@@ -134,6 +134,31 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       return seed && !next.some((i) => i.id === seed.id) ? [...next, seed] : next;
     },
   },
+  {
+    // מחיר בודד = פי 3 ממחיר הכמות לאירוע (אושר 22.11)
+    id: "2026-11-22-single-price-x3",
+    apply: (items) => {
+      const price: Record<string, number> = {
+        "rachel-segula-set": 149,
+        "rachel-candle": 119,
+        "round-pair-shabbat-shalom": 79,
+        "square-pair-shabbat-shalom": 89,
+        "corduroy-siddur": 149,
+        "p-mwmn1ekmlts": 135,
+        "p-mwmndjicin0": 119,
+        "p-mwls55jrm7t": 119,
+        "p-mwmn30f2oeg": 105,
+        "sefer-dvarim-stone": 105,
+        "p-mwmnc1ofv15": 89,
+      };
+      return items.map((i) => {
+        if (!price[i.id]) return i;
+        // הפריט הוורוד נקרא "תהילים" אבל בתמונה זה סידור הכיס "כוונת הלב"
+        const name = i.id === "p-mwmnc1ofv15" ? "סידור כיס כוונת הלב" : i.name;
+        return { ...i, name, price: price[i.id] };
+      });
+    },
+  },
 ];
 
 let migrationsChecked = false;
