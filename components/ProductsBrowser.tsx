@@ -73,7 +73,7 @@ export default function ProductsBrowser() {
           </p>
           <p className="mx-auto mt-5 max-w-xl rounded-[2px] border border-line bg-surface px-4 py-3 text-[0.95rem] leading-relaxed">
             <span className="font-medium">המחירים כאן הם מחירי כמות לאירוע, ליחידה:</span>{" "}
-            <span className="text-muted">מארזים מ־20 יחידות, ברכונים מ־10, סידורים וספרים מ־30. עיצוב גרפי – מחיר לעיצוב.</span>{" "}
+            <span className="text-muted">מארזים מ־20 יחידות, ברכונים מ־10, סידורים וספרים מ־30. יש גם מחיר לכמות קטנה, מ־10 יחידות. עיצוב גרפי – מחיר לעיצוב.</span>{" "}
             <Link href="/shop" className="font-medium whitespace-nowrap text-accent-strong underline underline-offset-4 hover:text-ink">
               רוצה פחות? לקנייה בבודדים ←
             </Link>

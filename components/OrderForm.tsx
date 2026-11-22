@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DELIVERY, EVENT_TYPES, detailedOrderMessage, discounted, formatAmount, isPromoProduct, whatsappLink, type Product } from "@/lib/site";
+import { DELIVERY, EVENT_TYPES, SMALL_QTY_MIN, detailedOrderMessage, discounted, formatAmount, isPromoProduct, smallQtyPrice, whatsappLink, type Product } from "@/lib/site";
 import { usePromoActive } from "./Promo";
 import { IconWhatsApp } from "./Icons";
 import { isValidPhone } from "@/lib/phone";
@@ -31,14 +31,18 @@ export default function OrderForm({ product }: { product: Product }) {
 
   // מחשבון: כמות × מחיר ליחידה (אחרי הנחת החודש, אם יש)
   const promo = usePromoActive() && isPromoProduct(product);
-  const unitPrice = product.priceFrom === null ? null : promo ? discounted(product.priceFrom) : product.priceFrom;
   const qtyNum = Math.floor(Number(quantity));
+  const small = smallQtyPrice(product);
+  // פחות ממחיר הכמות אבל לפחות 10 – מחיר מדרגת הביניים
+  const minAllowed = small !== null ? SMALL_QTY_MIN : product.minQty;
+  const basePrice = small !== null && qtyNum < product.minQty ? small : product.priceFrom;
+  const unitPrice = basePrice === null ? null : promo ? discounted(basePrice) : basePrice;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = Number(quantity);
-    if (!Number.isFinite(q) || q < product.minQty) {
-      setError(`מחיר הכמות הוא החל מ־${product.minQty} יחידות. לכמות קטנה יותר – כתבו לנו בוואטסאפ`);
+    if (!Number.isFinite(q) || q < minAllowed) {
+      setError(`ההזמנה לאירוע היא החל מ־${minAllowed} יחידות. לכמות קטנה יותר – אפשר לקנות בבודדים בחנות או לכתוב לנו בוואטסאפ`);
       return;
     }
     if (!name.trim()) {
@@ -107,7 +111,7 @@ export default function OrderForm({ product }: { product: Product }) {
             id="order-qty"
             type="number"
             inputMode="numeric"
-            min={product.minQty}
+            min={minAllowed}
             step={1}
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
@@ -116,7 +120,7 @@ export default function OrderForm({ product }: { product: Product }) {
             className={`${field} tabular-nums`}
           />
           <p id="order-qty-hint" className="mt-1 text-[0.82rem] text-muted">
-            מחיר הכמות – החל מ־{product.minQty} יחידות
+            {small !== null ? `${SMALL_QTY_MIN}–${product.minQty - 1} יחידות: ${formatAmount(small)} · מ־${product.minQty}: ${formatAmount(product.priceFrom!)}` : `מחיר הכמות – החל מ־${product.minQty} יחידות`}
           </p>
         </div>
         <div>
@@ -142,13 +146,13 @@ export default function OrderForm({ product }: { product: Product }) {
       {!isDesign && unitPrice !== null && (
         <div className="mt-4 rounded-[2px] border border-line bg-surface px-4 py-3" aria-live="polite">
           <p className="text-[0.85rem] text-muted">מחשבון מחיר</p>
-          {Number.isFinite(qtyNum) && qtyNum >= product.minQty ? (
+          {Number.isFinite(qtyNum) && qtyNum >= minAllowed ? (
             <p className="mt-0.5 tabular-nums">
               {qtyNum} יחידות × {formatAmount(unitPrice)} ={" "}
               <span className="font-serif text-[1.3rem] font-medium">החל מ־{formatAmount(Math.round(qtyNum * unitPrice * 100) / 100)}</span>
             </p>
           ) : (
-            <p className="mt-0.5">מחיר הכמות הוא החל מ־{product.minQty} יחידות. לכמות קטנה יותר – כתבו לנו ונחזור עם מחיר.</p>
+            <p className="mt-0.5">ההזמנה לאירוע היא החל מ־{minAllowed} יחידות. לכמות קטנה יותר – אפשר לקנות בבודדים בחנות או לכתוב לנו.</p>
           )}
           <p className="mt-1 text-[0.8rem] text-muted">
             {promo ? "כולל הנחת החודש. " : ""}לפני משלוח ותוספות (כמו הטבעה). המחיר הסופי יאושר איתך לפני ההזמנה.
