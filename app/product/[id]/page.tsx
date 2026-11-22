@@ -11,8 +11,10 @@ import {
   PRODUCTS,
   SHOP_TWINS,
   categoryBySlug,
+  SMALL_QTY_MIN,
   formatAmount,
   isBulk,
+  smallQtyPrice,
   categoryHref,
   productById,
   relatedProducts,
@@ -91,6 +93,12 @@ export default async function ProductPage({ params }: Params) {
                   <p className="mt-0.5 text-muted tabular-nums">
                     לדוגמה: {product.minQty} יחידות – החל מ־{formatAmount(product.priceFrom * product.minQty)} (לפני הנחות)
                   </p>
+                  {smallQtyPrice(product) !== null && (
+                    <p className="mt-1.5 tabular-nums">
+                      <span className="font-medium">כמות קטנה ({SMALL_QTY_MIN}–{product.minQty - 1} יחידות):</span>{" "}
+                      <span className="text-muted">{formatAmount(smallQtyPrice(product)!)} ליחידה</span>
+                    </p>
+                  )}
                   {twin && (
                     <Link href={`/shop/${twin}`} className="mt-2 inline-block font-medium text-accent-strong underline underline-offset-4 hover:text-ink">
                       רוצה פחות? אפשר לקנות גם בבודדים בחנות ←

@@ -159,6 +159,20 @@ const MIGRATIONS: { id: string; apply: (items: ShopItem[]) => ShopItem[] }[] = [
       });
     },
   },
+  {
+    // שמות ברורים לספרים בחנות
+    id: "2026-11-22-book-names",
+    apply: (items) => {
+      const name: Record<string, string> = {
+        "p-mwmndjicin0": "תהילים מבד קורדרוי",
+        "p-mwmn30f2oeg": "תהילים בסגנון אבן ירושלמית",
+        "p-mwls55jrm7t": "ספר דברים מבד קורדרוי",
+        "p-mwmn1ekmlts": "סידור מבד קורדרוי",
+        "corduroy-siddur": "סידור קורדרוי צבעוני",
+      };
+      return items.map((i) => (name[i.id] ? { ...i, name: name[i.id] } : i));
+    },
+  },
 ];
 
 let migrationsChecked = false;

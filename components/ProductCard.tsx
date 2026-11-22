@@ -1,4 +1,4 @@
-import { categoryBySlug, isBulk, productHref, type Product } from "@/lib/site";
+import { SMALL_QTY_MIN, categoryBySlug, formatAmount, isBulk, productHref, smallQtyPrice, type Product } from "@/lib/site";
 import { PromoBadge, PromoPrice } from "./Promo";
 import ProductMedia from "./ProductMedia";
 
@@ -29,6 +29,11 @@ export default function ProductCard({ product, sizes }: { product: Product; size
         </p>
         {isBulk(product) && (
           <p className="mt-1 text-[0.88rem] font-medium text-accent-strong">מחיר כמות · מ־{product.minQty} יחידות</p>
+        )}
+        {smallQtyPrice(product) !== null && (
+          <p className="text-[0.85rem] text-muted tabular-nums">
+            {SMALL_QTY_MIN}–{product.minQty - 1} יחידות: {formatAmount(smallQtyPrice(product)!)} ליחידה
+          </p>
         )}
         <div className="mt-auto pt-3.5 md:pt-5">
           <a href={href} aria-label={`לפרטים והזמנה: ${product.name}`} className="btn btn-secondary btn-sm w-full">
