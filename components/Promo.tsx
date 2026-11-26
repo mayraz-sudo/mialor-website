@@ -89,3 +89,15 @@ export function PromoNote({ product }: { product: Product }) {
     </p>
   );
 }
+
+/** מוצר עם מחיר קבוע (למשל "30 ₪ למארז") – במבצע: שורה קטנה עם המחיר אחרי ההנחה */
+export function PromoExactNote({ product }: { product: Product }) {
+  const active = usePromoActive();
+  if (!active || !isPromoProduct(product) || product.priceFrom === null) return null;
+  const until = PROMO.end.split("-").reverse().slice(0, 2).join(".");
+  return (
+    <p className="mt-1.5 text-[0.92rem] text-accent-strong tabular-nums">
+      {PROMO.name}: {PROMO.percent}% הנחה עד {until} – {discounted(product.priceFrom).toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₪ {product.unit}
+    </p>
+  );
+}

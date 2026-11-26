@@ -109,6 +109,14 @@ export type Product = {
   images: string[];
   /** סרטון קצר (אופציונלי) – מוצג במקום התמונה, בלי קול */
   video?: { src: string; poster: string };
+  /** מחיר קבוע להצגה (במקום "החל מ־"), למשל "30 ₪ למארז" */
+  displayPrice?: string;
+  /** מה כלול במארז – שורה ברורה לעמוד המוצר */
+  includes?: string;
+  /** כותרת ותיאור לגוגל ולמנועי חיפוש (אם שונים מהשם והתיאור) */
+  seo?: { title: string; description: string };
+  /** כפתור וואטסאפ בולט בראש העמוד, עם הודעה מוכנה */
+  quickAsk?: { label: string; message: string };
 };
 
 /** זמן הכנה להזמנות כמות */
@@ -128,8 +136,20 @@ export const PRODUCTS: Product[] = [
   { id: "rachel-candle", name: "מארז נר סגולת רחל אמנו", categories: ["packages"], priceFrom: 40, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("rachel-candle", 1),
     description: "מארז לאירועים בהזמנה בכמות: פמוט רחל אמנו מגבס, ברכה תואמת ואריזה יוקרתית, עם אפשרות למיתוג אישי. מתנה מרגשת לאורחות בהפרשת חלה ובאירועים. (לסט המלא עם 40 נרות וקופת צדקה – ראו \"סט סגולת רחל אמנו\".)" },
   // בקובץ סומן "הזמנות לאירועים" – הועבר למארזים כי זה מארז (לאישור)
-  { id: "round-candlesticks-blessing", name: "מארז פמוטים עגולים מגבס וברכה שבת שלום", categories: ["packages"], priceFrom: 33, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("round-candlesticks-blessing", 1),
-    description: "מארז שבת אלגנטי הכולל זוג פמוטים עגולים מגבס בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מתנה אישית ומלאת משמעות, עם אפשרות למיתוג בהתאמה לאירוע." },
+  // המארז עם הברכה – פמוטים עגולים או מרובעים לבחירה (אוחד עם "מרובעים וברכה", שמפנה לכאן)
+  { id: "round-candlesticks-blessing", name: "מארז פמוטים מגבס להפרשת חלה", categories: ["packages"], priceFrom: 30, unit: "למארז", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM,
+    images: ["/images/products/round-candlesticks-blessing-1.jpg", "/images/products/square-candlesticks-blessing-1.jpg"],
+    displayPrice: "30 ₪ למארז",
+    includes: "זוג פמוטי „שבת שלום” מגבס בעבודת יד (עגולים או מרובעים, לבחירה), ברכת הדלקת נרות ועטיפת צלופן – מוכן לחלוקה.",
+    seo: {
+      title: "מארז פמוטים מגבס להפרשת חלה – 30 ₪ למארז | מיאלור MIALOR",
+      description: "מארז פמוטים מגבס להפרשת חלה ב־30 ₪ למארז: זוג פמוטי „שבת שלום” בעבודת יד, עגולים או מרובעים לבחירה, וברכת הדלקת נרות, עטוף בצלופן ומוכן לחלוקה לאורחות.",
+    },
+    quickAsk: {
+      label: "בדיקת זמינות ומחיר לכמות שלי",
+      message: "היי מיאלור 🤍 אשמח לפרטים על מארז פמוטים מגבס להפרשת חלה. אני צריכה ___ מארזים לתאריך ___",
+    },
+    description: "מזכרת לכל אורחת בערב הפרשת החלה שלך 🤍 המארז של מיאלור כולל זוג פמוטי „שבת שלום” מגבס בעבודת יד, עגולים או מרובעים לבחירה, וברכת הדלקת נרות. כל מארז מגיע עטוף בצלופן ומוכן לחלוקה." },
   { id: "digital-invitation", name: "עיצוב הזמנה דיגיטלית", categories: ["invitations", "branding"], priceFrom: 100, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("digital-invitation", 4),
     description: "הזמנה דיגיטלית בעיצוב אישי ומוקפד, המותאמת לסגנון ולפרטי האירוע שלכם. דרך אלגנטית ומיוחדת להזמין את האורחים ולשתף את ההתרגשות לקראת היום הגדול." },
   { id: "wedding-logo", name: "לוגו לחתונה", categories: ["branding"], priceFrom: 100, unit: "לעיצוב", minQty: 1, leadTime: "יום עסקים אחד", customization: null, images: img("wedding-logo", 5),
@@ -138,8 +158,6 @@ export const PRODUCTS: Product[] = [
     images: ["/images/products/digital-invitation-video-poster.jpg"],
     video: { src: "/images/products/digital-invitation-video.mp4", poster: "/images/products/digital-invitation-video-poster.jpg" },
     description: "הזמנה דיגיטלית מונפשת בעיצוב אישי, המשלבת תנועה, אלמנטים גרפיים ופרטי האירוע. דרך מרשימה ומקורית להזמין את האורחים וליצור ציפייה לקראת האירוע." },
-  { id: "square-candlesticks-blessing", name: "מארז פמוטים מרובעים מגבס וברכה שבת שלום", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("square-candlesticks-blessing", 1),
-    description: "מארז שבת קלאסי הכולל זוג פמוטים מרובעים מגבס בעבודת יד וברכה מעוצבת להדלקת נרות שבת. מתנה שימושית ומרגשת עם אפשרות למיתוג אישי." },
   { id: "shabbat-candles-blessing", name: "מארז ברכה ונרות שבת", categories: ["packages"], priceFrom: 10, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("shabbat-candles-blessing", 1),
     description: "מארז עדין ומלא משמעות הכולל נרות שבת וברכה מעוצבת להדלקת נרות. מתנה מקסימה להפרשת חלה, שבת חתן ואירועים משפחתיים, עם אפשרות להקדשה אישית." },
   { id: "square-glass-blessing", name: "מארז פמוטים מרובעים מזכוכית וברכה", categories: ["packages"], priceFrom: 26, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: ["/images/products/square-glass-blessing-1.jpg"],
@@ -194,8 +212,8 @@ export const PRODUCTS: Product[] = [
 
 /** אילו מוצרים מוצגים בדף הבית ובאיזה סדר (6 מובילים). אפשר להחליף מזהים כאן. */
 export const HOME_FEATURED_IDS = [
+  "round-candlesticks-blessing",
   "rachel-candle",
-  "round-candlesticks-bag",
   "digital-invitation-video",
   "eshet-chayil-scarf",
   "booklet-mizmor-candles",
@@ -411,7 +429,6 @@ export const PACKAGE_TAGS: Record<string, { kind: PackageKind; events: PackageEv
   "rachel-segula-set-event": { kind: "misc", events: ["challah", "henna", "birthday"] },
   "rachel-candle": { kind: "gypsum", events: ["challah", "henna", "birthday"] },
   "round-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
-  "square-candlesticks-blessing": { kind: "gypsum", events: ALL_EVENTS },
   "round-candlesticks": { kind: "gypsum", events: ALL_EVENTS },
   "square-candlesticks": { kind: "gypsum", events: ALL_EVENTS },
   "round-candlesticks-bag": { kind: "gypsum", events: ALL_EVENTS },
@@ -442,8 +459,7 @@ export const PACKAGE_TAGS: Record<string, { kind: PackageKind; events: PackageEv
 
 /** שמות קצרים לתפריט, לפי הסדר שבו יופיעו בכל סוג */
 export const MENU_LABELS: Record<string, string> = {
-  "round-candlesticks-blessing": "פמוטים עגולים וברכה",
-  "square-candlesticks-blessing": "פמוטים מרובעים וברכה",
+  "round-candlesticks-blessing": "פמוטים מגבס וברכה (להפרשת חלה)",
   "round-candlesticks": "פמוטים עגולים",
   "square-candlesticks": "פמוטים מרובעים",
   "round-candlesticks-bag": "פמוטים עגולים בשקית יוקרתית",

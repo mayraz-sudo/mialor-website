@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import OrderForm from "@/components/OrderForm";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
-import { PromoNote, PromoPrice } from "@/components/Promo";
+import { PromoExactNote, PromoNote, PromoPrice } from "@/components/Promo";
+import { IconWhatsApp } from "@/components/Icons";
 import {
   ALL_PRODUCTS_HREF,
   DELIVERY,
@@ -18,7 +20,35 @@ import {
   categoryHref,
   productById,
   relatedProducts,
+  whatsappLink,
+  type Product,
 } from "@/lib/site";
+
+const BASE = "https://mialorshop.com";
+
+/** נתוני מוצר מובנים (Schema.org Product) – רק למוצר עם מחיר קבוע, ורק עם פרטים מאומתים */
+function productJsonLd(p: Product) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: p.name,
+    description: p.seo?.description ?? p.description,
+    image: p.images.map((src) => `${BASE}${src}`),
+    sku: p.id,
+    brand: { "@type": "Brand", name: "MIALOR" },
+    category: "מארזים לאירועים",
+    offers: {
+      "@type": "Offer",
+      url: `${BASE}/product/${p.id}`,
+      price: String(p.priceFrom),
+      priceCurrency: "ILS",
+      itemCondition: "https://schema.org/NewCondition",
+      // מוכן בהזמנה, לפי זמן ההכנה שבעמוד
+      availability: "https://schema.org/MadeToOrder",
+      seller: { "@type": "Organization", name: "MIALOR מיאלור", url: BASE },
+    },
+  };
+}
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -30,10 +60,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const p = productById((await params).id);
   if (!p) return {};
+  const title = p.seo?.title ?? `${p.name} | MIALOR`;
+  const description = p.seo?.description ?? p.description;
   return {
-    title: `${p.name} | MIALOR`,
-    description: p.description,
-    openGraph: { title: p.name, description: p.description, images: p.images[0] ? [p.images[0]] : [] },
+    title,
+    description,
+    alternates: { canonical: `/product/${p.id}` },
+    openGraph: { title, description, url: `/product/${p.id}`, images: p.images[0] ? [p.images[0]] : [] },
   };
 }
 
@@ -44,7 +77,15 @@ export default async function ProductPage({ params }: Params) {
   const related = relatedProducts(product);
   const twin = SHOP_TWINS[product.id];
 
+  const hero = Boolean(product.quickAsk);
+  // גרסאות בלי ברכה – מוצרים נפרדים (מוצגים כקישור כדי שלא יתבלבלו)
+  const withoutBlessing =
+    product.id === "round-candlesticks-blessing"
+      ? ["round-candlesticks", "square-candlesticks"].map(productById).filter((p): p is Product => Boolean(p))
+      : [];
+
   const facts = [
+    ...(product.includes ? [{ label: "מה כלול", value: product.includes }] : []),
     { label: product.minQty > 1 ? "מחיר כמות" : "כמות", value: product.minQty > 1 ? `החל מ־${product.minQty} יחידות` : "עיצוב אחד" },
     { label: "זמן הכנה", value: product.leadTime },
     ...(product.customization ? [{ label: "התאמה אישית", value: product.customization }] : []),
@@ -53,6 +94,9 @@ export default async function ProductPage({ params }: Params) {
 
   return (
     <>
+      {product.displayPrice && product.priceFrom !== null && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)).replace(/</g, "\\u003c") }} />
+      )}
       <section className="bg-bg">
         <div className="mx-auto max-w-[1180px] px-5 pt-5 pb-12 md:pt-8 md:pb-20">
           {/* פירורי לחם */}
@@ -78,15 +122,60 @@ export default async function ProductPage({ params }: Params) {
             </ol>
           </nav>
 
-          <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
-            <ProductGallery product={product} />
+          <div
+            className={
+              hero
+                ? "grid gap-6 [grid-template-areas:'head'_'gallery'_'body'] md:grid-cols-2 md:grid-rows-[auto_1fr] md:gap-x-12 md:gap-y-0 md:[grid-template-areas:'gallery_head'_'gallery_body'] lg:gap-x-16"
+                : "grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16"
+            }
+          >
+            <div className={hero ? "[grid-area:gallery]" : undefined}>
+              <ProductGallery product={product} />
+            </div>
 
-            <div>
-              <p className="t-label">לאירועים · {category.title}</p>
-              <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.2] text-balance md:text-[2.4rem]">{product.name}</h1>
-              <p className="mt-3 text-[1.15rem] tabular-nums">
-                <PromoPrice product={product} large />
-              </p>
+            {/* ראש העמוד: שם, מחיר והזמנה – בנייד מופיעים לפני התמונה */}
+            <div className={hero ? "[grid-area:head]" : undefined}>
+              <div className={hero ? "flex items-start gap-3.5" : undefined}>
+                {hero && product.images[0] && (
+                  // בנייד: תמונה קטנה של המארז ליד הכותרת (הגלריה המלאה מופיעה מיד אחרי)
+                  <div className="relative aspect-[4/5] w-[84px] shrink-0 overflow-hidden rounded-[2px] bg-surface md:hidden">
+                    <Image src={product.images[0]} alt="" fill sizes="84px" priority className="object-cover" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="t-label">לאירועים · {category.title}</p>
+                  <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.2] text-balance md:text-[2.4rem]">{product.name}</h1>
+                  {product.displayPrice ? (
+                    <p className="mt-2 text-[1.5rem] font-medium tabular-nums md:mt-2.5 md:text-[1.75rem]">{product.displayPrice}</p>
+                  ) : (
+                    <p className="mt-3 text-[1.15rem] tabular-nums">
+                      <PromoPrice product={product} large />
+                    </p>
+                  )}
+                </div>
+              </div>
+              {product.displayPrice && <PromoExactNote product={product} />}
+              {hero && (
+                <div className="flex flex-col">
+                  {/* בנייד הכפתור מופיע לפני התיאור, כדי שיהיה גלוי כבר בכניסה לעמוד */}
+                  <p className="order-2 mt-4 text-[1.05rem] leading-[1.8] md:order-1">{product.description}</p>
+                  <div className="order-1 md:order-2">
+                    <a
+                      href={whatsappLink(product.quickAsk!.message)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary mt-4 w-full text-[1.05rem] md:mt-5"
+                    >
+                      <IconWhatsApp className="h-5 w-5" />
+                      {product.quickAsk!.label}
+                    </a>
+                    <p className="mt-2 text-center text-[0.86rem] text-muted">נפתח וואטסאפ עם הודעה מוכנה – משלימים כמות ותאריך.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className={hero ? "[grid-area:body] md:pt-6" : undefined}>
               {isBulk(product) && product.priceFrom !== null && (
                 <div className="mt-3 rounded-[2px] border border-line bg-surface px-4 py-3 text-[0.97rem]">
                   <p className="font-medium">מחיר כמות לאירוע · מ־{product.minQty} יחידות</p>
@@ -106,9 +195,9 @@ export default async function ProductPage({ params }: Params) {
                   )}
                 </div>
               )}
-              <PromoNote product={product} />
+              {!product.displayPrice && <PromoNote product={product} />}
               <span aria-hidden className="rule mt-5" />
-              <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{product.description}</p>
+              {!hero && <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">{product.description}</p>}
 
               <dl className="mt-6 divide-y divide-line border-y border-line">
                 {facts.map((f) => (
@@ -119,7 +208,24 @@ export default async function ProductPage({ params }: Params) {
                 ))}
               </dl>
 
-              <div className="mt-7">
+              {withoutBlessing.length > 0 && (
+                <p className="mt-4 text-[0.95rem] leading-relaxed text-muted">
+                  מחפשת בלי הברכה? יש גם{" "}
+                  {withoutBlessing.map((w, i) => (
+                    <span key={w.id}>
+                      {i > 0 && " או "}
+                      <Link href={`/product/${w.id}`} className="text-accent-strong underline underline-offset-4 hover:text-ink">
+                        {w.name}
+                      </Link>{" "}
+                      ({w.priceFrom !== null ? `מ־${formatAmount(w.priceFrom)} ${w.unit}` : "מחיר לפי הזמנה"})
+                    </span>
+                  ))}
+                  {" "}– מוצרים נפרדים, במחיר אחר.
+                </p>
+              )}
+
+              <div id="order" className="mt-7 scroll-mt-28">
+                {hero && <h2 className="mb-3 font-serif text-[1.35rem]">הזמנה מפורטת</h2>}
                 <OrderForm product={product} />
               </div>
             </div>

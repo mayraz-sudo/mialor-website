@@ -25,7 +25,7 @@ export default function ProductCard({ product, sizes }: { product: Product; size
         </h3>
         <p className="mt-1 line-clamp-2 text-[0.95rem] leading-relaxed text-muted md:text-[0.94rem]">{product.description}</p>
         <p className="mt-2 text-[0.95rem] text-ink tabular-nums md:mt-2.5">
-          <PromoPrice product={product} />
+          {product.displayPrice ? <span className="font-medium">{product.displayPrice}</span> : <PromoPrice product={product} />}
         </p>
         {isBulk(product) && (
           <p className="mt-1 text-[0.88rem] font-medium text-accent-strong">מחיר כמות · מ־{product.minQty} יחידות</p>

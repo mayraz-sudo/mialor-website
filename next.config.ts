@@ -10,8 +10,14 @@ const base: NextConfig = {
   env: { NEXT_PUBLIC_BUILD_DATE: new Date().toISOString() },
 };
 
+// כתובות ישנות שאוחדו – מפנות לצמיתות (301/308) לעמוד הקיים, כדי שקישורים וגוגל לא יאבדו
+const redirects: NextConfig["redirects"] = async () => [
+  // "מארז פמוטים מרובעים וברכה" אוחד עם "מארז פמוטים מגבס להפרשת חלה" (עגולים או מרובעים לבחירה)
+  { source: "/product/square-candlesticks-blessing", destination: "/product/round-candlesticks-blessing", permanent: true },
+];
+
 const nextConfig: NextConfig = isExport
   ? { ...base, output: "export", distDir: ".next-export", images: { unoptimized: true } }
-  : base;
+  : { ...base, redirects };
 
 export default nextConfig;
