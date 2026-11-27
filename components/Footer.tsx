@@ -5,7 +5,8 @@ import { CATEGORIES, LOGO, SITE, TERMS, categoryHref, whatsappLink } from "@/lib
 const INFO_LINKS = [
   { label: "אודות", href: "/#about" },
   { label: "שאלות נפוצות", href: "/faq" },
-  { label: "תקנון ומדיניות פרטיות", href: "/terms" },
+  { label: "תקנון", href: "/terms" },
+  { label: "מדיניות פרטיות", href: "/privacy" },
   { label: "הצהרת נגישות", href: "/accessibility" },
 ];
 
