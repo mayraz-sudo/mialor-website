@@ -146,7 +146,7 @@ export const PRODUCTS: Product[] = [
     description: "זוג פמוטים מרובעים מזכוכית עם נרות, וברכת סדר הדלקת נרות שבת מעוצבת, באריזת צלופן עם סרט סאטן ותגית מיתוג אישית. מתנה אלגנטית לאורחים בכל אירוע." },
   { id: "glass-candlesticks-blessing", name: "מארז פמוטים מזכוכית וברכה", categories: ["packages"], priceFrom: 22, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("glass-candlesticks-blessing", 1),
     description: "מארז אלגנטי הכולל פמוטים מזכוכית וברכה בעיצוב נקי וקלאסי. מזכרת מיוחדת ושימושית לאורחים, המשלבת יופי ועדינות ומתאימה למגוון אירועים." },
-  { id: "havdalah-full", name: "מארז סדר הבדלה שלם", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: ["/images/products/havdalah-full-1.jpg"],
+  { id: "havdalah-full", name: "מארז סדר הבדלה שלם", categories: ["packages"], priceFrom: 35, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: ["/images/products/havdalah-full-2.jpg", "/images/products/havdalah-full-1.jpg"],
     description: "כל מה שצריך להבדלה: נר הבדלה קלוע, בשמים (ציפורן) בבקבוקון זכוכית עם פקק שעם, גפרורים וכרטיס סדר הבדלה מעוצב – באריזת צלופן עם סרט סאטן. מתנה מכובדת ושימושית לאורחים." },
   { id: "havdalah", name: "מארז הבדלה", categories: ["packages"], priceFrom: 20, unit: "ליחידה", minQty: 20, leadTime: EVENT_LEAD_TIME, customization: PACKAGE_CUSTOM, images: img("havdalah", 1),
     description: "מארז מיוחד בהשראת מסורת ההבדלה, הכולל נר הבדלה וברכון מעוצב עם סדר ההבדלה. מתנה בעלת משמעות לסיום השבת, עם אפשרות למיתוג אישי." },
